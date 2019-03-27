@@ -22,6 +22,15 @@
     public void ConfigureServices(IServiceCollection services)
     {
       services
+        .AddAuthentication("Bearer")
+        .AddIdentityServerAuthentication(options =>
+        {
+          options.Authority = Configuration["Authority"];
+          options.RequireHttpsMetadata = false;
+          options.ApiName = Configuration["ApiName"];
+        });
+
+      services
         .AddScoped<IArtistsService, ArtistsService>();
 
       services
@@ -55,6 +64,7 @@
         app.UseHsts();
       }
 
+      app.UseAuthentication();
       app.UseHttpsRedirection();
       app.UseMvc();
     }
