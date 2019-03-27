@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.28714.193
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Api", "Bejebeje.Api\Bejebeje.Api.csproj", "{119C3D0F-0652-4ED5-BD2F-1F1A4816C8BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bejebeje.Domain", "Bejebeje.Domain\Bejebeje.Domain.csproj", "{E4836350-291C-4801-9CFA-A011A2985310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Domain", "Bejebeje.Domain\Bejebeje.Domain.csproj", "{E4836350-291C-4801-9CFA-A011A2985310}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bejebeje.Services", "Bejebeje.Services\Bejebeje.Services.csproj", "{B591ED41-877E-4320-B204-718E8A9B844A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bejebeje.ViewModels", "Bejebeje.ViewModels\Bejebeje.ViewModels.csproj", "{B1750691-5278-4EBA-97AF-AB5FFAF26422}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{E4836350-291C-4801-9CFA-A011A2985310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4836350-291C-4801-9CFA-A011A2985310}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4836350-291C-4801-9CFA-A011A2985310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B591ED41-877E-4320-B204-718E8A9B844A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B591ED41-877E-4320-B204-718E8A9B844A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B591ED41-877E-4320-B204-718E8A9B844A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B591ED41-877E-4320-B204-718E8A9B844A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1750691-5278-4EBA-97AF-AB5FFAF26422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1750691-5278-4EBA-97AF-AB5FFAF26422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1750691-5278-4EBA-97AF-AB5FFAF26422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1750691-5278-4EBA-97AF-AB5FFAF26422}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
