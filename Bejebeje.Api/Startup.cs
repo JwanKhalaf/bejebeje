@@ -7,6 +7,7 @@
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
+  using Swashbuckle.AspNetCore.Swagger;
 
   public class Startup
   {
@@ -26,6 +27,12 @@
       services
         .AddMvc()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+      services
+        .AddSwaggerGen(c =>
+        {
+          c.SwaggerDoc("v1", new Info { Title = "Bejebeje API", Version = "v1" });
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +41,13 @@
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
+
+        app.UseSwagger();
+
+        app.UseSwaggerUI(c =>
+        {
+          c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bejebeje API V1");
+        });
       }
       else
       {
