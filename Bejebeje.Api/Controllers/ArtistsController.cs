@@ -1,8 +1,8 @@
-﻿using Bejebeje.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Bejebeje.Api.Controllers
+﻿namespace Bejebeje.Api.Controllers
 {
+  using Bejebeje.Services.Services.Interfaces;
+  using Microsoft.AspNetCore.Mvc;
+
   [Route("api/[controller]")]
   [ApiController]
   public class ArtistsController : ControllerBase
@@ -11,7 +11,7 @@ namespace Bejebeje.Api.Controllers
 
     public ArtistsController(IArtistsService artistService)
     {
-      this.artistsService = artistService;
+      artistsService = artistService;
     }
 
     [HttpGet]
