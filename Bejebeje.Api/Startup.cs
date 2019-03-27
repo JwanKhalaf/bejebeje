@@ -1,13 +1,13 @@
-﻿using Bejebeje.Services.Services;
-using Bejebeje.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Bejebeje.Api
+﻿namespace Bejebeje.Api
 {
+  using Bejebeje.Services.Services;
+  using Bejebeje.Services.Services.Interfaces;
+  using Microsoft.AspNetCore.Builder;
+  using Microsoft.AspNetCore.Hosting;
+  using Microsoft.AspNetCore.Mvc;
+  using Microsoft.Extensions.Configuration;
+  using Microsoft.Extensions.DependencyInjection;
+
   public class Startup
   {
     public Startup(IConfiguration configuration)

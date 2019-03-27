@@ -1,8 +1,8 @@
-﻿using Bejebeje.ViewModels.Artist;
-using System.Collections.Generic;
-
-namespace Bejebeje.Services.Services.Interfaces
+﻿namespace Bejebeje.Services.Services.Interfaces
 {
+  using System.Collections.Generic;
+  using Bejebeje.ViewModels.Artist;
+
   public interface IArtistsService
   {
     IList<ArtistCardViewModel> GetArtistCards();
