@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Bejebeje.Services.Services.Interfaces
 {
-  public interface IArtistService
+  public interface IArtistsService
   {
     IList<ArtistCardViewModel> GetArtistCards();
   }

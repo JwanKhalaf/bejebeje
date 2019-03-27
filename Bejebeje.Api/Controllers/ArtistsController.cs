@@ -5,19 +5,19 @@ namespace Bejebeje.Api.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
-  public class ArtistController : ControllerBase
+  public class ArtistsController : ControllerBase
   {
-    private readonly IArtistService artistService;
+    private readonly IArtistsService artistsService;
 
-    public ArtistController(IArtistService artistService)
+    public ArtistsController(IArtistsService artistService)
     {
-      this.artistService = artistService;
+      this.artistsService = artistService;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-      var artistCards = artistService.GetArtistCards();
+      var artistCards = artistsService.GetArtistCards();
       return Ok(artistCards);
     }
   }

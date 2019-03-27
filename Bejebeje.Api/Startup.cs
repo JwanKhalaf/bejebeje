@@ -21,7 +21,7 @@ namespace Bejebeje.Api
     public void ConfigureServices(IServiceCollection services)
     {
       services
-        .AddScoped<IArtistService, ArtistService>();
+        .AddScoped<IArtistsService, ArtistsService>();
 
       services
         .AddMvc()

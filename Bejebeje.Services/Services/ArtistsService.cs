@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Bejebeje.Services.Services
 {
-  public class ArtistService : IArtistService
+  public class ArtistsService : IArtistsService
   {
     public IList<ArtistCardViewModel> GetArtistCards()
     {
@@ -16,7 +16,14 @@ namespace Bejebeje.Services.Services
       artistOne.ImageUrl = "https://placehold.it/100x100";
       artistOne.Slug = "sivan-perwer";
 
+      ArtistCardViewModel artistTwo = new ArtistCardViewModel();
+      artistTwo.FirstName = "Ciwan";
+      artistTwo.LastName = "Haco";
+      artistTwo.ImageUrl = "https://placehold.it/100x100";
+      artistTwo.Slug = "ciwan-haco";
+
       artistCards.Add(artistOne);
+      artistCards.Add(artistTwo);
       return artistCards;
     }
   }
