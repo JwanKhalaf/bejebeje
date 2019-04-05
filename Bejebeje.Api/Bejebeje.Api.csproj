@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <UserSecretsId>e50b6d8a-3bcc-4672-9c72-2a8325ace38d</UserSecretsId>
+    <UserSecretsId>bejebeje-api-e50b6d8a-3bcc-4672-9c72-2a8325ace38d</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
