@@ -3,7 +3,7 @@
   using System;
   using Bejebeje.Domain.Interfaces;
 
-  public class ArtistSlug : IBaseEntity
+  public class LyricSlug : IBaseEntity
   {
     public int Id { get; set; }
 
