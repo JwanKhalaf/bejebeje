@@ -1,10 +1,13 @@
 ﻿namespace Bejebeje.Domain
 {
   using System;
+  using Bejebeje.Domain.Interfaces;
 
-  public class BaseEntity
+  public class ArtistSlug : IBaseEntity
   {
     public int Id { get; set; }
+
+    public string Name { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
