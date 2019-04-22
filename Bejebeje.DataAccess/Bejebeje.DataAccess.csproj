@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bejebeje.Common\Bejebeje.Common.csproj" />
+    <ProjectReference Include="..\Bejebeje.Domain\Bejebeje.Domain.csproj" />
   </ItemGroup>
 
 </Project>

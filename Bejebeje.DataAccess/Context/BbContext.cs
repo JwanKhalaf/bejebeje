@@ -1,6 +1,7 @@
 ﻿namespace Bejebeje.DataAccess.Context
 {
   using Bejebeje.Common.Extensions;
+  using Bejebeje.Domain;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -10,6 +11,14 @@
         : base(options)
     {
     }
+
+    public DbSet<Artist> Artists { get; set; }
+
+    public DbSet<ArtistSlug> ArtistSlug { get; set; }
+
+    public DbSet<Lyric> Lyrics { get; set; }
+
+    public DbSet<LyricSlug> LyricSlugs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
