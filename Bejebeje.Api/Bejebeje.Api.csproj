@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>bejebeje.api-8105439d-a6f9-47ff-8ba5-ce4605f5c0a2</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bejebeje.DataAccess\Bejebeje.DataAccess.csproj" />
     <ProjectReference Include="..\Bejebeje.Services\Bejebeje.Services.csproj" />
   </ItemGroup>
 
