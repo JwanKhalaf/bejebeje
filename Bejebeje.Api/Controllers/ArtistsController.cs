@@ -6,7 +6,7 @@
 
   [Route("api/[controller]")]
   [ApiController]
-  [Authorize]
+  //[Authorize]
   public class ArtistsController : ControllerBase
   {
     private readonly IArtistsService artistsService;

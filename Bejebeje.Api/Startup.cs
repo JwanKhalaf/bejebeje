@@ -2,6 +2,7 @@
 {
   using Bejebeje.DataAccess.Configuration;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.DataAccess.Data;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Builder;
@@ -28,6 +29,9 @@
 
       services
         .AddDbContext<BbContext>(options => options.UseNpgsql(databaseConnectionString));
+
+      services
+        .AddSingleton<DataSeeder>();
 
       services
         .Configure<InitialSeedConfiguration>(c =>

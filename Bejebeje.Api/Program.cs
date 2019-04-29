@@ -35,8 +35,6 @@
       {
         Console.WriteLine("Database will be seeded with sample data if no data exists already.");
 
-        Console.WriteLine("Admin user will be seeded if the account does not exist.");
-
         IConfiguration config = host
           .Services
           .GetRequiredService<IConfiguration>();
