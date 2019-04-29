@@ -1,5 +1,6 @@
 ﻿namespace Bejebeje.Api
 {
+  using Bejebeje.DataAccess.Configuration;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
@@ -27,6 +28,12 @@
 
       services
         .AddDbContext<BbContext>(options => options.UseNpgsql(databaseConnectionString));
+
+      services
+        .Configure<InitialSeedConfiguration>(c =>
+        {
+          c.ConnectionString = databaseConnectionString;
+        });
 
       services
         .AddAuthentication("Bearer")
