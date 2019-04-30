@@ -3,9 +3,10 @@ version: "3.7"
 services:
   bejebeje-api:
     build:
-      context: ./Bejebeje.Api
+      context: .
       labels:
         com.bejebeje.description: "Bejebeje's API"
+      dockerfile: /Bejebeje.Api/Dockerfile
     image: bejebeje-api:latest
     ports:
       - "5005:5005"
@@ -22,4 +23,5 @@ services:
     env_file:
       - ./variables.env
 
-volumes: data-volume:
+volumes:
+  data-volume:
