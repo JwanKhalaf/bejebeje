@@ -1,29 +1,35 @@
 ﻿namespace Bejebeje.Services.Services
 {
   using System.Collections.Generic;
+  using System.Linq;
+  using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Artist;
+  using Microsoft.EntityFrameworkCore;
 
   public class ArtistsService : IArtistsService
   {
+    private readonly BbContext context;
+
+    public ArtistsService(BbContext context)
+    {
+      this.context = context;
+    }
+
     public IList<ArtistCardViewModel> GetArtistCards()
     {
-      List<ArtistCardViewModel> artistCards = new List<ArtistCardViewModel>();
+      List<ArtistCardViewModel> artistCards = context
+      .Artists
+      .AsNoTracking()
+      .Select(x => new ArtistCardViewModel
+      {
+        FirstName = x.FirstName,
+        LastName = x.LastName,
+        Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
+        ImageUrl = x.ImageUrl
+      })
+      .ToList();
 
-      ArtistCardViewModel artistOne = new ArtistCardViewModel();
-      artistOne.FirstName = "Şivan";
-      artistOne.LastName = "Perwer";
-      artistOne.ImageUrl = "https://placehold.it/100x100";
-      artistOne.Slug = "sivan-perwer";
-
-      ArtistCardViewModel artistTwo = new ArtistCardViewModel();
-      artistTwo.FirstName = "Ciwan";
-      artistTwo.LastName = "Haco";
-      artistTwo.ImageUrl = "https://placehold.it/100x100";
-      artistTwo.Slug = "ciwan-haco";
-
-      artistCards.Add(artistOne);
-      artistCards.Add(artistTwo);
       return artistCards;
     }
   }
