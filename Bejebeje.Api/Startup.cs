@@ -1,10 +1,14 @@
 ﻿namespace Bejebeje.Api
 {
+  using Bejebeje.DataAccess.Configuration;
+  using Bejebeje.DataAccess.Context;
+  using Bejebeje.DataAccess.Data;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Builder;
   using Microsoft.AspNetCore.Hosting;
   using Microsoft.AspNetCore.Mvc;
+  using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
   using Swashbuckle.AspNetCore.Swagger;
@@ -21,6 +25,20 @@
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      string databaseConnectionString = Configuration["Database:DefaultConnectionString"];
+
+      services
+        .AddDbContext<BbContext>(options => options.UseNpgsql(databaseConnectionString));
+
+      services
+        .AddSingleton<DataSeeder>();
+
+      services
+        .Configure<InitialSeedConfiguration>(c =>
+        {
+          c.ConnectionString = databaseConnectionString;
+        });
+
       services
         .AddAuthentication("Bearer")
         .AddIdentityServerAuthentication(options =>

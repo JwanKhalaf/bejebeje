@@ -54,6 +54,7 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 **/Properties/launchSettings.json
+Bejebeje.Api/api_log.txt
 
 # StyleCop
 StyleCopReport.xml
