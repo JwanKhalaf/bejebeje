@@ -1,10 +1,10 @@
 ﻿namespace Bejebeje.Services.Services
 {
-  using System.Linq;
   using System.Collections.Generic;
+  using System.Linq;
+  using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Artist;
-  using Bejebeje.DataAccess.Context;
   using Microsoft.EntityFrameworkCore;
 
   public class ArtistsService : IArtistsService

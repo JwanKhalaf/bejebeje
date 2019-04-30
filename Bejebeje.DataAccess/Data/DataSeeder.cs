@@ -21,6 +21,8 @@ namespace Bejebeje.DataAccess.Data
 
     public void EnsureDataIsSeeded()
     {
+      string userId = "eb600251-1fdd-4c2e-bee0-a9dca87a271a";
+
       ServiceCollection services = new ServiceCollection();
 
       services
@@ -35,6 +37,37 @@ namespace Bejebeje.DataAccess.Data
             .GetService<BbContext>();
 
           context.Database.Migrate();
+
+          var ezNexwesim = new Lyric
+          {
+            Title = "Ez nexweş im",
+            Body = @"Ez nexweş im gewra minê
+                    Îro min go were ser min... ay…
+                    Gewra minê min go wez nexweş im
+                    De were ser min
+                    Tuyê taya lihêfê rake vê êvarê rex û têkev ber min
+                    Ax… çi ferman e bira oy…
+
+                    Bextê te me gava gundî û cîran bêjin ew kî bû ew kî nebû
+                    Ezê bêjim Hekîmê Loqman bû hate ser min limin...
+                    Ez xirabmal im yeman,
+                                ez bendewar im yeman
+                    Eva serê çend û çend salên min temam
+                    Min terka welatê xwe da
+                    Ez perîşan im bira… ax çi ferman e dilo",
+            UserId = userId,
+            Slugs = new List<LyricSlug>
+            {
+              new LyricSlug
+              {
+                Name = "ez-nexwes-im",
+                CreatedAt = DateTime.UtcNow,
+                IsPrimary = true
+              }
+            },
+            CreatedAt = DateTime.UtcNow,
+            IsApproved = true
+          };
 
           if (!context.Artists.Any())
           {
@@ -53,8 +86,9 @@ namespace Bejebeje.DataAccess.Data
               },
               IsApproved = true,
               ImageUrl = "https://placehold.it/100x100",
-              UserId = "eb600251-1fdd-4c2e-bee0-a9dca87a271a",
-              CreatedAt = DateTime.UtcNow
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Lyrics = new List<Lyric> { ezNexwesim }
             };
 
             Artist hesenzirek = new Artist
@@ -78,7 +112,7 @@ namespace Bejebeje.DataAccess.Data
               },
               IsApproved = true,
               ImageUrl = "https://placehold.it/100x100",
-              UserId = "eb600251-1fdd-4c2e-bee0-a9dca87a271a",
+              UserId = userId,
               CreatedAt = DateTime.UtcNow
             };
 
@@ -103,7 +137,7 @@ namespace Bejebeje.DataAccess.Data
               },
               IsApproved = true,
               ImageUrl = "https://placehold.it/100x100",
-              UserId = "eb600251-1fdd-4c2e-bee0-a9dca87a271a",
+              UserId = userId,
               CreatedAt = DateTime.UtcNow
             };
 
@@ -122,7 +156,7 @@ namespace Bejebeje.DataAccess.Data
               },
               IsApproved = true,
               ImageUrl = "https://placehold.it/100x100",
-              UserId = "eb600251-1fdd-4c2e-bee0-a9dca87a271a",
+              UserId = userId,
               CreatedAt = DateTime.UtcNow
             };
 
