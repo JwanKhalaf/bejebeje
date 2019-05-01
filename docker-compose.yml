@@ -4,11 +4,9 @@ services:
   bejebeje-api:
     build:
       context: .
-      args:
-        - aspnetcore_urls=http://*5005
+      dockerfile: ./Bejebeje.Api/Dockerfile
       labels:
         com.bejebeje.description: "Bejebeje's API"
-      dockerfile: ./Bejebeje.Api/Dockerfile
     image: bejebeje-api:latest
     ports:
       - "5005:5005"
