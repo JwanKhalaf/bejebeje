@@ -6,7 +6,7 @@ services:
       context: .
       labels:
         com.bejebeje.description: "Bejebeje's API"
-      dockerfile: /Bejebeje.Api/Dockerfile
+      dockerfile: ./Bejebeje.Api/Dockerfile
     image: bejebeje-api:latest
     ports:
       - "5005:5005"

@@ -8,13 +8,19 @@ FROM microsoft/dotnet:2.2-sdk AS build-env
 # instructions that follows the WORKDIR instruction.
 WORKDIR /app
 
-# again, remember, our current working directory within the container is /app
+RUN pwd
+
+# our current working directory within the container is /app
 # we now copy all the files (from local machine) to /app (in the container).
 COPY . ./
 
-# and again, on the container (we are in /app folder)
+RUN ls -la
+
+# again, on the container (we are in /app folder)
 # we now publish the project into a folder called 'out'.
-RUN dotnet publish Bejebeje.Api.csproj -c Release -o out
+RUN dotnet publish Bejebeje.Api/Bejebeje.Api.csproj -c Release -o out
+
+RUN ls -la
 
 # set base image as the dotnet 2.2 runtime.
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
@@ -28,7 +34,7 @@ WORKDIR /app
 
 # copy the contents of /app/out in the `build-env` and paste it in the
 # `/app` directory of the new runtime container.
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/Bejebeje.Api/out .
 
 # set the entry point into the application.
-ENTRYPOINT ["dotnet", "Bejebeje.Api.dll"]
+ENTRYPOINT ["dotnet", "Bejebeje.Api.dll", "-seed"]
