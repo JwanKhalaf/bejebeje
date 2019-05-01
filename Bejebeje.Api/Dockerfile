@@ -16,14 +16,8 @@ RUN dotnet publish Bejebeje.Api/Bejebeje.Api.csproj -c Release -o out
 # set base image as the dotnet 2.2 runtime.
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 
-# local variable
-ARG APP_PORT
-
-# temporary test to make sure the variable is coming through.
-RUN echo "ASPNETCORE_URLS -> $APP_PORT"
-
 # telling the application what port to run on.
-ENV ASPNETCORE_URLS=$APP_PORT
+ENV ASPNETCORE_URLS=http://*:5005
 
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
 # instructions that follows the WORKDIR instruction.
