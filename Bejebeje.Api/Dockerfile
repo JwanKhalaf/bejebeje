@@ -1,6 +1,3 @@
-# local variable
-ARG ASPNETCORE_URLS=http://*5005
-
 # set base image as the dotnet 2.2 SDK.
 FROM microsoft/dotnet:2.2-sdk AS build-env
 
@@ -8,25 +5,22 @@ FROM microsoft/dotnet:2.2-sdk AS build-env
 # instructions that follows the WORKDIR instruction.
 WORKDIR /app
 
-RUN pwd
-
 # our current working directory within the container is /app
 # we now copy all the files (from local machine) to /app (in the container).
 COPY . ./
-
-RUN ls -la
 
 # again, on the container (we are in /app folder)
 # we now publish the project into a folder called 'out'.
 RUN dotnet publish Bejebeje.Api/Bejebeje.Api.csproj -c Release -o out
 
-RUN ls -la
-
 # set base image as the dotnet 2.2 runtime.
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 
+# local variable
+ARG aspnetcore_urls
+
 # telling the application what port to run on.
-ENV ASPNETCORE_URLS=$ASPNETCORE_URLS
+ENV ASPNETCORE_URLS=$aspnetcore_urls
 
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
 # instructions that follows the WORKDIR instruction.
