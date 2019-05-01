@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  bejebeje-api:
+    build:
+      context: .
+      dockerfile: ./Bejebeje.Api/Dockerfile
+      labels:
+        com.bejebeje.description: "Bejebeje's API"
+    image: bejebeje-api:latest
+    ports:
+      - "5005:5005"
+    env_file:
+      - ./variables.env
+    depends_on:
+      - database
+  database:
+    image: postgres
+    ports:
+      - "8002:5432"
+    volumes:
+      - data-volume:/var/lib/postgresql/data
+    env_file:
+      - ./variables.env
+
+volumes:
+  data-volume:
