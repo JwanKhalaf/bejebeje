@@ -5,15 +5,15 @@ dist: xenial
 dotnet: 2.2
 branches:
   only:
-    - master
-    - develop
-    - feature/travis-ci
+  - master
+  - develop
+  - feature/travis-ci
 before_script:
-  - chmod -R a+x scripts
+- chmod -R a+x scripts
 script:
-  - ./scripts/docker-publish-travis.sh
+- "./scripts/docker-publish-travis.sh"
 after_success:
-  - ./scripts/after-success.sh
+- "./scripts/after-success.sh"
 notifications:
   email:
     on_success: never
