@@ -4,16 +4,16 @@ DOCKER_TAG='latest'
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
 # build the docker image.
-docker build -f ./Bejebeje.Identity/Dockerfile -t bejebeje/identity:$DOCKER_TAG -t bejebeje/identity:$TRAVIS_BUILD_NUMBER ./Bejebeje.Identity --no-cache
+docker build -f ./Dockerfile -t bejebeje/api:$DOCKER_TAG -t bejebeje/api:$TRAVIS_BUILD_NUMBER . --no-cache
 
 # tag the docker image with latest.
-docker tag bejebeje/identity:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/identity:$DOCKER_TAG
+docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$DOCKER_TAG
 
 # tag the docker image with build number.
-docker tag bejebeje/identity:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/identity:$TRAVIS_BUILD_NUMBER
+docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$TRAVIS_BUILD_NUMBER
 
 # push the docker image (tagged latest) to docker hub.
-docker push bejebeje/identity:$DOCKER_TAG
+docker push bejebeje/api:$DOCKER_TAG
 
 # push the docker image (tagged with build number) to docker hub.
-docker push bejebeje/identity:$TRAVIS_BUILD_NUMBER
+docker push bejebeje/api:$TRAVIS_BUILD_NUMBER
