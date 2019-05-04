@@ -4,7 +4,6 @@
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Mvc;
 
-  [Route("[controller]")]
   [ApiController]
   public class LyricsController : ControllerBase
   {
@@ -15,6 +14,7 @@
       this.lyricsService = lyricsService;
     }
 
+    [Route("artists/{artistSlug}/[controller]")]
     [HttpGet]
     public IActionResult Get(string artistSlug)
     {
