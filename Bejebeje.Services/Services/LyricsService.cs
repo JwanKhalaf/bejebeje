@@ -2,6 +2,7 @@
 {
   using System.Collections.Generic;
   using System.Linq;
+  using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
@@ -18,21 +19,21 @@
       this.context = context;
     }
 
-    public IList<LyricCardViewModel> GetLyricsByArtistSlug(string artistSlug)
+    public async Task<IList<LyricCardViewModel>> GetLyricsByArtistSlugAsync(string artistSlug)
     {
-      int artistId = context
+      int artistId = await context
         .Artists
         .AsNoTracking()
         .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
         .Select(x => x.Id)
-        .FirstOrDefault();
+        .FirstOrDefaultAsync();
 
       if (artistId == 0)
       {
         throw new ArtistNotFoundException(artistSlug);
       }
 
-      List<LyricCardViewModel> lyrics = context
+      List<LyricCardViewModel> lyrics = await context
         .Lyrics
         .AsNoTracking()
         .Where(l => l.ArtistId == artistId)
@@ -41,7 +42,7 @@
           Title = l.Title,
           Slug = l.Slugs.Where(s => s.IsPrimary).Select(s => s.Name).Single()
         })
-        .ToList();
+        .ToListAsync();
 
       return lyrics;
     }

@@ -1,6 +1,7 @@
 ﻿namespace Bejebeje.Api.Controllers
 {
   using System;
+  using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.Services.Services.Interfaces;
@@ -24,7 +25,7 @@
 
     [Route("artists/{artistSlug}/[controller]")]
     [HttpGet]
-    public IActionResult Get(string artistSlug)
+    public async Task<IActionResult> Get(string artistSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
       {
@@ -33,7 +34,7 @@
 
       try
       {
-        var lyrics = lyricsService.GetLyricsByArtistSlug(artistSlug);
+        var lyrics = await lyricsService.GetLyricsByArtistSlugAsync(artistSlug);
         return Ok(lyrics);
       }
       catch (ArtistNotFoundException exception)
