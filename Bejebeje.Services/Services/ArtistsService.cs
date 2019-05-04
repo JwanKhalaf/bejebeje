@@ -2,6 +2,7 @@
 {
   using System.Collections.Generic;
   using System.Linq;
+  using System.Threading.Tasks;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Artist;
@@ -16,9 +17,9 @@
       this.context = context;
     }
 
-    public IList<ArtistCardViewModel> GetArtists()
+    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync()
     {
-      List<ArtistCardViewModel> artistCards = context
+      List<ArtistCardViewModel> artistCards = await context
       .Artists
       .AsNoTracking()
       .Select(x => new ArtistCardViewModel
@@ -28,7 +29,7 @@
         Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
         ImageUrl = x.ImageUrl
       })
-      .ToList();
+      .ToListAsync();
 
       return artistCards;
     }

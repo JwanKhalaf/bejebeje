@@ -1,5 +1,6 @@
 ﻿namespace Bejebeje.Api.Controllers
 {
+  using System.Threading.Tasks;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,9 @@
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-      var artists = artistsService.GetArtists();
+      var artists = await artistsService.GetArtistsAsync();
       return Ok(artists);
     }
   }
