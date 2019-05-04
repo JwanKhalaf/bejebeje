@@ -18,7 +18,10 @@
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-      var artists = await artistsService.GetArtistsAsync();
+      var artists = await artistsService
+        .GetArtistsAsync()
+        .ConfigureAwait(false);
+
       return Ok(artists);
     }
   }

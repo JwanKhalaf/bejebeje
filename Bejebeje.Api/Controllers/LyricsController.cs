@@ -36,7 +36,9 @@
 
       try
       {
-        IList<LyricCardViewModel> lyrics = await lyricsService.GetLyricsByArtistSlugAsync(artistSlug);
+        IList<LyricCardViewModel> lyrics = await lyricsService
+          .GetLyricsByArtistSlugAsync(artistSlug)
+          .ConfigureAwait(false);
 
         return Ok(lyrics);
       }
