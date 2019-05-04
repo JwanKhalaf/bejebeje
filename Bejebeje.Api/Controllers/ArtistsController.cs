@@ -17,8 +17,8 @@
     [HttpGet]
     public IActionResult Get()
     {
-      var artistCards = artistsService.GetArtistCards();
-      return Ok(artistCards);
+      var artists = artistsService.GetArtists();
+      return Ok(artists);
     }
   }
 }

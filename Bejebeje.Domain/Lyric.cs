@@ -23,5 +23,7 @@
     public bool IsDeleted { get; set; }
 
     public bool IsApproved { get; set; }
+
+    public int ArtistId { get; set; }
   }
 }

@@ -16,5 +16,7 @@
     public DateTime ModifiedAt { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public int LyricId { get; set; }
   }
 }

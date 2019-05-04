@@ -16,7 +16,7 @@
       this.context = context;
     }
 
-    public IList<ArtistCardViewModel> GetArtistCards()
+    public IList<ArtistCardViewModel> GetArtists()
     {
       List<ArtistCardViewModel> artistCards = context
       .Artists
