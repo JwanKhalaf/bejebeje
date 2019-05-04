@@ -1,9 +1,11 @@
-﻿namespace Bejebeje.Services.Services.Interfaces
+﻿namespace Bejebeje.Services.Services
 {
   using System.Collections.Generic;
   using System.Linq;
+  using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Lyric;
   using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +25,12 @@
         .AsNoTracking()
         .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
         .Select(x => x.Id)
-        .Single();
+        .FirstOrDefault();
+
+      if (artistId == 0)
+      {
+        throw new ArtistNotFoundException(artistSlug);
+      }
 
       List<LyricCardViewModel> lyrics = context
         .Lyrics
