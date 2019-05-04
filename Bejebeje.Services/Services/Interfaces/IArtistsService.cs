@@ -5,6 +5,6 @@
 
   public interface IArtistsService
   {
-    IList<ArtistCardViewModel> GetArtistCards();
+    IList<ArtistCardViewModel> GetArtists();
   }
 }
