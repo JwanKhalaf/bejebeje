@@ -1,10 +1,12 @@
 ﻿namespace Bejebeje.Api.Controllers
 {
   using System;
+  using System.Collections.Generic;
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.Services.Services.Interfaces;
+  using Bejebeje.ViewModels.Lyric;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
 
@@ -34,7 +36,8 @@
 
       try
       {
-        var lyrics = await lyricsService.GetLyricsByArtistSlugAsync(artistSlug);
+        IList<LyricCardViewModel> lyrics = await lyricsService.GetLyricsByArtistSlugAsync(artistSlug);
+
         return Ok(lyrics);
       }
       catch (ArtistNotFoundException exception)
