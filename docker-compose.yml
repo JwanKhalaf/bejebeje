@@ -9,7 +9,7 @@ services:
         com.bejebeje.description: "Bejebeje's API"
     image: bejebeje-api:latest
     ports:
-      - "5005:5005"
+      - "5010:5005"
     env_file:
       - ./variables.env
     depends_on:
