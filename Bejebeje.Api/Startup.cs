@@ -64,6 +64,9 @@
         .AddScoped<IArtistsService, ArtistsService>();
 
       services
+        .AddScoped<ILyricsService, LyricsService>();
+
+      services
         .AddMvc()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -94,6 +97,7 @@
         app.UseHsts();
       }
 
+      app.UseCors("default");
       app.UseAuthentication();
       app.UseHttpsRedirection();
       app.UseMvc();

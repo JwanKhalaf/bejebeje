@@ -16,5 +16,7 @@
     public DateTime ModifiedAt { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public int ArtistId { get; set; }
   }
 }

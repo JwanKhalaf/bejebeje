@@ -1,9 +1,10 @@
 ﻿namespace Bejebeje.Api.Controllers
 {
+  using System.Threading.Tasks;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Mvc;
 
-  [Route("api/[controller]")]
+  [Route("[controller]")]
   [ApiController]
   public class ArtistsController : ControllerBase
   {
@@ -15,10 +16,13 @@
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-      var artistCards = artistsService.GetArtistCards();
-      return Ok(artistCards);
+      var artists = await artistsService
+        .GetArtistsAsync()
+        .ConfigureAwait(false);
+
+      return Ok(artists);
     }
   }
 }

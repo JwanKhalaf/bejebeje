@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bejebeje.DataAccess.Migrations
 {
     [DbContext(typeof(BbContext))]
-    [Migration("20190426231332_InitialCreate")]
+    [Migration("20190504084349_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,7 +63,7 @@ namespace Bejebeje.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ArtistId")
+                    b.Property<int>("ArtistId")
                         .HasColumnName("artist_id");
 
                     b.Property<DateTime>("CreatedAt")
@@ -96,7 +96,7 @@ namespace Bejebeje.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
-                    b.Property<int?>("ArtistId")
+                    b.Property<int>("ArtistId")
                         .HasColumnName("artist_id");
 
                     b.Property<string>("Body")
@@ -144,7 +144,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<bool>("IsPrimary")
                         .HasColumnName("is_primary");
 
-                    b.Property<int?>("LyricId")
+                    b.Property<int>("LyricId")
                         .HasColumnName("lyric_id");
 
                     b.Property<DateTime>("ModifiedAt")
@@ -167,7 +167,8 @@ namespace Bejebeje.DataAccess.Migrations
                     b.HasOne("Bejebeje.Domain.Artist")
                         .WithMany("Slugs")
                         .HasForeignKey("ArtistId")
-                        .HasConstraintName("fk_artist_slug_artists_artist_id");
+                        .HasConstraintName("fk_artist_slug_artists_artist_id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
@@ -175,7 +176,8 @@ namespace Bejebeje.DataAccess.Migrations
                     b.HasOne("Bejebeje.Domain.Artist")
                         .WithMany("Lyrics")
                         .HasForeignKey("ArtistId")
-                        .HasConstraintName("fk_lyrics_artists_artist_id");
+                        .HasConstraintName("fk_lyrics_artists_artist_id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
@@ -183,7 +185,8 @@ namespace Bejebeje.DataAccess.Migrations
                     b.HasOne("Bejebeje.Domain.Lyric")
                         .WithMany("Slugs")
                         .HasForeignKey("LyricId")
-                        .HasConstraintName("fk_lyric_slugs_lyrics_lyric_id");
+                        .HasConstraintName("fk_lyric_slugs_lyrics_lyric_id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

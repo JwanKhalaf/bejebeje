@@ -24,6 +24,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+variables.env
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 .vscode/
@@ -330,3 +332,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+deploy_key
