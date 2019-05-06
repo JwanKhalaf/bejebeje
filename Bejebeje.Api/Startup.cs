@@ -97,6 +97,7 @@
         app.UseHsts();
       }
 
+      app.UseCors("default");
       app.UseAuthentication();
       app.UseHttpsRedirection();
       app.UseMvc();
