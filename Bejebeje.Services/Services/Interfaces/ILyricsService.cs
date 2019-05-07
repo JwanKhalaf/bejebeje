@@ -6,6 +6,8 @@
 
   public interface ILyricsService
   {
-    Task<IList<LyricCardViewModel>> GetLyricsByArtistSlugAsync(string artistSlug);
+    Task<IList<LyricCardViewModel>> GetLyricsAsync(string artistSlug);
+
+    Task<LyricViewModel> GetLyricAsync(string artistSlug, string lyricSlug);
   }
 }
