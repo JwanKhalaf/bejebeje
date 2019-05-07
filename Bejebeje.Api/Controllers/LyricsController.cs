@@ -37,7 +37,7 @@
       try
       {
         IList<LyricCardViewModel> lyrics = await lyricsService
-          .GetLyricsByArtistSlugAsync(artistSlug)
+          .GetLyricsAsync(artistSlug)
           .ConfigureAwait(false);
 
         return Ok(lyrics);
@@ -45,6 +45,42 @@
       catch (ArtistNotFoundException exception)
       {
         logger.LogError($"The requested artist was not found. {exception.ToLogData()}");
+
+        return NotFound();
+      }
+    }
+
+    [Route("artists/{artistSlug}/[controller]/{lyricSlug}")]
+    [HttpGet]
+    public async Task<IActionResult> Get(string artistSlug, string lyricSlug)
+    {
+      if (string.IsNullOrEmpty(artistSlug))
+      {
+        throw new ArgumentException("Missing artist slug", nameof(artistSlug));
+      }
+
+      if (string.IsNullOrEmpty(lyricSlug))
+      {
+        throw new ArgumentException("Missing lyric slug", nameof(lyricSlug));
+      }
+
+      try
+      {
+        LyricViewModel lyric = await lyricsService
+          .GetLyricAsync(artistSlug, lyricSlug)
+          .ConfigureAwait(false);
+
+        return Ok(lyric);
+      }
+      catch (ArtistNotFoundException exception)
+      {
+        logger.LogError($"The requested artist was not found. {exception.ToLogData()}");
+
+        return NotFound();
+      }
+      catch (LyricNotFoundException exception)
+      {
+        logger.LogError($"The requested lyric was not found. {exception.ToLogData()}");
 
         return NotFound();
       }
