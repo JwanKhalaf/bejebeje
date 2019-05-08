@@ -93,7 +93,7 @@ namespace Bejebeje.DataAccess.Data
               {
                 new ArtistSlug
                 {
-                  Name = "tnt",
+                  Name = "acdc",
                   CreatedAt = DateTime.UtcNow,
                   IsPrimary = true
                 }
