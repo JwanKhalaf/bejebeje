@@ -38,29 +38,43 @@ namespace Bejebeje.DataAccess.Data
 
           context.Database.Migrate();
 
-          var ezNexwesim = new Lyric
+          var tnt = new Lyric
           {
-            Title = "Ez nexweş im",
-            Body = @"Ez nexweş im gewra minê
-                    Îro min go were ser min... ay…
-                    Gewra minê min go wez nexweş im
-                    De were ser min
-                    Tuyê taya lihêfê rake vê êvarê rex û têkev ber min
-                    Ax… çi ferman e bira oy…
-
-                    Bextê te me gava gundî û cîran bêjin ew kî bû ew kî nebû
-                    Ezê bêjim Hekîmê Loqman bû hate ser min limin...
-                    Ez xirabmal im yeman,
-                                ez bendewar im yeman
-                    Eva serê çend û çend salên min temam
-                    Min terka welatê xwe da
-                    Ez perîşan im bira… ax çi ferman e dilo",
+            Title = "TNT",
+            Body = @"Oi, oi, oi
+                    Oi, oi, oi
+                    Oi, oi, oi
+                    Oi, oi, oi
+                    Oi, oi, oi
+                    See me ride out of the sunset
+                    On your color TV screen
+                    Out for all that I can get
+                    If you know what I mean
+                    Women to the left of me
+                    And women to the right
+                    Ain't got no gun
+                    Ain't got no knife
+                    Don't you start no fight
+                    'Cause I'm T.N.T. I'm dynamite
+                    T.N.T. and I'll win the fight
+                    T.N.T. I'm a power load
+                    T.N.T. watch me explode
+                    I'm dirty, mean and mighty unclean
+                    I'm a wanted man
+                    Public enemy number one
+                    Understand
+                    So lock up your daughter
+                    Lock up your wife
+                    Lock up your back door
+                    And run for your life
+                    The man is back in town
+                    Don't you mess me 'round",
             UserId = userId,
             Slugs = new List<LyricSlug>
             {
               new LyricSlug
               {
-                Name = "ez-nexwes-im",
+                Name = "tnt",
                 CreatedAt = DateTime.UtcNow,
                 IsPrimary = true
               }
@@ -71,15 +85,15 @@ namespace Bejebeje.DataAccess.Data
 
           if (!context.Artists.Any())
           {
-            Artist sivanPerwer = new Artist
+            Artist acdc = new Artist
             {
-              FirstName = "Şivan",
-              LastName = "Perwer",
+              FirstName = "AC/DC",
+              LastName = string.Empty,
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
                 {
-                  Name = "sivan-perwer",
+                  Name = "tnt",
                   CreatedAt = DateTime.UtcNow,
                   IsPrimary = true
                 }
@@ -88,68 +102,18 @@ namespace Bejebeje.DataAccess.Data
               ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Lyrics = new List<Lyric> { ezNexwesim }
+              Lyrics = new List<Lyric> { tnt }
             };
 
-            Artist hesenzirek = new Artist
+            Artist bbKing = new Artist
             {
-              FirstName = "Hesen",
-              LastName = "Zîrek",
+              FirstName = "BB",
+              LastName = "King",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
                 {
-                  Name = "hesen-zirek",
-                  CreatedAt = DateTime.UtcNow,
-                  IsPrimary = true
-                },
-                new ArtistSlug
-                {
-                  Name = "hasan-zirak",
-                  CreatedAt = DateTime.UtcNow,
-                  IsPrimary = false
-                }
-              },
-              IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
-              UserId = userId,
-              CreatedAt = DateTime.UtcNow
-            };
-
-            Artist nasirRezazi = new Artist
-            {
-              FirstName = "Nasir",
-              LastName = "Rezazî",
-              Slugs = new List<ArtistSlug>
-              {
-                new ArtistSlug
-                {
-                  Name = "nasir-rezazi",
-                  CreatedAt = DateTime.UtcNow,
-                  IsPrimary = true
-                },
-                new ArtistSlug
-                {
-                  Name = "naser-razazi",
-                  CreatedAt = DateTime.UtcNow,
-                  IsPrimary = false
-                }
-              },
-              IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
-              UserId = userId,
-              CreatedAt = DateTime.UtcNow
-            };
-
-            Artist ciwanHaco = new Artist
-            {
-              FirstName = "Ciwan",
-              LastName = "Haco",
-              Slugs = new List<ArtistSlug>
-              {
-                new ArtistSlug
-                {
-                  Name = "ciwan-haco",
+                  Name = "bb-king",
                   CreatedAt = DateTime.UtcNow,
                   IsPrimary = true
                 }
@@ -160,10 +124,48 @@ namespace Bejebeje.DataAccess.Data
               CreatedAt = DateTime.UtcNow
             };
 
-            context.Artists.Add(sivanPerwer);
-            context.Artists.Add(hesenzirek);
-            context.Artists.Add(nasirRezazi);
-            context.Artists.Add(ciwanHaco);
+            Artist damianMarley = new Artist
+            {
+              FirstName = "Damian",
+              LastName = "Marley",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "damian-marley",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              ImageUrl = "https://placehold.it/100x100",
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow
+            };
+
+            Artist canaanSmith = new Artist
+            {
+              FirstName = "Canaan",
+              LastName = "Smith",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "canaan-smith",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              ImageUrl = "https://placehold.it/100x100",
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow
+            };
+
+            context.Artists.Add(acdc);
+            context.Artists.Add(bbKing);
+            context.Artists.Add(damianMarley);
+            context.Artists.Add(canaanSmith);
 
             context.SaveChanges();
           }
