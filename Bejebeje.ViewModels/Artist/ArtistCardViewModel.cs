@@ -6,7 +6,7 @@
 
     public string LastName { get; set; }
 
-    public string ImageUrl { get; set; }
+    public int ImageId { get; set; }
 
     public string Slug { get; set; }
   }

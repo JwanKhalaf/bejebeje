@@ -3,189 +3,224 @@ using System;
 using Bejebeje.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Bejebeje.DataAccess.Migrations
 {
-  [DbContext(typeof(BbContext))]
-  partial class BbContextModelSnapshot : ModelSnapshot
-  {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    [DbContext(typeof(BbContext))]
+    partial class BbContextModelSnapshot : ModelSnapshot
     {
+        protected override void BuildModel(ModelBuilder modelBuilder)
+        {
 #pragma warning disable 612, 618
-      modelBuilder
-          .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-          .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
-          .HasAnnotation("Relational:MaxIdentifierLength", 63);
+            modelBuilder
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-      modelBuilder.Entity("Bejebeje.Domain.Artist", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+            modelBuilder.Entity("Bejebeje.Domain.Artist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
-            b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at");
 
-            b.Property<string>("FirstName")
-                      .HasColumnName("first_name");
+                    b.Property<string>("FirstName")
+                        .HasColumnName("first_name");
 
-            b.Property<string>("ImageUrl")
-                      .HasColumnName("image_url");
+                    b.Property<bool>("IsApproved")
+                        .HasColumnName("is_approved");
 
-            b.Property<bool>("IsApproved")
-                      .HasColumnName("is_approved");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnName("is_deleted");
 
-            b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                    b.Property<string>("LastName")
+                        .HasColumnName("last_name");
 
-            b.Property<string>("LastName")
-                      .HasColumnName("last_name");
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnName("modified_at");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+                    b.Property<string>("UserId")
+                        .HasColumnName("user_id");
 
-            b.Property<string>("UserId")
-                      .HasColumnName("user_id");
+                    b.HasKey("Id")
+                        .HasName("pk_artists");
 
-            b.HasKey("Id")
-                      .HasName("pk_artists");
+                    b.ToTable("artists");
+                });
 
-            b.ToTable("artists");
-          });
+            modelBuilder.Entity("Bejebeje.Domain.ArtistImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
-      modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+                    b.Property<int>("ArtistId")
+                        .HasColumnName("artist_id");
 
-            b.Property<int>("ArtistId")
-                      .HasColumnName("artist_id");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at");
 
-            b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                    b.Property<byte[]>("Data")
+                        .HasColumnName("data");
 
-            b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnName("modified_at");
 
-            b.Property<bool>("IsPrimary")
-                      .HasColumnName("is_primary");
+                    b.HasKey("Id")
+                        .HasName("pk_artist_images");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+                    b.HasIndex("ArtistId")
+                        .IsUnique()
+                        .HasName("ix_artist_images_artist_id");
 
-            b.Property<string>("Name")
-                      .HasColumnName("name");
+                    b.ToTable("artist_images");
+                });
 
-            b.HasKey("Id")
-                      .HasName("pk_artist_slug");
+            modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
-            b.HasIndex("ArtistId")
-                      .HasName("ix_artist_slug_artist_id");
+                    b.Property<int>("ArtistId")
+                        .HasColumnName("artist_id");
 
-            b.ToTable("artist_slug");
-          });
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at");
 
-      modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnName("is_deleted");
 
-            b.Property<int>("ArtistId")
-                      .HasColumnName("artist_id");
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnName("is_primary");
 
-            b.Property<string>("Body")
-                      .HasColumnName("body");
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnName("modified_at");
 
-            b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                    b.Property<string>("Name")
+                        .HasColumnName("name");
 
-            b.Property<bool>("IsApproved")
-                      .HasColumnName("is_approved");
+                    b.HasKey("Id")
+                        .HasName("pk_artist_slug");
 
-            b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                    b.HasIndex("ArtistId")
+                        .HasName("ix_artist_slug_artist_id");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+                    b.ToTable("artist_slug");
+                });
 
-            b.Property<string>("Title")
-                      .HasColumnName("title");
+            modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
-            b.Property<string>("UserId")
-                      .HasColumnName("user_id");
+                    b.Property<int>("ArtistId")
+                        .HasColumnName("artist_id");
 
-            b.HasKey("Id")
-                      .HasName("pk_lyrics");
+                    b.Property<string>("Body")
+                        .HasColumnName("body");
 
-            b.HasIndex("ArtistId")
-                      .HasName("ix_lyrics_artist_id");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at");
 
-            b.ToTable("lyrics");
-          });
+                    b.Property<bool>("IsApproved")
+                        .HasColumnName("is_approved");
 
-      modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
-          {
-            b.Property<int>("Id")
-                      .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnName("is_deleted");
 
-            b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnName("modified_at");
 
-            b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                    b.Property<string>("Title")
+                        .HasColumnName("title");
 
-            b.Property<bool>("IsPrimary")
-                      .HasColumnName("is_primary");
+                    b.Property<string>("UserId")
+                        .HasColumnName("user_id");
 
-            b.Property<int>("LyricId")
-                      .HasColumnName("lyric_id");
+                    b.HasKey("Id")
+                        .HasName("pk_lyrics");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+                    b.HasIndex("ArtistId")
+                        .HasName("ix_lyrics_artist_id");
 
-            b.Property<string>("Name")
-                      .HasColumnName("name");
+                    b.ToTable("lyrics");
+                });
 
-            b.HasKey("Id")
-                      .HasName("pk_lyric_slugs");
+            modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
 
-            b.HasIndex("LyricId")
-                      .HasName("ix_lyric_slugs_lyric_id");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at");
 
-            b.ToTable("lyric_slugs");
-          });
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnName("is_deleted");
 
-      modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
-          {
-            b.HasOne("Bejebeje.Domain.Artist")
-                      .WithMany("Slugs")
-                      .HasForeignKey("ArtistId")
-                      .HasConstraintName("fk_artist_slug_artists_artist_id")
-                      .OnDelete(DeleteBehavior.Cascade);
-          });
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnName("is_primary");
 
-      modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
-          {
-            b.HasOne("Bejebeje.Domain.Artist")
-                      .WithMany("Lyrics")
-                      .HasForeignKey("ArtistId")
-                      .HasConstraintName("fk_lyrics_artists_artist_id")
-                      .OnDelete(DeleteBehavior.Cascade);
-          });
+                    b.Property<int>("LyricId")
+                        .HasColumnName("lyric_id");
 
-      modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
-          {
-            b.HasOne("Bejebeje.Domain.Lyric")
-                      .WithMany("Slugs")
-                      .HasForeignKey("LyricId")
-                      .HasConstraintName("fk_lyric_slugs_lyrics_lyric_id")
-                      .OnDelete(DeleteBehavior.Cascade);
-          });
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnName("modified_at");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_lyric_slugs");
+
+                    b.HasIndex("LyricId")
+                        .HasName("ix_lyric_slugs_lyric_id");
+
+                    b.ToTable("lyric_slugs");
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.ArtistImage", b =>
+                {
+                    b.HasOne("Bejebeje.Domain.Artist", "Artist")
+                        .WithOne("Image")
+                        .HasForeignKey("Bejebeje.Domain.ArtistImage", "ArtistId")
+                        .HasConstraintName("fk_artist_images_artists_artist_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
+                {
+                    b.HasOne("Bejebeje.Domain.Artist")
+                        .WithMany("Slugs")
+                        .HasForeignKey("ArtistId")
+                        .HasConstraintName("fk_artist_slug_artists_artist_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
+                {
+                    b.HasOne("Bejebeje.Domain.Artist")
+                        .WithMany("Lyrics")
+                        .HasForeignKey("ArtistId")
+                        .HasConstraintName("fk_lyrics_artists_artist_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
+                {
+                    b.HasOne("Bejebeje.Domain.Lyric")
+                        .WithMany("Slugs")
+                        .HasForeignKey("LyricId")
+                        .HasConstraintName("fk_lyric_slugs_lyrics_lyric_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 #pragma warning restore 612, 618
+        }
     }
-  }
 }

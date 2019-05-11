@@ -67,6 +67,9 @@
         .AddScoped<ILyricsService, LyricsService>();
 
       services
+        .AddScoped<IImagesService, ImagesService>();
+
+      services
         .AddMvc()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

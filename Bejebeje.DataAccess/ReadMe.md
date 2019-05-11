@@ -4,7 +4,7 @@ In Bash, you run: export ASPNETCORE_ENVIRONMENT=Development
 
 # Create New Migration
 
-dotnet ef migrations --project Bejebeje.DataAccess --startup-project Bejebeje.Api add NewMigrationName
+dotnet ef migrations --project Bejebeje.DataAccess --startup-project Bejebeje.Api add InitialCreate
 
 # Update Database
 

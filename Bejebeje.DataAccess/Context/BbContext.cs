@@ -20,9 +20,16 @@
 
     public DbSet<LyricSlug> LyricSlugs { get; set; }
 
+    public DbSet<ArtistImage> ArtistImages { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
       base.OnModelCreating(builder);
+
+      builder.Entity<Artist>()
+            .HasOne(a => a.Image)
+            .WithOne(a => a.Artist)
+            .HasForeignKey<ArtistImage>(ai => ai.ArtistId);
 
       foreach (IMutableEntityType entity in builder.Model.GetEntityTypes())
       {

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bejebeje.DataAccess.Migrations
 {
     [DbContext(typeof(BbContext))]
-    [Migration("20190504084349_InitialCreate")]
+    [Migration("20190511151840_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,6 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnName("first_name");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnName("image_url");
-
                     b.Property<bool>("IsApproved")
                         .HasColumnName("is_approved");
 
@@ -55,6 +52,34 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasName("pk_artists");
 
                     b.ToTable("artists");
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.ArtistImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id");
+
+                    b.Property<int>("ArtistId")
+                        .HasColumnName("artist_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnName("created_at");
+
+                    b.Property<byte[]>("Data")
+                        .HasColumnName("data");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnName("modified_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_artist_images");
+
+                    b.HasIndex("ArtistId")
+                        .IsUnique()
+                        .HasName("ix_artist_images_artist_id");
+
+                    b.ToTable("artist_images");
                 });
 
             modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
@@ -160,6 +185,15 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasName("ix_lyric_slugs_lyric_id");
 
                     b.ToTable("lyric_slugs");
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.ArtistImage", b =>
+                {
+                    b.HasOne("Bejebeje.Domain.Artist", "Artist")
+                        .WithOne("Image")
+                        .HasForeignKey("Bejebeje.Domain.ArtistImage", "ArtistId")
+                        .HasConstraintName("fk_artist_images_artists_artist_id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>

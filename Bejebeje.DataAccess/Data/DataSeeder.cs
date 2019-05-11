@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Bejebeje.DataAccess.Configuration;
 using Bejebeje.DataAccess.Context;
@@ -38,7 +39,7 @@ namespace Bejebeje.DataAccess.Data
 
           context.Database.Migrate();
 
-          var tnt = new Lyric
+          Lyric tnt = new Lyric
           {
             Title = "TNT",
             Body = @"Oi, oi, oi
@@ -99,10 +100,10 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Lyrics = new List<Lyric> { tnt }
+              Lyrics = new List<Lyric> { tnt },
+              Image = GetImage("acdc.jpg")
             };
 
             Artist bbKing = new Artist
@@ -119,9 +120,9 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
-              CreatedAt = DateTime.UtcNow
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("bbking.jpg")
             };
 
             Artist damianMarley = new Artist
@@ -138,9 +139,9 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
-              CreatedAt = DateTime.UtcNow
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("damian-marley.jpg")
             };
 
             Artist canaanSmith = new Artist
@@ -157,9 +158,9 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
-              CreatedAt = DateTime.UtcNow
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("csmith.jpg")
             };
 
             context.Artists.Add(acdc);
@@ -175,6 +176,27 @@ namespace Bejebeje.DataAccess.Data
           }
         }
       }
+    }
+
+    private ArtistImage GetImage(string imageName)
+    {
+      string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+      string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
+
+      if (File.Exists(imageFilePath))
+      {
+        byte[] imagesBytes = File.ReadAllBytes(imageFilePath);
+
+        ArtistImage artistImage = new ArtistImage
+        {
+          Data = imagesBytes,
+          CreatedAt = DateTime.UtcNow
+        };
+
+        return artistImage;
+      }
+
+      return null;
     }
   }
 }

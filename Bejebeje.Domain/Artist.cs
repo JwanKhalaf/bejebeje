@@ -14,13 +14,13 @@
 
     public IEnumerable<ArtistSlug> Slugs { get; set; }
 
-    public string ImageUrl { get; set; }
-
     public bool IsApproved { get; set; }
 
     public string UserId { get; set; }
 
     public IEnumerable<Lyric> Lyrics { get; set; }
+
+    public ArtistImage Image { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
