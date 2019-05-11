@@ -22,7 +22,7 @@
 
     public ArtistImage Image { get; set; }
 
-    public int ImageId { get; set; }
+    public int? ImageId { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
