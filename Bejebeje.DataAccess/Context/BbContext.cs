@@ -20,7 +20,7 @@
 
     public DbSet<LyricSlug> LyricSlugs { get; set; }
 
-    public DbSet<ArtistImage> Images { get; set; }
+    public DbSet<ArtistImage> ArtistImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
