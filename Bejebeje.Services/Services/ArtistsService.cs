@@ -27,7 +27,7 @@
         FirstName = x.FirstName,
         LastName = x.LastName,
         Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
-        ImageId = x.Image.Id
+        ImageId = x.Image == null ? 0 : x.Image.Id
       })
       .ToListAsync();
 
