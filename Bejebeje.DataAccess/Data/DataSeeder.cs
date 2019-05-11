@@ -121,7 +121,8 @@ namespace Bejebeje.DataAccess.Data
               },
               IsApproved = true,
               UserId = userId,
-              CreatedAt = DateTime.UtcNow
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("bbking.jpg")
             };
 
             Artist damianMarley = new Artist
@@ -139,7 +140,8 @@ namespace Bejebeje.DataAccess.Data
               },
               IsApproved = true,
               UserId = userId,
-              CreatedAt = DateTime.UtcNow
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("damian-marley.jpg")
             };
 
             Artist canaanSmith = new Artist
@@ -157,7 +159,8 @@ namespace Bejebeje.DataAccess.Data
               },
               IsApproved = true,
               UserId = userId,
-              CreatedAt = DateTime.UtcNow
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("csmith.jpg")
             };
 
             context.Artists.Add(acdc);
