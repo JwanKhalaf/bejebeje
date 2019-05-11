@@ -14,4 +14,19 @@
     <ProjectReference Include="..\Bejebeje.Domain\Bejebeje.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\SeedImages\acdc.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\SeedImages\bbking.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\SeedImages\csmith.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\SeedImages\damian-marley.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

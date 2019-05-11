@@ -20,7 +20,7 @@
 
     public IEnumerable<Lyric> Lyrics { get; set; }
 
-    public Image Image { get; set; }
+    public ArtistImage Image { get; set; }
 
     public int ImageId { get; set; }
 

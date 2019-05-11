@@ -2,7 +2,7 @@
 {
   using System;
 
-  public class Image
+  public class ArtistImage
   {
     public int Id { get; set; }
 
