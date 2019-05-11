@@ -99,7 +99,6 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
               Lyrics = new List<Lyric> { tnt }
@@ -119,7 +118,6 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
               CreatedAt = DateTime.UtcNow
             };
@@ -138,7 +136,6 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
               CreatedAt = DateTime.UtcNow
             };
@@ -157,7 +154,6 @@ namespace Bejebeje.DataAccess.Data
                 }
               },
               IsApproved = true,
-              ImageUrl = "https://placehold.it/100x100",
               UserId = userId,
               CreatedAt = DateTime.UtcNow
             };
