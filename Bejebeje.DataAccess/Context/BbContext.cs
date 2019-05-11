@@ -26,6 +26,11 @@
     {
       base.OnModelCreating(builder);
 
+      builder.Entity<Artist>()
+            .HasOne(a => a.Image)
+            .WithOne(a => a.Artist)
+            .HasForeignKey<ArtistImage>(ai => ai.ArtistId);
+
       foreach (IMutableEntityType entity in builder.Model.GetEntityTypes())
       {
         // replace table names
