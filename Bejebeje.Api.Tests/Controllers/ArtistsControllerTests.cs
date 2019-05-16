@@ -91,5 +91,11 @@
       artists.First().ImageId.Should().Be(artistImageId);
       artists.First().Slug.Should().Be(artistSlug);
     }
+
+    [Test]
+    public void FailingTest_ForTravisCI_Testing()
+    {
+      Assert.Fail();
+    }
   }
 }
