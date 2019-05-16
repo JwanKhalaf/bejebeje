@@ -27,7 +27,7 @@
     {
       if (artistSlug == null)
       {
-        throw new ArgumentException(nameof(artistSlug));
+        throw new ArgumentNullException(nameof(artistSlug));
       }
 
       try

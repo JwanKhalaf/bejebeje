@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
@@ -26,5 +25,4 @@
     <ProjectReference Include="..\Bejebeje.ViewModels\Bejebeje.ViewModels.csproj" />
     <ProjectReference Include="..\Bejebeje.DataAccess\Bejebeje.DataAccess.csproj" />
   </ItemGroup>
-
 </Project>
