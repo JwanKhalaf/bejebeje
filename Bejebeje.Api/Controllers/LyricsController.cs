@@ -31,7 +31,7 @@
     {
       if (string.IsNullOrEmpty(artistSlug))
       {
-        throw new ArgumentException("Missing artist slug", nameof(artistSlug));
+        throw new ArgumentNullException("Missing artist slug", nameof(artistSlug));
       }
 
       try
