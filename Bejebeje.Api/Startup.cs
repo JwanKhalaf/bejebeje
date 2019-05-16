@@ -74,6 +74,9 @@
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
       services
+        .AddApiVersioning();
+
+      services
         .AddSwaggerGen(c =>
         {
           c.SwaggerDoc("v1", new Info { Title = "Bejebeje API", Version = "v1" });

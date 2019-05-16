@@ -25,7 +25,7 @@
       this.logger = logger;
     }
 
-    [Route("artists/{artistSlug}/[controller]")]
+    [Route("v{version:apiVersion}/artists/{artistSlug}/[controller]")]
     [HttpGet]
     public async Task<IActionResult> Get(string artistSlug)
     {
@@ -50,7 +50,7 @@
       }
     }
 
-    [Route("artists/{artistSlug}/[controller]/{lyricSlug}")]
+    [Route("v{version:apiVersion}/artists/{artistSlug}/[controller]/{lyricSlug}")]
     [HttpGet]
     public async Task<IActionResult> Get(string artistSlug, string lyricSlug)
     {
