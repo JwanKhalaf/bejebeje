@@ -22,7 +22,7 @@
       this.logger = logger;
     }
 
-    [Route("artists/{artistSlug}/image")]
+    [Route("v{version:apiVersion}/artists/{artistSlug}/image")]
     public async Task<IActionResult> Get(string artistSlug)
     {
       if (artistSlug == null)

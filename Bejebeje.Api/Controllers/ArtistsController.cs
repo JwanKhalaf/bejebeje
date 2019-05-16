@@ -4,7 +4,7 @@
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Mvc;
 
-  [Route("[controller]")]
+  [Route("v{version:apiVersion}/[controller]")]
   [ApiController]
   public class ArtistsController : ControllerBase
   {
