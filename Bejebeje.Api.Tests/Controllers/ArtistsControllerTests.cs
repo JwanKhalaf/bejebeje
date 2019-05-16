@@ -25,7 +25,7 @@
     }
 
     [Test]
-    public async Task EnsureThatAnEmptyListIsReturnedWhenThereIsNoData()
+    public async Task Get_WithNoData_ReturnsAnOkObjectResult()
     {
       // arrange
       artistsServiceMock
