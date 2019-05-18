@@ -3,6 +3,7 @@
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
+  using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Artist;
@@ -15,6 +16,18 @@
     public ArtistsService(BbContext context)
     {
       this.context = context;
+    }
+
+    public async Task<int> GetArtistIdAsync(string artistSlug)
+    {
+      int artistId = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
+        .Select(x => x.Id)
+        .FirstOrDefaultAsync();
+
+      return artistId;
     }
 
     public async Task<IList<ArtistCardViewModel>> GetArtistsAsync()

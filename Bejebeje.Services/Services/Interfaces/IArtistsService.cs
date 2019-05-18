@@ -6,6 +6,8 @@
 
   public interface IArtistsService
   {
+    Task<int> GetArtistIdAsync(string artistSlug);
+
     Task<IList<ArtistCardViewModel>> GetArtistsAsync();
   }
 }
