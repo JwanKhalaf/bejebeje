@@ -23,7 +23,7 @@
     }
 
     [Route("v{version:apiVersion}/artists/{artistSlug}/image")]
-    public async Task<IActionResult> Get(string artistSlug)
+    public async Task<IActionResult> GetArtistImage(string artistSlug)
     {
       if (artistSlug == null)
       {
