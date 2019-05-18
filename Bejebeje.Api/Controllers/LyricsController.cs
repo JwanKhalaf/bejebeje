@@ -27,7 +27,7 @@
 
     [Route("v{version:apiVersion}/artists/{artistSlug}/[controller]")]
     [HttpGet]
-    public async Task<IActionResult> Get(string artistSlug)
+    public async Task<IActionResult> GetLyrics(string artistSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
       {
@@ -52,16 +52,16 @@
 
     [Route("v{version:apiVersion}/artists/{artistSlug}/[controller]/{lyricSlug}")]
     [HttpGet]
-    public async Task<IActionResult> Get(string artistSlug, string lyricSlug)
+    public async Task<IActionResult> GetSingleLyric(string artistSlug, string lyricSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
       {
-        throw new ArgumentException("Missing artist slug", nameof(artistSlug));
+        throw new ArgumentNullException("Missing artist slug", nameof(artistSlug));
       }
 
       if (string.IsNullOrEmpty(lyricSlug))
       {
-        throw new ArgumentException("Missing lyric slug", nameof(lyricSlug));
+        throw new ArgumentNullException("Missing lyric slug", nameof(lyricSlug));
       }
 
       try
