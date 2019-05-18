@@ -34,7 +34,7 @@ namespace Bejebeje.Api.Tests.Controllers
     }
 
     [Test]
-    public async Task Get_WhenParamIsNull_ThrowsAnArgumentNullException()
+    public async Task GetArtists_WhenParamIsNull_ThrowsAnArgumentNullException()
     {
       // arrange
       string artistSlug = null;
@@ -47,10 +47,10 @@ namespace Bejebeje.Api.Tests.Controllers
     }
 
     [Test]
-    public async Task Get_WhenArtistDoesNotExist_ReturnsANotFoundResult()
+    public async Task GetArtists_WhenArtistDoesNotExist_ReturnsANotFoundResult()
     {
       // arrange
-      string artistSlug = "John Doe";
+      string artistSlug = "john-doe";
 
       imagesServiceMock
         .Setup(x => x.GetArtistImageBytesAsync(artistSlug))
@@ -64,7 +64,7 @@ namespace Bejebeje.Api.Tests.Controllers
     }
 
     [Test]
-    public async Task Get_WhenArtistExists_ReturnsTheImageFile()
+    public async Task GetArtists_WhenArtistExists_ReturnsTheImageFile()
     {
       // arrange
       string expectedFileContentType = "image/jpeg";
