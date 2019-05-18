@@ -34,20 +34,20 @@ namespace Bejebeje.Api.Tests.Controllers
     }
 
     [Test]
-    public async Task GetArtists_WhenParamIsNull_ThrowsAnArgumentNullException()
+    public async Task GetArtistImage_WhenParamIsNull_ThrowsAnArgumentNullException()
     {
       // arrange
       string artistSlug = null;
 
       // act
-      Func<Task> act = async () => await artistImagesController.Get(artistSlug);
+      Func<Task> act = async () => await artistImagesController.GetArtistImage(artistSlug);
 
       // assert
       await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]
-    public async Task GetArtists_WhenArtistDoesNotExist_ReturnsANotFoundResult()
+    public async Task GetArtistImage_WhenArtistDoesNotExist_ReturnsANotFoundResult()
     {
       // arrange
       string artistSlug = "john-doe";
@@ -57,14 +57,14 @@ namespace Bejebeje.Api.Tests.Controllers
         .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
-      IActionResult result = await artistImagesController.Get(artistSlug);
+      IActionResult result = await artistImagesController.GetArtistImage(artistSlug);
 
       // assert
       result.Should().BeOfType<NotFoundResult>();
     }
 
     [Test]
-    public async Task GetArtists_WhenArtistExists_ReturnsTheImageFile()
+    public async Task GetArtistImage_WhenArtistExists_ReturnsTheImageFile()
     {
       // arrange
       string expectedFileContentType = "image/jpeg";
@@ -81,7 +81,7 @@ namespace Bejebeje.Api.Tests.Controllers
         .ReturnsAsync(imageBytes);
 
       // act
-      IActionResult result = await artistImagesController.Get(artistSlug);
+      IActionResult result = await artistImagesController.GetArtistImage(artistSlug);
 
       // assert
       result.Should().BeOfType<FileContentResult>();

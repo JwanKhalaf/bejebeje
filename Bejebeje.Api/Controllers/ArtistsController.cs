@@ -16,7 +16,7 @@
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetArtist()
+    public async Task<IActionResult> GetArtists()
     {
       var artists = await artistsService
         .GetArtistsAsync()

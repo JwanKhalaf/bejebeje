@@ -26,7 +26,7 @@
     }
 
     [Test]
-    public async Task Get_WithNoArtistsFromTheService_ReturnsAnOkObjectResultWithEmptyList()
+    public async Task GetArtists_WithNoArtistsFromTheService_ReturnsAnOkObjectResultWithEmptyList()
     {
       // arrange
       artistsServiceMock
@@ -34,7 +34,7 @@
         .ReturnsAsync(new List<ArtistCardViewModel>());
 
       // act
-      IActionResult result = await artistsController.Get();
+      IActionResult result = await artistsController.GetArtists();
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -49,7 +49,7 @@
     }
 
     [Test]
-    public async Task Get_WithArtistsFromTheService_ReturnsAnOkObjectResultWithArtists()
+    public async Task GetArtists_WithArtistsFromTheService_ReturnsAnOkObjectResultWithArtists()
     {
       // arrange
       string artistFirstName = "Johnny";
@@ -73,7 +73,7 @@
         .ReturnsAsync(artistsFromService);
 
       // act
-      IActionResult result = await artistsController.Get();
+      IActionResult result = await artistsController.GetArtists();
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
