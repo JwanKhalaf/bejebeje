@@ -151,7 +151,7 @@ namespace Bejebeje.Api.Tests.Controllers
       string lyricSlug = "test-song";
 
       lyricsServiceMock
-        .Setup(x => x.GetLyricAsync(artistSlug, lyricSlug))
+        .Setup(x => x.GetSingleLyricAsync(artistSlug, lyricSlug))
         .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
@@ -169,7 +169,7 @@ namespace Bejebeje.Api.Tests.Controllers
       string lyricSlug = "test-song";
 
       lyricsServiceMock
-        .Setup(x => x.GetLyricAsync(artistSlug, lyricSlug))
+        .Setup(x => x.GetSingleLyricAsync(artistSlug, lyricSlug))
         .ThrowsAsync(new LyricNotFoundException(artistSlug, lyricSlug));
 
       // act
@@ -196,7 +196,7 @@ namespace Bejebeje.Api.Tests.Controllers
       };
 
       lyricsServiceMock
-        .Setup(x => x.GetLyricAsync(artistSlug, lyricSlug))
+        .Setup(x => x.GetSingleLyricAsync(artistSlug, lyricSlug))
         .ReturnsAsync(lyricFromService);
 
       // act

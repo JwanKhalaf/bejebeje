@@ -42,7 +42,7 @@
       return lyrics;
     }
 
-    public async Task<LyricViewModel> GetLyricAsync(string artistSlug, string lyricSlug)
+    public async Task<LyricViewModel> GetSingleLyricAsync(string artistSlug, string lyricSlug)
     {
       int artistId = await GetArtistIdAsync(artistSlug);
 
