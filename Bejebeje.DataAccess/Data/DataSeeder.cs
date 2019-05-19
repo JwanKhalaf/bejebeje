@@ -86,7 +86,7 @@ namespace Bejebeje.DataAccess.Data
 
           Lyric thunderstruck = new Lyric
           {
-            Title = "TNT",
+            Title = "Thunderstruck",
             Body = @"<p>I was caught
                   In the middle of a railroad track (thunder)
                   I looked round
