@@ -12,21 +12,21 @@
 
   public class LyricsService : ILyricsService
   {
+    private readonly IArtistsService artistsService;
+
     private readonly BbContext context;
 
-    public LyricsService(BbContext context)
+    public LyricsService(
+      IArtistsService artistsService,
+      BbContext context)
     {
+      this.artistsService = artistsService;
       this.context = context;
     }
 
     public async Task<IList<LyricCardViewModel>> GetLyricsAsync(string artistSlug)
     {
-      int artistId = await GetArtistIdAsync(artistSlug);
-
-      if (artistId == 0)
-      {
-        throw new ArtistNotFoundException(artistSlug);
-      }
+      int artistId = await artistsService.GetArtistIdAsync(artistSlug);
 
       List<LyricCardViewModel> lyrics = await context
         .Lyrics
@@ -42,14 +42,9 @@
       return lyrics;
     }
 
-    public async Task<LyricViewModel> GetLyricAsync(string artistSlug, string lyricSlug)
+    public async Task<LyricViewModel> GetSingleLyricAsync(string artistSlug, string lyricSlug)
     {
-      int artistId = await GetArtistIdAsync(artistSlug);
-
-      if (artistId == 0)
-      {
-        throw new ArtistNotFoundException(artistSlug);
-      }
+      int artistId = await artistsService.GetArtistIdAsync(artistSlug);
 
       LyricViewModel lyric = await context
         .Lyrics
@@ -68,18 +63,6 @@
       }
 
       return lyric;
-    }
-
-    private async Task<int> GetArtistIdAsync(string artistSlug)
-    {
-      int artistId = await context
-        .Artists
-        .AsNoTracking()
-        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
-        .Select(x => x.Id)
-        .FirstOrDefaultAsync();
-
-      return artistId;
     }
   }
 }

@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Bejebeje.Api.Controllers;
-using Bejebeje.Common.Exceptions;
-using Bejebeje.Services.Services.Interfaces;
-using Bejebeje.ViewModels.Lyric;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-
-namespace Bejebeje.Api.Tests.Controllers
+﻿namespace Bejebeje.Api.Tests.Controllers
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Threading.Tasks;
+  using Bejebeje.Api.Controllers;
+  using Bejebeje.Common.Exceptions;
+  using Bejebeje.Services.Services.Interfaces;
+  using Bejebeje.ViewModels.Lyric;
+  using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc;
+  using Microsoft.Extensions.Logging;
+  using Moq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class LyricsControllerTests
   {
@@ -151,7 +151,7 @@ namespace Bejebeje.Api.Tests.Controllers
       string lyricSlug = "test-song";
 
       lyricsServiceMock
-        .Setup(x => x.GetLyricAsync(artistSlug, lyricSlug))
+        .Setup(x => x.GetSingleLyricAsync(artistSlug, lyricSlug))
         .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
@@ -169,7 +169,7 @@ namespace Bejebeje.Api.Tests.Controllers
       string lyricSlug = "test-song";
 
       lyricsServiceMock
-        .Setup(x => x.GetLyricAsync(artistSlug, lyricSlug))
+        .Setup(x => x.GetSingleLyricAsync(artistSlug, lyricSlug))
         .ThrowsAsync(new LyricNotFoundException(artistSlug, lyricSlug));
 
       // act
@@ -196,7 +196,7 @@ namespace Bejebeje.Api.Tests.Controllers
       };
 
       lyricsServiceMock
-        .Setup(x => x.GetLyricAsync(artistSlug, lyricSlug))
+        .Setup(x => x.GetSingleLyricAsync(artistSlug, lyricSlug))
         .ReturnsAsync(lyricFromService);
 
       // act

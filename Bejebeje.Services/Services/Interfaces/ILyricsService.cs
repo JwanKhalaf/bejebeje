@@ -8,6 +8,6 @@
   {
     Task<IList<LyricCardViewModel>> GetLyricsAsync(string artistSlug);
 
-    Task<LyricViewModel> GetLyricAsync(string artistSlug, string lyricSlug);
+    Task<LyricViewModel> GetSingleLyricAsync(string artistSlug, string lyricSlug);
   }
 }

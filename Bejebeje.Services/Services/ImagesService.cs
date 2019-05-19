@@ -5,32 +5,41 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Domain;
   using Interfaces;
   using Microsoft.EntityFrameworkCore;
 
   public class ImagesService : IImagesService
   {
+    private readonly IArtistsService artistsService;
+
     private readonly BbContext context;
 
-    public ImagesService(BbContext context)
+    public ImagesService(
+      IArtistsService artistsService,
+      BbContext context)
     {
+      this.artistsService = artistsService;
       this.context = context;
     }
 
     public async Task<byte[]> GetArtistImageBytesAsync(string artistSlug)
     {
-      byte[] imageBytes = await context
-        .ArtistImages
-        .Where(ai => ai.Artist.Slugs.Any(s => s.Name == artistSlug.Standardize()))
-        .Select(ai => ai.Data)
+      int artistId = await artistsService.GetArtistIdAsync(artistSlug);
+
+      Artist artist = await context
+        .Artists
+        .AsNoTracking()
+        .Include(x => x.Image)
+        .Where(a => a.Slugs.Any(s => s.Name == artistSlug.Standardize()))
         .SingleOrDefaultAsync();
 
-      if (imageBytes == null)
+      if (artist.Image == null)
       {
-        throw new ArtistNotFoundException(artistSlug);
+        throw new MissingArtistImageException(artistSlug);
       }
 
-      return imageBytes;
+      return artist.Image.Data;
     }
   }
 }

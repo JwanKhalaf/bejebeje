@@ -1,17 +1,17 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Bejebeje.Api.Controllers;
-using Bejebeje.Common.Exceptions;
-using Bejebeje.Services.Services.Interfaces;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-
-namespace Bejebeje.Api.Tests.Controllers
+﻿namespace Bejebeje.Api.Tests.Controllers
 {
+  using System;
+  using System.IO;
+  using System.Threading.Tasks;
+  using Bejebeje.Api.Controllers;
+  using Bejebeje.Common.Exceptions;
+  using Bejebeje.Services.Services.Interfaces;
+  using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc;
+  using Microsoft.Extensions.Logging;
+  using Moq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class ArtistImageControllerTests
   {
