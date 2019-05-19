@@ -42,12 +42,12 @@ namespace Bejebeje.DataAccess.Data
           Lyric tnt = new Lyric
           {
             Title = "TNT",
-            Body = @"Oi, oi, oi
+            Body = @"<p>Oi, oi, oi
                     Oi, oi, oi
                     Oi, oi, oi
                     Oi, oi, oi
-                    Oi, oi, oi
-                    See me ride out of the sunset
+                    Oi, oi, oi</p>
+                    <p>See me ride out of the sunset
                     On your color TV screen
                     Out for all that I can get
                     If you know what I mean
@@ -55,12 +55,12 @@ namespace Bejebeje.DataAccess.Data
                     And women to the right
                     Ain't got no gun
                     Ain't got no knife
-                    Don't you start no fight
-                    'Cause I'm T.N.T. I'm dynamite
+                    Don't you start no fight</p>
+                    <p>'Cause I'm T.N.T. I'm dynamite
                     T.N.T. and I'll win the fight
                     T.N.T. I'm a power load
-                    T.N.T. watch me explode
-                    I'm dirty, mean and mighty unclean
+                    T.N.T. watch me explode</p>
+                    <p>I'm dirty, mean and mighty unclean
                     I'm a wanted man
                     Public enemy number one
                     Understand
@@ -69,13 +69,102 @@ namespace Bejebeje.DataAccess.Data
                     Lock up your back door
                     And run for your life
                     The man is back in town
-                    Don't you mess me 'round",
+                    Don't you mess me 'round</p>",
             UserId = userId,
             Slugs = new List<LyricSlug>
             {
               new LyricSlug
               {
                 Name = "tnt",
+                CreatedAt = DateTime.UtcNow,
+                IsPrimary = true
+              }
+            },
+            CreatedAt = DateTime.UtcNow,
+            IsApproved = true
+          };
+
+          Lyric thunderstruck = new Lyric
+          {
+            Title = "TNT",
+            Body = @"<p>I was caught
+                  In the middle of a railroad track (thunder)
+                  I looked round
+                  And I knew there was no turning back (thunder)
+                  My mind raced
+                  And I thought what could I do (thunder)
+                  And I knew
+                  There was no help, no help from you (thunder)
+                  Sound of the drums
+                  Beating in my heart
+                  The thunder of guns
+                  Tore me apart
+                  You've been
+                  Thunderstruck</p>
+
+                  <p>Rode down the highway
+                  Broke the limit, we hit the town
+                  Went through to Texas, yeah Texas, and we had some fun
+                  We met some girls
+                  Some dancers who gave a good time
+                  Broke all the rules
+                  Played all the fools
+                  Yeah yeah they, they, they blew our minds
+                  And I was shaking at the knees
+                  Could I come again please
+                  Yeah them ladies were too kind
+                  You've been
+                  Thunderstruck</p>",
+            UserId = userId,
+            Slugs = new List<LyricSlug>
+            {
+              new LyricSlug
+              {
+                Name = "thunderstruck",
+                CreatedAt = DateTime.UtcNow,
+                IsPrimary = true
+              }
+            },
+            CreatedAt = DateTime.UtcNow,
+            IsApproved = true
+          };
+
+          Lyric theThrillIsGone = new Lyric
+          {
+            Title = "The Thrill Is Gone",
+            Body = @"<p>The thrill is gone
+                    The thrill is gone away
+                    The thrill is gone baby
+                    The thrill is gone away
+                    You know you done me wrong baby
+                    And you'll be sorry someday</p>
+
+                    <p>The thrill is gone
+                    It's gone away from me
+                    The thrill is gone baby
+                    The thrill is gone away from me
+                    Although, I'll still live on
+                    But so lonely I'll be</p>
+
+                    <p>The thrill is gone
+                    It's gone away for good
+                    The thrill is gone baby
+                    It's gone away for good
+                    Someday I know I'll be over it all baby
+                    Just like I know a good man should</p>
+
+                    <p>You know I'm free, free now baby
+                    I'm free from your spell
+                    Oh I'm free, free, free now
+                    I'm free from your spell
+                    And now that it's all over
+                    All I can do is wish you well</p>",
+            UserId = userId,
+            Slugs = new List<LyricSlug>
+            {
+              new LyricSlug
+              {
+                Name = "the-thrill-is-gone",
                 CreatedAt = DateTime.UtcNow,
                 IsPrimary = true
               }
@@ -102,7 +191,7 @@ namespace Bejebeje.DataAccess.Data
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Lyrics = new List<Lyric> { tnt },
+              Lyrics = new List<Lyric> { tnt, thunderstruck },
               Image = GetImage("acdc.jpg")
             };
 
@@ -122,6 +211,7 @@ namespace Bejebeje.DataAccess.Data
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
+              Lyrics = new List<Lyric> { theThrillIsGone },
               Image = GetImage("bbking.jpg")
             };
 
