@@ -28,11 +28,6 @@
     {
       int artistId = await artistsService.GetArtistIdAsync(artistSlug);
 
-      if (artistId == 0)
-      {
-        throw new ArtistNotFoundException(artistSlug);
-      }
-
       List<LyricCardViewModel> lyrics = await context
         .Lyrics
         .AsNoTracking()
@@ -50,11 +45,6 @@
     public async Task<LyricViewModel> GetSingleLyricAsync(string artistSlug, string lyricSlug)
     {
       int artistId = await artistsService.GetArtistIdAsync(artistSlug);
-
-      if (artistId == 0)
-      {
-        throw new ArtistNotFoundException(artistSlug);
-      }
 
       LyricViewModel lyric = await context
         .Lyrics

@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Bejebeje.Common.Exceptions;
-using Bejebeje.Domain;
-using Bejebeje.Services.Services;
-using Bejebeje.Services.Services.Interfaces;
-using Bejebeje.Services.Tests.Helpers;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
-
-namespace Bejebeje.Services.Tests.Services
+﻿namespace Bejebeje.Services.Tests.Services
 {
+  using System;
+  using System.Collections.Generic;
+  using System.IO;
+  using System.Threading.Tasks;
+  using Bejebeje.Common.Exceptions;
+  using Bejebeje.Domain;
+  using Bejebeje.Services.Services;
+  using Bejebeje.Services.Services.Interfaces;
+  using Bejebeje.Services.Tests.Helpers;
+  using FluentAssertions;
+  using Moq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class ImagesServiceTests : DatabaseTestBase
   {
@@ -38,7 +38,7 @@ namespace Bejebeje.Services.Tests.Services
 
       artistsServiceMock
         .Setup(x => x.GetArtistIdAsync(artistSlug))
-        .ReturnsAsync(0);
+        .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
       Func<Task> act = async () => await imagesService.GetArtistImageBytesAsync(artistSlug);

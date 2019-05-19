@@ -27,11 +27,6 @@
     {
       int artistId = await artistsService.GetArtistIdAsync(artistSlug);
 
-      if (artistId == 0)
-      {
-        throw new ArtistNotFoundException(artistSlug);
-      }
-
       Artist artist = await context
         .Artists
         .AsNoTracking()

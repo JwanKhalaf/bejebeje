@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Bejebeje.Domain;
-using Bejebeje.Services.Services;
-using Bejebeje.Services.Tests.Helpers;
-using Bejebeje.ViewModels.Artist;
-using FluentAssertions;
-using NUnit.Framework;
-
-namespace Bejebeje.Services.Tests.Services
+﻿namespace Bejebeje.Services.Tests.Services
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Threading.Tasks;
+  using Bejebeje.Common.Exceptions;
+  using Bejebeje.Domain;
+  using Bejebeje.Services.Services;
+  using Bejebeje.Services.Tests.Helpers;
+  using Bejebeje.ViewModels.Artist;
+  using FluentAssertions;
+  using NUnit.Framework;
+
   [TestFixture]
   public class ArtistsServiceTests : DatabaseTestBase
   {
@@ -22,6 +23,54 @@ namespace Bejebeje.Services.Tests.Services
       SetupDataContext();
 
       artistsService = new ArtistsService(Context);
+    }
+
+    [Test]
+    public async Task GetArtistIdAsync_WhenArtistDoesNotExist_ThrowsAnArtistNotFoundException()
+    {
+      // arrange
+      string artistSlug = "john-doe";
+
+      // act
+      Func<Task> act = async () => await artistsService.GetArtistIdAsync(artistSlug);
+
+      // assert
+      await act.Should().ThrowAsync<ArtistNotFoundException>();
+    }
+
+    [Test]
+    public async Task GetArtistIdAsync_WhenArtistDoesExist_ReturnsTheArtistId()
+    {
+      // arrange
+      string artistSlug = "fats-waller";
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      int expectedArtistId = 1;
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        CreatedAt = DateTime.UtcNow,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            CreatedAt = DateTime.UtcNow,
+            IsPrimary = true
+          }
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      int result = await artistsService.GetArtistIdAsync(artistSlug);
+
+      // assert
+      result.Should().Be(expectedArtistId);
     }
 
     [Test]

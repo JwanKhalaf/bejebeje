@@ -3,6 +3,7 @@
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
+  using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
@@ -20,14 +21,19 @@
 
     public async Task<int> GetArtistIdAsync(string artistSlug)
     {
-      int artistId = await context
+      int? artistId = await context
         .Artists
         .AsNoTracking()
         .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
-        .Select(x => x.Id)
+        .Select(x => (int?)x.Id)
         .FirstOrDefaultAsync();
 
-      return artistId;
+      if (artistId == null)
+      {
+        throw new ArtistNotFoundException(artistSlug);
+      }
+
+      return artistId.Value;
     }
 
     public async Task<IList<ArtistCardViewModel>> GetArtistsAsync()

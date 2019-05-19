@@ -1,11 +1,11 @@
-﻿using System;
-using Bejebeje.DataAccess.Context;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Bejebeje.Services.Tests.Helpers
+﻿namespace Bejebeje.Services.Tests.Helpers
 {
+  using System;
+  using Bejebeje.DataAccess.Context;
+  using Microsoft.EntityFrameworkCore;
+  using Microsoft.EntityFrameworkCore.Diagnostics;
+  using Microsoft.Extensions.DependencyInjection;
+
   public abstract class DatabaseTestBase
   {
     protected BbContext Context { get; private set; }

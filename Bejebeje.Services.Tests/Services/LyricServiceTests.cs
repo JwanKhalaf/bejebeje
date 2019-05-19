@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Bejebeje.Common.Exceptions;
-using Bejebeje.Domain;
-using Bejebeje.Services.Services;
-using Bejebeje.Services.Services.Interfaces;
-using Bejebeje.Services.Tests.Helpers;
-using Bejebeje.ViewModels.Lyric;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
-
-namespace Bejebeje.Services.Tests.Services
+﻿namespace Bejebeje.Services.Tests.Services
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Threading.Tasks;
+  using Bejebeje.Common.Exceptions;
+  using Bejebeje.Domain;
+  using Bejebeje.Services.Services;
+  using Bejebeje.Services.Services.Interfaces;
+  using Bejebeje.Services.Tests.Helpers;
+  using Bejebeje.ViewModels.Lyric;
+  using FluentAssertions;
+  using Moq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class LyricServiceTests : DatabaseTestBase
   {
@@ -41,7 +41,7 @@ namespace Bejebeje.Services.Tests.Services
 
       artistsServiceMock
         .Setup(x => x.GetArtistIdAsync(artistSlug))
-        .ReturnsAsync(0);
+        .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
       Func<Task> act = async () => await lyricsService.GetLyricsAsync(artistSlug);
@@ -120,7 +120,7 @@ namespace Bejebeje.Services.Tests.Services
 
       artistsServiceMock
         .Setup(x => x.GetArtistIdAsync(artistSlug))
-        .ReturnsAsync(0);
+        .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
       Func<Task> act = async () => await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
