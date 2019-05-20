@@ -2,6 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
+  using System.IO;
   using System.Linq;
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
@@ -71,6 +72,112 @@
 
       // assert
       result.Should().Be(expectedArtistId);
+    }
+
+    [Test]
+    public async Task GetArtistDetailsAsync_WhenArtistDoesNotExist_ThrowsAnArtistNotFoundException()
+    {
+      // arrange
+      string artistSlug = "john-doe";
+
+      // act
+      Func<Task> act = async () => await artistsService.GetArtistDetailsAsync(artistSlug);
+
+      // assert
+      await act.Should().ThrowAsync<ArtistNotFoundException>();
+    }
+
+    [Test]
+    public async Task GetArtistDetailsAsync_WhenArtistDoesExistButHasNoImage_ReturnsArtistDetailsWithImageIdAsZero()
+    {
+      // arrange
+      string artistSlug = "fats-waller";
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      int expectedArtistId = 1;
+      int expectedImageId = 0;
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        CreatedAt = DateTime.UtcNow,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            CreatedAt = DateTime.UtcNow,
+            IsPrimary = true
+          }
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      ArtistDetailsViewModel result = await artistsService.GetArtistDetailsAsync(artistSlug);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Id.Should().Be(expectedArtistId);
+      result.FirstName.Should().Be(artistFirstName);
+      result.LastName.Should().Be(artistLastName);
+      result.Slug.Should().Be(artistSlug);
+      result.ImageId.Should().Be(expectedImageId);
+    }
+
+    [Test]
+    public async Task GetArtistDetailsAsync_WhenArtistDoesExistAndHasAnImage_ReturnsArtistDetailsWithCorrectImageId()
+    {
+      // arrange
+      string artistSlug = "fats-waller";
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      int expectedArtistId = 1;
+      int expectedImageId = 1;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        CreatedAt = DateTime.UtcNow,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            CreatedAt = DateTime.UtcNow,
+            IsPrimary = true
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = DateTime.UtcNow
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      ArtistDetailsViewModel result = await artistsService.GetArtistDetailsAsync(artistSlug);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Id.Should().Be(expectedArtistId);
+      result.FirstName.Should().Be(artistFirstName);
+      result.LastName.Should().Be(artistLastName);
+      result.Slug.Should().Be(artistSlug);
+      result.ImageId.Should().Be(expectedImageId);
     }
 
     [Test]

@@ -8,6 +8,8 @@
   {
     Task<int> GetArtistIdAsync(string artistSlug);
 
+    Task<ArtistDetailsViewModel> GetArtistDetailsAsync(string artistSlug);
+
     Task<IList<ArtistCardViewModel>> GetArtistsAsync();
   }
 }
