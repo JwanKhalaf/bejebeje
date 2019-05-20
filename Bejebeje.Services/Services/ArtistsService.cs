@@ -1,5 +1,6 @@
 ﻿namespace Bejebeje.Services.Services
 {
+  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
@@ -51,6 +52,29 @@
       .ToListAsync();
 
       return artistCards;
+    }
+
+    public async Task<ArtistDetailsViewModel> GetArtistDetailsAsync(string artistSlug)
+    {
+      int artistId = await GetArtistIdAsync(artistSlug);
+
+      ArtistDetailsViewModel artist = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => x.Id == artistId)
+        .Select(x => new ArtistDetailsViewModel
+        {
+          Id = x.Id,
+          FirstName = x.FirstName,
+          LastName = x.LastName,
+          Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
+          ImageId = x.Image != null ? x.Image.Id : 0,
+          CreatedAt = x.CreatedAt,
+          ModifiedAt = x.ModifiedAt
+        })
+        .SingleOrDefaultAsync();
+
+      return artist;
     }
   }
 }
