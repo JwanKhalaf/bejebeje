@@ -1,6 +1,5 @@
 ﻿namespace Bejebeje.Services.Services
 {
-  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
@@ -42,6 +41,7 @@
       List<ArtistCardViewModel> artistCards = await context
       .Artists
       .AsNoTracking()
+      .OrderBy(x => x.FirstName)
       .Select(x => new ArtistCardViewModel
       {
         FirstName = x.FirstName,
