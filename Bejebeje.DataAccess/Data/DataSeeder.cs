@@ -173,11 +173,446 @@ namespace Bejebeje.DataAccess.Data
               Image = GetImage("csmith.jpg")
             };
 
-            context.Artists.Add(acdc);
-            context.Artists.Add(bbKing);
-            context.Artists.Add(damianMarley);
-            context.Artists.Add(canaanSmith);
+            Artist davidBowie = new Artist
+            {
+              FirstName = "David",
+              LastName = "Bowie",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "david-bowie",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("dbowie.jpg")
+            };
 
+            Artist edSheeran = new Artist
+            {
+              FirstName = "Ed",
+              LastName = "Sheeran",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "ed-sheeran",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("esheeran.jpg")
+            };
+
+            Artist fleetwoodMac = new Artist
+            {
+              FirstName = "Fleetwood",
+              LastName = "Mac",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "fleetwood-mac",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("fmac.jpg")
+            };
+
+            Artist georgeMichael = new Artist
+            {
+              FirstName = "George",
+              LastName = "Michael",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "george-michael",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("gmichael.jpg")
+            };
+
+            Artist howlingWolf = new Artist
+            {
+              FirstName = "Howling",
+              LastName = "Wolf",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "howling-wolf",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("hwolf.jpg")
+            };
+
+            Artist iceT = new Artist
+            {
+              FirstName = "Ice",
+              LastName = "T",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "ice-t",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("itea.jpg")
+            };
+
+            Artist jenniferLopez = new Artist
+            {
+              FirstName = "Jennifer",
+              LastName = "Lopez",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "jennifer-lopez",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("jlopez.jpg")
+            };
+
+            Artist kennyRogers = new Artist
+            {
+              FirstName = "Kenny",
+              LastName = "Rogers",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "kenny-rogers",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("krogers.jpg")
+            };
+
+            Artist ladyGaga = new Artist
+            {
+              FirstName = "Lady",
+              LastName = "Gaga",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "lady-gaga",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("lgaga.jpg")
+            };
+
+            Artist muddyWaters = new Artist
+            {
+              FirstName = "Muddy",
+              LastName = "Waters",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "muddy-waters",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("mwaters.jpg")
+            };
+
+            Artist neilYoung = new Artist
+            {
+              FirstName = "Neil",
+              LastName = "Young",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "neil-young",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("nyoung.jpg")
+            };
+
+            Artist ozzyOsbourne = new Artist
+            {
+              FirstName = "Ozzy",
+              LastName = "Osbourne",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "ozzy-osbourne",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("oosbourne.jpg")
+            };
+
+            Artist pattiSmith = new Artist
+            {
+              FirstName = "Patti",
+              LastName = "Smith",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "patti-smith",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("psmith.jpg")
+            };
+
+            Artist queen = new Artist
+            {
+              FirstName = "Queen",
+              LastName = "",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "queen",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("queen.jpg")
+            };
+
+            Artist rayCharles = new Artist
+            {
+              FirstName = "Ray",
+              LastName = "Charles",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "ray-charles",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("rcharles.jpg")
+            };
+
+            Artist sonnyBoyWilliamson = new Artist
+            {
+              FirstName = "Sonny Boy",
+              LastName = "Williamson",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "sonny-boy-williamson",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("sboywilliamson.jpg")
+            };
+
+            Artist tBoneWalker = new Artist
+            {
+              FirstName = "T Bone",
+              LastName = "Walker",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "t-bone-walker",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("tbonewalker.jpg")
+            };
+
+            Artist u2 = new Artist
+            {
+              FirstName = "U2",
+              LastName = "",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "u2",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("u2.jpg")
+            };
+
+            Artist vanHalen = new Artist
+            {
+              FirstName = "Van",
+              LastName = "Halen",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "van-halen",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("vhalen.jpg")
+            };
+
+            Artist wheatus = new Artist
+            {
+              FirstName = "Wheatus",
+              LastName = "",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "wheatus",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("wheatus.jpg")
+            };
+
+            Artist xtc = new Artist
+            {
+              FirstName = "XTC",
+              LastName = "",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "xtc",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("xtc.jpg")
+            };
+
+            Artist yolandaBeCool = new Artist
+            {
+              FirstName = "Yolanda",
+              LastName = "Be Cool",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "yolanda-be-cool",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("yolanda-be-cool.jpg")
+            };
+
+            Artist zacBrown = new Artist
+            {
+              FirstName = "Zac",
+              LastName = "Brown",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "zac-brown",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("zbrown.jpg")
+            };
+
+            List<Artist> artists = new List<Artist> { acdc, bbKing, canaanSmith, damianMarley, edSheeran, fleetwoodMac, georgeMichael, howlingWolf, iceT, jenniferLopez, kennyRogers, ladyGaga, muddyWaters, neilYoung, ozzyOsbourne, pattiSmith, queen, rayCharles, sonnyBoyWilliamson, tBoneWalker, u2, vanHalen, wheatus, xtc, yolandaBeCool, zacBrown };
+
+            context.Artists.AddRange(artists);
             context.SaveChanges();
           }
           else
