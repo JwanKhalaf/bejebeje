@@ -8,6 +8,11 @@
   {
     public Task Search(string searchTerm)
     {
+      if (string.IsNullOrEmpty(searchTerm))
+      {
+        throw new ArgumentNullException(nameof(searchTerm));
+      }
+
       throw new NotImplementedException();
     }
   }
