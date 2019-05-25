@@ -29,5 +29,18 @@
       // assert
       await action.Should().ThrowAsync<ArgumentNullException>();
     }
+
+    [Test]
+    public async Task Search_WhenParamIsEmpty_ThrowsArgumentNullException()
+    {
+      // arrange
+      string searchTerm = "";
+
+      // act
+      Func<Task> action = async () => await searchController.Search(searchTerm);
+
+      // assert
+      await action.Should().ThrowAsync<ArgumentNullException>();
+    }
   }
 }
