@@ -8,6 +8,7 @@
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
 
+  [ApiController]
   public class SearchController : ControllerBase
   {
     private ISearchService searchService;
@@ -22,6 +23,8 @@
       this.logger = logger;
     }
 
+    [Route("v{version:apiVersion}/[controller]/{searchTerm}")]
+    [HttpGet]
     public async Task<IActionResult> Search(string searchTerm)
     {
       if (string.IsNullOrEmpty(searchTerm))

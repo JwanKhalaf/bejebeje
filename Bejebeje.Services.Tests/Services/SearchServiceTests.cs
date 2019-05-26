@@ -50,7 +50,83 @@
     }
 
     [Test]
-    public async Task SearchAsync_WhenResultsMatch_ReturnsAPopulatedListOfSearchResultViewModels()
+    public async Task SearchAsync_WhenResultsMatchOnArtistFirstNameOnly_ReturnsAPopulatedListOfSearchResultViewModelsWithCorrectData()
+    {
+      // arrange
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+      string searchTerm = "queen";
+
+      string firstArtistName = "Queen";
+      string firstArtistSlug = "queen";
+      string queenFilePath = baseDirectoryPath + "/Assets/queen.jpg";
+      byte[] queenImageBytes = await File.ReadAllBytesAsync(queenFilePath);
+
+      string secondArtistName = "Westlife";
+      string secondArtistSlug = "westlife";
+      string westlifeFilePath = baseDirectoryPath + "/Assets/westlife.jpg";
+      byte[] westlifeImageBytes = await File.ReadAllBytesAsync(westlifeFilePath);
+
+      Artist queen = new Artist
+      {
+        FirstName = firstArtistName,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = firstArtistSlug,
+            IsPrimary = true,
+            CreatedAt = DateTime.UtcNow
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = queenImageBytes,
+          CreatedAt = DateTime.UtcNow
+        },
+        CreatedAt = DateTime.UtcNow,
+        IsApproved = true
+      };
+
+      Artist westlife = new Artist
+      {
+        FirstName = secondArtistName,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = secondArtistSlug,
+            IsPrimary = true,
+            CreatedAt = DateTime.UtcNow
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = westlifeImageBytes,
+          CreatedAt = DateTime.UtcNow
+        },
+        CreatedAt = DateTime.UtcNow,
+        IsApproved = true
+      };
+
+      Context.Artists.Add(queen);
+      Context.Artists.Add(westlife);
+      Context.SaveChanges();
+
+      // act
+      IList<SearchResultViewModel> result = await searchService.SearchAsync(searchTerm);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<List<SearchResultViewModel>>();
+      result.Should().HaveCount(1);
+      result.First().Name.Should().Be(firstArtistName);
+      result.First().ImageId.Should().Be(1);
+      result.First().Slug.Should().Be(firstArtistSlug);
+      result.First().ResultType.Should().Be(ResultType.Artist);
+    }
+
+    [Test]
+    public async Task SearchAsync_WhenResultsMatchOnArtistLastNameOnly_ReturnsAPopulatedListOfSearchResultViewModelsWithCorrectData()
     {
       // arrange
       string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;

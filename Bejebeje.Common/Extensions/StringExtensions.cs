@@ -14,7 +14,12 @@
 
     public static string Standardize(this string input)
     {
-      return input.Trim().ToLowerInvariant();
+      if (!string.IsNullOrEmpty(input))
+      {
+        return input.Trim().ToLowerInvariant();
+      }
+
+      return string.Empty;
     }
   }
 }

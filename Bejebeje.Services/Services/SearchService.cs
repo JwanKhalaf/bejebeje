@@ -1,10 +1,14 @@
 ﻿namespace Bejebeje.Services.Services
 {
   using System.Collections.Generic;
+  using System.Linq;
   using System.Threading.Tasks;
+  using Bejebeje.Common.Enums;
+  using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Search;
+  using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Logging;
 
   public class SearchService : ISearchService
@@ -24,6 +28,36 @@
     public async Task<IList<SearchResultViewModel>> SearchAsync(string searchTerm)
     {
       List<SearchResultViewModel> searchResults = new List<SearchResultViewModel>();
+
+      List<SearchResultViewModel> matchedArtists = await context
+        .Artists
+        .Where(x => EF.Functions.Like(x.FirstName.Standardize(), $"%{searchTerm.Standardize()}%"))
+        .Where(x => EF.Functions.Like(x.LastName.Standardize(), $"%{searchTerm.Standardize()}%"))
+        .Where(x => x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTerm.Standardize()}%")))
+        .Select(x => new SearchResultViewModel
+        {
+          Name = string.IsNullOrEmpty(x.LastName) ? x.FirstName : $"{x.FirstName} {x.LastName}",
+          Slug = x.Slugs.Single(s => s.IsPrimary).Name,
+          ImageId = x.Image.Id,
+          ResultType = ResultType.Artist
+        })
+        .ToListAsync();
+
+      List<SearchResultViewModel> matchedLyrics = await context
+        .Lyrics
+        .Where(x => EF.Functions.Like(x.Title.Standardize(), $"%{searchTerm.Standardize()}%"))
+        .Where(x => x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTerm.Standardize()}%")))
+        .Select(x => new SearchResultViewModel
+        {
+          Name = x.Title,
+          Slug = x.Slugs.Single(s => s.IsPrimary).Name,
+          ImageId = 0,
+          ResultType = ResultType.Lyric
+        })
+        .ToListAsync();
+
+      searchResults.AddRange(matchedArtists);
+      searchResults.AddRange(matchedLyrics);
 
       return searchResults;
     }
