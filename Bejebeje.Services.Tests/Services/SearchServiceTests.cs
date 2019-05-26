@@ -1,6 +1,5 @@
 ﻿namespace Bejebeje.Services.Tests.Services
 {
-  using System.Collections;
   using System.Collections.Generic;
   using System.Threading.Tasks;
   using Bejebeje.Services.Services;
@@ -25,7 +24,9 @@
 
       SetupDataContext();
 
-      searchService = new SearchService(loggerMock.Object);
+      searchService = new SearchService(
+        Context,
+        loggerMock.Object);
     }
 
 
@@ -36,11 +37,12 @@
       string searchTerm = "queen";
 
       // act
-      IList<SearchResultViewModel> results = await searchService.SearchAsync(searchTerm);
+      IList<SearchResultViewModel> result = await searchService.SearchAsync(searchTerm);
 
       // assert
-      results.Should().NotBeNull();
-      results.Should().HaveCount(0);
+      result.Should().NotBeNull();
+      result.Should().BeOfType<List<SearchResultViewModel>>();
+      result.Should().HaveCount(0);
     }
   }
 }

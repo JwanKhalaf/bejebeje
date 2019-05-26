@@ -2,22 +2,30 @@
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
+  using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Search;
   using Microsoft.Extensions.Logging;
 
   public class SearchService : ISearchService
   {
+    private BbContext context;
+
     private ILogger logger;
 
-    public SearchService(ILogger<SearchService> logger)
+    public SearchService(
+      BbContext context,
+      ILogger<SearchService> logger)
     {
+      this.context = context;
       this.logger = logger;
     }
 
-    public Task<IList<SearchResultViewModel>> SearchAsync(string searchTerm)
+    public async Task<IList<SearchResultViewModel>> SearchAsync(string searchTerm)
     {
-      throw new System.NotImplementedException();
+      List<SearchResultViewModel> searchResults = new List<SearchResultViewModel>();
+
+      return searchResults;
     }
   }
 }
