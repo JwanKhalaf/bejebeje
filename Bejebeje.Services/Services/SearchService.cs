@@ -28,6 +28,7 @@
     public async Task<IList<SearchResultViewModel>> SearchAsync(string searchTerm)
     {
       string searchTermStandardized = searchTerm.Standardize();
+
       List<SearchResultViewModel> searchResults = new List<SearchResultViewModel>();
 
       List<SearchResultViewModel> matchedArtists = await context
@@ -47,8 +48,9 @@
 
       List<SearchResultViewModel> matchedLyrics = await context
         .Lyrics
-        .Where(x => EF.Functions.Like(x.Title.Standardize(), $"%{searchTerm.Standardize()}%"))
-        .Where(x => x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTerm.Standardize()}%")))
+        .Where(x =>
+          EF.Functions.Like(x.Title.Standardize(), $"%{searchTermStandardized}%") ||
+          x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTermStandardized}%")))
         .Select(x => new SearchResultViewModel
         {
           Name = x.Title,
