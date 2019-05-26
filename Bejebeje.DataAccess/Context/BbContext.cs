@@ -31,10 +31,6 @@
             .WithOne(a => a.Artist)
             .HasForeignKey<ArtistImage>(ai => ai.ArtistId);
 
-      builder.Entity<Artist>()
-          .Property(p => p.FullName)
-          .HasComputedColumnSql("[FirstNameName] + ' ' + [LastNameName]");
-
       foreach (IMutableEntityType entity in builder.Model.GetEntityTypes())
       {
         // replace table names
