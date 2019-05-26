@@ -208,7 +208,7 @@
     {
       // arrange
       string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
-      string searchTerm = "queen";
+      string searchTerm = "unique-slug";
 
       string firstArtistName = "Queen";
       string firstArtistSlug = "queen";
@@ -217,6 +217,7 @@
 
       string secondArtistName = "Westlife";
       string secondArtistSlug = "westlife";
+      string secondArtistUniqueSlug = "unique-slug";
       string lyricTitle = "Queen of My Heart";
       string lyricBody = "Test lyrics";
       string lyricSlug = "queen-of-my-heart";
@@ -271,6 +272,12 @@
             Name = secondArtistSlug,
             IsPrimary = true,
             CreatedAt = DateTime.UtcNow
+          },
+          new ArtistSlug
+          {
+            Name = secondArtistUniqueSlug,
+            IsPrimary = false,
+            CreatedAt = DateTime.UtcNow
           }
         },
         Image = new ArtistImage
@@ -293,16 +300,11 @@
       // assert
       result.Should().NotBeNull();
       result.Should().BeOfType<List<SearchResultViewModel>>();
-      result.Should().HaveCount(2);
-      result.First().Name.Should().Be(firstArtistName);
-      result.First().ImageId.Should().Be(1);
-      result.First().Slug.Should().Be(firstArtistSlug);
+      result.Should().HaveCount(1);
+      result.First().Name.Should().Be(secondArtistName);
+      result.First().ImageId.Should().Be(2);
+      result.First().Slug.Should().Be(secondArtistSlug);
       result.First().ResultType.Should().Be(ResultType.Artist);
-
-      result.Last().Name.Should().Be(lyricTitle);
-      result.Last().Slug.Should().Be(lyricSlug);
-      result.Last().ImageId.Should().Be(0);
-      result.Last().ResultType.Should().Be(ResultType.Lyric);
     }
   }
 }
