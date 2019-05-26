@@ -27,11 +27,22 @@
 
     [Route("v{version:apiVersion}/[controller]")]
     [HttpGet]
-    public async Task<IActionResult> GetArtists()
+    public async Task<IActionResult> GetArtists([FromQuery] string name)
     {
-      IList<ArtistCardViewModel> artists = await artistsService
-        .GetArtistsAsync()
-        .ConfigureAwait(false);
+      IList<ArtistCardViewModel> artists;
+
+      if (string.IsNullOrEmpty(name))
+      {
+        artists = await artistsService
+         .GetArtistsAsync()
+         .ConfigureAwait(false);
+      }
+      else
+      {
+        artists = await artistsService
+          .GetArtistsAsync(name)
+          .ConfigureAwait(false);
+      }
 
       return Ok(artists);
     }

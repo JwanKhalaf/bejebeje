@@ -44,7 +44,7 @@
         .ReturnsAsync(new List<ArtistCardViewModel>());
 
       // act
-      IActionResult result = await artistsController.GetArtists();
+      IActionResult result = await artistsController.GetArtists("");
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -83,7 +83,7 @@
         .ReturnsAsync(artistsFromService);
 
       // act
-      IActionResult result = await artistsController.GetArtists();
+      IActionResult result = await artistsController.GetArtists("");
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
