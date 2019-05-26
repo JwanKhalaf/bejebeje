@@ -1,9 +1,12 @@
 ﻿namespace Bejebeje.Api.Tests.Controllers
 {
   using System;
+  using System.Collections.Generic;
   using System.Threading.Tasks;
   using Bejebeje.Api.Controllers;
+  using Bejebeje.ViewModels.Search;
   using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc;
   using NUnit.Framework;
 
   [TestFixture]
@@ -41,6 +44,19 @@
 
       // assert
       await action.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Test]
+    public async Task Search_WhenNoResultsExist_ReturnsAnEmptyListOfSearchResultViewModel()
+    {
+      // arrange
+      string searchTerm = "james brown";
+
+      // act
+      IActionResult result = await searchController.Search(searchTerm);
+
+      // assert
+      result.Should().BeOfType<OkObjectResult>();
     }
   }
 }

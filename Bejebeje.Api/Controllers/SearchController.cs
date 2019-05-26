@@ -6,7 +6,7 @@
 
   public class SearchController : ControllerBase
   {
-    public Task Search(string searchTerm)
+    public Task<IActionResult> Search(string searchTerm)
     {
       if (string.IsNullOrEmpty(searchTerm))
       {
