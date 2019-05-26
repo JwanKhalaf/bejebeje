@@ -12,6 +12,8 @@
 
     public string LastName { get; set; }
 
+    public string FullName { get; set; }
+
     public IEnumerable<ArtistSlug> Slugs { get; set; }
 
     public bool IsApproved { get; set; }

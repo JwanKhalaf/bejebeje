@@ -184,7 +184,7 @@
     public async Task GetArtistsAsync_WithNoData_ReturnsAnEmptyListOfArtists()
     {
       // act
-      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync();
+      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync(string.Empty);
 
       // assert
       result.Should().BeOfType<List<ArtistCardViewModel>>();
@@ -224,7 +224,7 @@
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync();
+      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync(string.Empty);
 
       // assert
       result.Should().BeOfType<List<ArtistCardViewModel>>();

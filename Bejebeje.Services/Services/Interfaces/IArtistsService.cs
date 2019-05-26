@@ -10,8 +10,6 @@
 
     Task<ArtistDetailsViewModel> GetArtistDetailsAsync(string artistSlug);
 
-    Task<IList<ArtistCardViewModel>> GetArtistsAsync();
-
     Task<IList<ArtistCardViewModel>> GetArtistsAsync(string artistName);
   }
 }

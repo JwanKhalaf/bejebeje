@@ -40,7 +40,7 @@
     {
       // arrange
       artistsServiceMock
-        .Setup(x => x.GetArtistsAsync())
+        .Setup(x => x.GetArtistsAsync(string.Empty))
         .ReturnsAsync(new List<ArtistCardViewModel>());
 
       // act
@@ -79,7 +79,7 @@
       };
 
       artistsServiceMock
-        .Setup(x => x.GetArtistsAsync())
+        .Setup(x => x.GetArtistsAsync(string.Empty))
         .ReturnsAsync(artistsFromService);
 
       // act

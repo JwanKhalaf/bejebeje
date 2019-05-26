@@ -6,6 +6,7 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Domain;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Artist;
   using Microsoft.EntityFrameworkCore;
@@ -59,42 +60,45 @@
       return artist;
     }
 
-    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync()
-    {
-      List<ArtistCardViewModel> artistCards = await context
-      .Artists
-      .AsNoTracking()
-      .OrderBy(x => x.FirstName)
-      .Select(x => new ArtistCardViewModel
-      {
-        FirstName = x.FirstName,
-        LastName = x.LastName,
-        Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
-        ImageId = x.Image == null ? 0 : x.Image.Id
-      })
-      .ToListAsync();
-
-      return artistCards;
-    }
-
     public async Task<IList<ArtistCardViewModel>> GetArtistsAsync(string artistName)
     {
       string searchTermStandardized = artistName.Standardize();
+      List<ArtistCardViewModel> matchedArtists;
 
-      List<ArtistCardViewModel> matchedArtists = await context
+      IQueryable<Artist> artists = context
         .Artists
-        .Where(x =>
-          EF.Functions.Like(x.FirstName.Standardize(), $"%{searchTermStandardized}%") ||
-          EF.Functions.Like(x.LastName.Standardize(), $"%{searchTermStandardized}%") ||
-          x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTermStandardized}%")))
-        .Select(x => new ArtistCardViewModel
-        {
-          FirstName = x.FirstName,
-          LastName = x.LastName,
-          Slug = x.Slugs.Single(s => s.IsPrimary).Name,
-          ImageId = x.Image.Id
-        })
-        .ToListAsync();
+        .AsNoTracking()
+        .AsQueryable();
+
+      if (string.IsNullOrEmpty(searchTermStandardized))
+      {
+        matchedArtists = await artists
+          .OrderBy(x => x.FirstName)
+          .Select(x => new ArtistCardViewModel
+          {
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
+            ImageId = x.Image == null ? 0 : x.Image.Id
+          })
+          .ToListAsync();
+      }
+      else
+      {
+        matchedArtists = await artists
+          .Where(x =>
+            EF.Functions.Like(x.FullName.Standardize(), $"%{searchTermStandardized}%") ||
+            x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTermStandardized}%")))
+          .OrderBy(x => x.FirstName)
+          .Select(x => new ArtistCardViewModel
+          {
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            Slug = x.Slugs.Single(s => s.IsPrimary).Name,
+            ImageId = x.Image.Id
+          })
+          .ToListAsync();
+      }
 
       return matchedArtists;
     }
