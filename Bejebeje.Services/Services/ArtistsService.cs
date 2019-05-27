@@ -6,7 +6,6 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
-  using Bejebeje.Domain;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Artist;
   using Microsoft.EntityFrameworkCore;
@@ -60,19 +59,11 @@
       return artist;
     }
 
-    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync(string artistName)
+    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync()
     {
-      string searchTermStandardized = artistName.Standardize();
-      List<ArtistCardViewModel> matchedArtists;
-
-      IQueryable<Artist> artists = context
+      List<ArtistCardViewModel> artists = await context
         .Artists
         .AsNoTracking()
-        .AsQueryable();
-
-      if (string.IsNullOrEmpty(searchTermStandardized))
-      {
-        matchedArtists = await artists
           .OrderBy(x => x.FirstName)
           .Select(x => new ArtistCardViewModel
           {
@@ -82,11 +73,18 @@
             ImageId = x.Image == null ? 0 : x.Image.Id
           })
           .ToListAsync();
-      }
-      else
-      {
-        matchedArtists = await artists
-          .Where(x =>
+
+      return artists;
+    }
+
+    public async Task<IList<ArtistCardViewModel>> SearchArtistsAsync(string artistName)
+    {
+      string searchTermStandardized = artistName.Standardize();
+
+      List<ArtistCardViewModel> matchedArtists = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x =>
             EF.Functions.Like(x.FullName.Standardize(), $"%{searchTermStandardized}%") ||
             x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTermStandardized}%")))
           .OrderBy(x => x.FirstName)
@@ -98,7 +96,6 @@
             ImageId = x.Image.Id
           })
           .ToListAsync();
-      }
 
       return matchedArtists;
     }

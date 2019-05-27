@@ -41,10 +41,10 @@
         .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
-      Func<Task> act = async () => await imagesService.GetArtistImageBytesAsync(artistSlug);
+      Func<Task> action = async () => await imagesService.GetArtistImageBytesAsync(artistSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArtistNotFoundException>();
+      await action.Should().ThrowAsync<ArtistNotFoundException>();
     }
 
     [Test]
@@ -80,10 +80,10 @@
         .ReturnsAsync(1);
 
       // act
-      Func<Task> act = async () => await imagesService.GetArtistImageBytesAsync(artistSlug);
+      Func<Task> action = async () => await imagesService.GetArtistImageBytesAsync(artistSlug);
 
       // assert
-      await act.Should().ThrowAsync<MissingArtistImageException>();
+      await action.Should().ThrowAsync<MissingArtistImageException>();
     }
 
     [Test]

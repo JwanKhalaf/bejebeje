@@ -70,9 +70,6 @@
         .AddScoped<IImagesService, ImagesService>();
 
       services
-        .AddScoped<ISearchService, SearchService>();
-
-      services
         .AddMvc()
         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

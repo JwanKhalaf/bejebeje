@@ -31,9 +31,18 @@
     {
       IList<ArtistCardViewModel> artists;
 
-      artists = await artistsService
-        .GetArtistsAsync(name)
-        .ConfigureAwait(false);
+      if (string.IsNullOrEmpty(name))
+      {
+        artists = await artistsService
+          .GetArtistsAsync()
+          .ConfigureAwait(false);
+      }
+      else
+      {
+        artists = await artistsService
+          .SearchArtistsAsync(name)
+          .ConfigureAwait(false);
+      }
 
       return Ok(artists);
     }

@@ -14,7 +14,7 @@
 
     public string FullName { get; set; }
 
-    public IEnumerable<ArtistSlug> Slugs { get; set; }
+    public IEnumerable<ArtistSlug> Slugs { get; set; } = new List<ArtistSlug>();
 
     public bool IsApproved { get; set; }
 
