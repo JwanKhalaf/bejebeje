@@ -16,6 +16,7 @@ namespace Bejebeje.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     first_name = table.Column<string>(nullable: true),
                     last_name = table.Column<string>(nullable: true),
+                    full_name = table.Column<string>(nullable: true),
                     is_approved = table.Column<bool>(nullable: false),
                     user_id = table.Column<string>(nullable: true),
                     created_at = table.Column<DateTime>(nullable: false),

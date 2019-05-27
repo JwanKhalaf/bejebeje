@@ -31,6 +31,9 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnName("first_name");
 
+                    b.Property<string>("FullName")
+                        .HasColumnName("full_name");
+
                     b.Property<bool>("IsApproved")
                         .HasColumnName("is_approved");
 

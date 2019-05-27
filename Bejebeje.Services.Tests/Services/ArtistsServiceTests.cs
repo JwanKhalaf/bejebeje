@@ -33,10 +33,10 @@
       string artistSlug = "john-doe";
 
       // act
-      Func<Task> act = async () => await artistsService.GetArtistIdAsync(artistSlug);
+      Func<Task> action = async () => await artistsService.GetArtistIdAsync(artistSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArtistNotFoundException>();
+      await action.Should().ThrowAsync<ArtistNotFoundException>();
     }
 
     [Test]
@@ -81,10 +81,10 @@
       string artistSlug = "john-doe";
 
       // act
-      Func<Task> act = async () => await artistsService.GetArtistDetailsAsync(artistSlug);
+      Func<Task> action = async () => await artistsService.GetArtistDetailsAsync(artistSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArtistNotFoundException>();
+      await action.Should().ThrowAsync<ArtistNotFoundException>();
     }
 
     [Test]
@@ -233,6 +233,282 @@
       result.First().LastName.Should().Be(artistLastName);
       result.First().ImageId.Should().Be(expectedArtistImageId);
       result.First().Slug.Should().Be(artistSlug);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenNoArtistsMatch_ReturnsAnEmptyListOfArtistCardViewModels()
+    {
+      // arrange
+      string artistName = "Watson";
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistFullName = "Fats Waller";
+      string artistSlug = "fats-waller";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = artistFullName,
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<List<ArtistCardViewModel>>();
+      result.Should().HaveCount(0);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenThereIsAMatchOnFirstNameOnly_ReturnsAPopulatedListOfArtistCardViewModels()
+    {
+      // arrange
+      string artistName = "fats";
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistSlug = "something-different-from-first-and-last-name";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = $"{artistFirstName} {artistLastName}",
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<List<ArtistCardViewModel>>();
+      result.Should().HaveCount(1);
+
+      result.First().FirstName.Should().Be(artistFirstName);
+      result.First().LastName.Should().Be(artistLastName);
+      result.First().Slug.Should().Be(artistSlug);
+      result.First().ImageId.Should().Be(1);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenThereIsAMatchOnLastNameOnly_ReturnsAPopulatedListOfArtistCardViewModels()
+    {
+      // arrange
+      string artistName = "waller";
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistSlug = "something-different-from-first-and-last-name";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = $"{artistFirstName} {artistLastName}",
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<List<ArtistCardViewModel>>();
+      result.Should().HaveCount(1);
+
+      result.First().FirstName.Should().Be(artistFirstName);
+      result.First().LastName.Should().Be(artistLastName);
+      result.First().Slug.Should().Be(artistSlug);
+      result.First().ImageId.Should().Be(1);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenThereIsAMatchOnArtistSlugOnly_ReturnsAPopulatedListOfArtistCardViewModels()
+    {
+      // arrange
+      string artistName = "nokia";
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistSlug = "nokia";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = $"{artistFirstName} {artistLastName}",
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<List<ArtistCardViewModel>>();
+      result.Should().HaveCount(1);
+
+      result.First().FirstName.Should().Be(artistFirstName);
+      result.First().LastName.Should().Be(artistLastName);
+      result.First().Slug.Should().Be(artistSlug);
+      result.First().ImageId.Should().Be(1);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenSearchParamHasASpaceInItAndThereIsAMatch_ReturnsAPopulatedListOfArtistCardViewModels()
+    {
+      // arrange
+      string artistName = "fats wal";
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistSlug = "fats-waller";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = $"{artistFirstName} {artistLastName}",
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt
+          }
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt
+        }
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<List<ArtistCardViewModel>>();
+      result.Should().HaveCount(1);
+
+      result.First().FirstName.Should().Be(artistFirstName);
+      result.First().LastName.Should().Be(artistLastName);
+      result.First().Slug.Should().Be(artistSlug);
+      result.First().ImageId.Should().Be(1);
     }
   }
 }

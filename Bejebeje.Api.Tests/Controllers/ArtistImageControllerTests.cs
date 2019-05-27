@@ -40,10 +40,10 @@
       string artistSlug = null;
 
       // act
-      Func<Task> act = async () => await artistImagesController.GetArtistImage(artistSlug);
+      Func<Task> action = async () => await artistImagesController.GetArtistImage(artistSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArgumentNullException>();
+      await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]

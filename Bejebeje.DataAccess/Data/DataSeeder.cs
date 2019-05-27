@@ -99,6 +99,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "AC/DC",
               LastName = string.Empty,
+              FullName = "AC/DC",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -119,6 +120,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "BB",
               LastName = "King",
+              FullName = "BB King",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -135,29 +137,11 @@ namespace Bejebeje.DataAccess.Data
               Image = GetImage("bbking.jpg")
             };
 
-            Artist damianMarley = new Artist
-            {
-              FirstName = "Damian",
-              LastName = "Marley",
-              Slugs = new List<ArtistSlug>
-              {
-                new ArtistSlug
-                {
-                  Name = "damian-marley",
-                  CreatedAt = DateTime.UtcNow,
-                  IsPrimary = true
-                }
-              },
-              IsApproved = true,
-              UserId = userId,
-              CreatedAt = DateTime.UtcNow,
-              Image = GetImage("damian-marley.jpg")
-            };
-
             Artist canaanSmith = new Artist
             {
               FirstName = "Canaan",
               LastName = "Smith",
+              FullName = "Canaan Smith",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -173,10 +157,31 @@ namespace Bejebeje.DataAccess.Data
               Image = GetImage("csmith.jpg")
             };
 
+            Artist damianMarley = new Artist
+            {
+              FirstName = "Damian",
+              LastName = "Marley",
+              FullName = "Damian Marley",
+              Slugs = new List<ArtistSlug>
+              {
+                new ArtistSlug
+                {
+                  Name = "damian-marley",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              IsApproved = true,
+              UserId = userId,
+              CreatedAt = DateTime.UtcNow,
+              Image = GetImage("damian-marley.jpg")
+            };
+
             Artist davidBowie = new Artist
             {
               FirstName = "David",
               LastName = "Bowie",
+              FullName = "David Bowie",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -196,6 +201,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Ed",
               LastName = "Sheeran",
+              FullName = "Ed Sheeran",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -215,6 +221,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Fleetwood",
               LastName = "Mac",
+              FullName = "Fleetwood Mac",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -234,6 +241,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "George",
               LastName = "Michael",
+              FullName = "George Michael",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -253,6 +261,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Howling",
               LastName = "Wolf",
+              FullName = "Howling Wolf",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -272,6 +281,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Ice",
               LastName = "T",
+              FullName = "Ice T",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -291,6 +301,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Jennifer",
               LastName = "Lopez",
+              FullName = "Jennifer Lopez",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -310,6 +321,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Kenny",
               LastName = "Rogers",
+              FullName = "Kenny Rogers",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -329,6 +341,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Lady",
               LastName = "Gaga",
+              FullName = "Lady Gaga",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -348,6 +361,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Muddy",
               LastName = "Waters",
+              FullName = "Muddy Waters",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -367,6 +381,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Neil",
               LastName = "Young",
+              FullName = "Neil Young",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -386,6 +401,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Ozzy",
               LastName = "Osbourne",
+              FullName = "Ozzy Osbourne",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -405,6 +421,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Patti",
               LastName = "Smith",
+              FullName = "Patti Smith",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -424,6 +441,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Queen",
               LastName = "",
+              FullName = "Queen",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -443,6 +461,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Ray",
               LastName = "Charles",
+              FullName = "Ray Charles",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -462,6 +481,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Sonny Boy",
               LastName = "Williamson",
+              FullName = "Sonny Boy Williamson",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -481,6 +501,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "T Bone",
               LastName = "Walker",
+              FullName = "T Bone Walker",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -500,6 +521,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "U2",
               LastName = "",
+              FullName = "U2",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -519,6 +541,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Van",
               LastName = "Halen",
+              FullName = "Van Halen",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -538,6 +561,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Wheatus",
               LastName = "",
+              FullName = "Wheatus",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -557,6 +581,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "XTC",
               LastName = "",
+              FullName = "XTC",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -576,6 +601,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Yolanda",
               LastName = "Be Cool",
+              FullName = "Yolanda Be Cool",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -595,6 +621,7 @@ namespace Bejebeje.DataAccess.Data
             {
               FirstName = "Zac",
               LastName = "Brown",
+              FullName = "Zac Brown",
               Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -610,7 +637,7 @@ namespace Bejebeje.DataAccess.Data
               Image = GetImage("zbrown.jpg")
             };
 
-            List<Artist> artists = new List<Artist> { acdc, bbKing, canaanSmith, damianMarley, edSheeran, fleetwoodMac, georgeMichael, howlingWolf, iceT, jenniferLopez, kennyRogers, ladyGaga, muddyWaters, neilYoung, ozzyOsbourne, pattiSmith, queen, rayCharles, sonnyBoyWilliamson, tBoneWalker, u2, vanHalen, wheatus, xtc, yolandaBeCool, zacBrown };
+            List<Artist> artists = new List<Artist> { acdc, bbKing, canaanSmith, damianMarley, davidBowie, edSheeran, fleetwoodMac, georgeMichael, howlingWolf, iceT, jenniferLopez, kennyRogers, ladyGaga, muddyWaters, neilYoung, ozzyOsbourne, pattiSmith, queen, rayCharles, sonnyBoyWilliamson, tBoneWalker, u2, vanHalen, wheatus, xtc, yolandaBeCool, zacBrown };
 
             context.Artists.AddRange(artists);
             context.SaveChanges();

@@ -44,10 +44,10 @@
         .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
-      Func<Task> act = async () => await lyricsService.GetLyricsAsync(artistSlug);
+      Func<Task> action = async () => await lyricsService.GetLyricsAsync(artistSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArtistNotFoundException>();
+      await action.Should().ThrowAsync<ArtistNotFoundException>();
     }
 
     [Test]
@@ -112,6 +112,117 @@
     }
 
     [Test]
+    public async Task SearchLyricsAsync_WhenNoLyricsMatch_ReturnsAnEmptyListOfLyricCardViewModels()
+    {
+      // arrange
+      string lyricTitle = "window";
+      string seedLyricTitle = "TNT";
+      string seedLyricSlug = "tnt";
+      DateTime seedLyricCreatedAt = DateTime.UtcNow;
+
+      Lyric tnt = new Lyric
+      {
+        Title = seedLyricTitle,
+        CreatedAt = seedLyricCreatedAt,
+        Slugs = new List<LyricSlug>
+        {
+          new LyricSlug
+          {
+            Name = seedLyricSlug,
+            IsPrimary = true,
+            CreatedAt = seedLyricCreatedAt,
+          }
+        }
+      };
+
+      Context.Lyrics.Add(tnt);
+      Context.SaveChanges();
+
+      // act
+      IList<LyricCardViewModel> result = await lyricsService.SearchLyricsAsync(lyricTitle);
+
+      // assert
+      result.Should().BeOfType<List<LyricCardViewModel>>();
+      result.Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task SearchLyricsAsync_WhenThereIsMatchOnTitleOnly_ReturnsAPopulatedListOfLyricCardViewModels()
+    {
+      // arrange
+      string lyricTitle = "tnt";
+      string seedLyricTitle = "TNT";
+      string unmatchedLyricSlug = "door";
+      DateTime seedLyricCreatedAt = DateTime.UtcNow;
+
+      Lyric tnt = new Lyric
+      {
+        Title = seedLyricTitle,
+        CreatedAt = seedLyricCreatedAt,
+        Slugs = new List<LyricSlug>
+        {
+          new LyricSlug
+          {
+            Name = unmatchedLyricSlug,
+            IsPrimary = true,
+            CreatedAt = seedLyricCreatedAt
+          }
+        }
+      };
+
+      Context.Lyrics.Add(tnt);
+      Context.SaveChanges();
+
+      // act
+      IList<LyricCardViewModel> result = await lyricsService.SearchLyricsAsync(lyricTitle);
+
+      // assert
+      result.Should().BeOfType<List<LyricCardViewModel>>();
+      result.Should().NotBeEmpty();
+      result.Should().HaveCount(1);
+      result.First().Title.Should().Be(seedLyricTitle);
+      result.First().Slug.Should().Be(unmatchedLyricSlug);
+    }
+
+    [Test]
+    public async Task SearchLyricsAsync_WhenThereIsMatchOnLyricSlugOnly_ReturnsAPopulatedListOfLyricCardViewModels()
+    {
+      // arrange
+      string lyricTitle = "oen";
+      string seedLyricTitle = "TNT";
+      string uniqueLyricSlug = "uioenkl";
+      DateTime seedLyricCreatedAt = DateTime.UtcNow;
+
+      Lyric tnt = new Lyric
+      {
+        Title = seedLyricTitle,
+        CreatedAt = seedLyricCreatedAt,
+        Slugs = new List<LyricSlug>
+        {
+          new LyricSlug
+          {
+            Name = uniqueLyricSlug,
+            IsPrimary = true,
+            CreatedAt = seedLyricCreatedAt
+          }
+        }
+      };
+
+      Context.Lyrics.Add(tnt);
+      Context.SaveChanges();
+
+      // act
+      IList<LyricCardViewModel> result = await lyricsService.SearchLyricsAsync(lyricTitle);
+
+      // assert
+      result.Should().BeOfType<List<LyricCardViewModel>>();
+      result.Should().NotBeEmpty();
+      result.Should().HaveCount(1);
+      result.First().Title.Should().Be(seedLyricTitle);
+      result.First().Slug.Should().Be(uniqueLyricSlug);
+    }
+
+    [Test]
     public async Task GetSingleLyricAsync_WhenArtistDoesNotExist_ThrowsAnArtistNotFoundException()
     {
       // arrange
@@ -123,10 +234,10 @@
         .ThrowsAsync(new ArtistNotFoundException(artistSlug));
 
       // act
-      Func<Task> act = async () => await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
+      Func<Task> action = async () => await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArtistNotFoundException>();
+      await action.Should().ThrowAsync<ArtistNotFoundException>();
     }
 
     [Test]
@@ -164,10 +275,10 @@
         .ReturnsAsync(artistId);
 
       // act
-      Func<Task> act = async () => await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
+      Func<Task> action = async () => await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
 
       // assert
-      await act.Should().ThrowAsync<LyricNotFoundException>();
+      await action.Should().ThrowAsync<LyricNotFoundException>();
     }
 
     [Test]
@@ -225,7 +336,7 @@
         .ReturnsAsync(artistId);
 
       // act
-      LyricViewModel result =  await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
+      LyricViewModel result = await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
 
       // assert
       result.Should().NotBeNull();

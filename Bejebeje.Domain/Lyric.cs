@@ -14,7 +14,7 @@
 
     public string UserId { get; set; }
 
-    public IEnumerable<LyricSlug> Slugs { get; set; }
+    public IEnumerable<LyricSlug> Slugs { get; set; } = new List<LyricSlug>();
 
     public DateTime CreatedAt { get; set; }
 

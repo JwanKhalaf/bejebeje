@@ -35,11 +35,33 @@
         .Select(l => new LyricCardViewModel
         {
           Title = l.Title,
-          Slug = l.Slugs.Where(s => s.IsPrimary).Select(s => s.Name).Single()
+          Slug = l.Slugs.Single(s => s.IsPrimary).Name
         })
         .ToListAsync();
 
       return lyrics;
+    }
+
+    public async Task<IList<LyricCardViewModel>> SearchLyricsAsync(string lyricName)
+    {
+      string lyricNameStandardized = lyricName.Standardize();
+
+      var test = context.Lyrics.ToList();
+
+      List<LyricCardViewModel> matchedLyrics = await context
+        .Lyrics
+        .AsNoTracking()
+        .Where(x =>
+          EF.Functions.Like(x.Title.Standardize(), $"%{lyricNameStandardized}%") ||
+          x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{lyricNameStandardized}%")))
+        .Select(x => new LyricCardViewModel
+        {
+          Title = x.Title,
+          Slug = x.Slugs.Single(s => s.IsPrimary).Name
+        })
+        .ToListAsync();
+
+      return matchedLyrics;
     }
 
     public async Task<LyricViewModel> GetSingleLyricAsync(string artistSlug, string lyricSlug)

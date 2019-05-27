@@ -42,10 +42,10 @@
       string artistSlug = null;
 
       // act
-      Func<Task> act = async () => await lyricsController.GetLyrics(artistSlug);
+      Func<Task> action = async () => await lyricsController.GetLyrics(artistSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArgumentNullException>();
+      await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]
@@ -116,6 +116,96 @@
     }
 
     [Test]
+    public async Task SearchLyrics_WhenParamIsNull_ThrowsAnArgumentNullException()
+    {
+      // arrange
+      string lyricTitle = null;
+
+      // act
+      Func<Task> action = async () => await lyricsController.SearchLyrics(lyricTitle);
+
+      // assert
+      await action.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Test]
+    public async Task SearchLyrics_WhenParamIsEmpty_ThrowsAnArgumentNullException()
+    {
+      // arrange
+      string lyricTitle = "";
+
+      // act
+      Func<Task> action = async () => await lyricsController.SearchLyrics(lyricTitle);
+
+      // assert
+      await action.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Test]
+    public async Task SearchLyrics_WhenNoLyricsMatch_ReturnsAnEmptyListOfLyricCardViewModel()
+    {
+      // arrange
+      string lyricTitle = "tnt";
+
+      lyricsServiceMock
+        .Setup(x => x.SearchLyricsAsync(lyricTitle))
+        .ReturnsAsync(new List<LyricCardViewModel>());
+
+      // act
+      IActionResult result = await lyricsController.SearchLyrics(lyricTitle);
+
+      // assert
+      result.Should().BeOfType<OkObjectResult>();
+
+      OkObjectResult okObjectResult = result as OkObjectResult;
+
+      okObjectResult.Should().NotBeNull();
+
+      List<LyricCardViewModel> lyrics = okObjectResult.Value as List<LyricCardViewModel>;
+
+      lyrics.Should().NotBeNull();
+      lyrics.Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task SearchLyrics_WhenLyricsMatch_ReturnsAPopulatedListOfLyricCardViewModel()
+    {
+      // arrange
+      string lyricTitle = "tnt";
+      string seedLyricTitle = "TNT";
+      string seedLyricSlug = "tnt";
+
+      lyricsServiceMock
+        .Setup(x => x.SearchLyricsAsync(lyricTitle))
+        .ReturnsAsync(new List<LyricCardViewModel>
+        {
+          new LyricCardViewModel
+          {
+            Title = seedLyricTitle,
+            Slug = seedLyricSlug
+          }
+        });
+
+      // act
+      IActionResult result = await lyricsController.SearchLyrics(lyricTitle);
+
+      // assert
+      result.Should().BeOfType<OkObjectResult>();
+
+      OkObjectResult okObjectResult = result as OkObjectResult;
+
+      okObjectResult.Should().NotBeNull();
+
+      List<LyricCardViewModel> lyrics = okObjectResult.Value as List<LyricCardViewModel>;
+
+      lyrics.Should().NotBeNull();
+      lyrics.Should().HaveCount(1);
+
+      lyrics.First().Title.Should().Be(seedLyricTitle);
+      lyrics.First().Slug.Should().Be(seedLyricSlug);
+    }
+
+    [Test]
     public async Task GetSingleLyric_WhenArtistSlugParamIsNull_ThrowsAnArgumentNullException()
     {
       // arrange
@@ -123,10 +213,10 @@
       string lyricSlug = "the-gambler";
 
       // act
-      Func<Task> act = async () => await lyricsController.GetSingleLyric(artistSlug, lyricSlug);
+      Func<Task> action = async () => await lyricsController.GetSingleLyric(artistSlug, lyricSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArgumentNullException>();
+      await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]
@@ -137,10 +227,10 @@
       string lyricSlug = null;
 
       // act
-      Func<Task> act = async () => await lyricsController.GetSingleLyric(artistSlug, lyricSlug);
+      Func<Task> action = async () => await lyricsController.GetSingleLyric(artistSlug, lyricSlug);
 
       // assert
-      await act.Should().ThrowAsync<ArgumentNullException>();
+      await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]

@@ -50,6 +50,22 @@
       }
     }
 
+    [Route("v{version:apiVersion}/[controller]")]
+    [HttpGet]
+    public async Task<IActionResult> SearchLyrics([FromQuery] string title)
+    {
+      if (string.IsNullOrEmpty(title))
+      {
+        throw new ArgumentNullException("Missing lyric title", nameof(title));
+      }
+
+      IList<LyricCardViewModel> lyrics = await lyricsService
+        .SearchLyricsAsync(title)
+        .ConfigureAwait(false);
+
+      return Ok(lyrics);
+    }
+
     [Route("v{version:apiVersion}/artists/{artistSlug}/[controller]/{lyricSlug}")]
     [HttpGet]
     public async Task<IActionResult> GetSingleLyric(string artistSlug, string lyricSlug)

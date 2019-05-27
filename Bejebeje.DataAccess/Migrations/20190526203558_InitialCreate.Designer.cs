@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bejebeje.DataAccess.Migrations
 {
     [DbContext(typeof(BbContext))]
-    [Migration("20190511151840_InitialCreate")]
+    [Migration("20190526203558_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace Bejebeje.DataAccess.Migrations
 
                     b.Property<string>("FirstName")
                         .HasColumnName("first_name");
+
+                    b.Property<string>("FullName")
+                        .HasColumnName("full_name");
 
                     b.Property<bool>("IsApproved")
                         .HasColumnName("is_approved");
