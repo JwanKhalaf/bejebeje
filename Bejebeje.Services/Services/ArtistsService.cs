@@ -6,6 +6,7 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.ViewModels.Artist;
   using Microsoft.EntityFrameworkCore;
@@ -59,12 +60,13 @@
       return artist;
     }
 
-    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync()
+    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync(int pageNumber, int pageSize)
     {
       List<ArtistCardViewModel> artists = await context
         .Artists
         .AsNoTracking()
           .OrderBy(x => x.FirstName)
+          .Paging(pageNumber, pageSize)
           .Select(x => new ArtistCardViewModel
           {
             FirstName = x.FirstName,

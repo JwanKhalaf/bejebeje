@@ -10,7 +10,7 @@
 
     Task<ArtistDetailsViewModel> GetArtistDetailsAsync(string artistSlug);
 
-    Task<IList<ArtistCardViewModel>> GetArtistsAsync();
+    Task<IList<ArtistCardViewModel>> GetArtistsAsync(int pageNumber, int pageSize);
 
     Task<IList<ArtistCardViewModel>> SearchArtistsAsync(string artistName);
   }
