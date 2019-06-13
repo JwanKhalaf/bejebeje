@@ -27,7 +27,7 @@
 
     [Route("v{version:apiVersion}/[controller]")]
     [HttpGet]
-    public async Task<IActionResult> GetArtists([FromQuery] string name, int offset = 1, int limit = 10)
+    public async Task<IActionResult> GetArtists([FromQuery] string name, int offset = 0, int limit = 10)
     {
       IList<ArtistCardViewModel> artists;
 
