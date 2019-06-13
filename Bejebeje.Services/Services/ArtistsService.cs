@@ -60,13 +60,13 @@
       return artist;
     }
 
-    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync(int pageNumber, int pageSize)
+    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync(int offset, int limit)
     {
       List<ArtistCardViewModel> artists = await context
         .Artists
         .AsNoTracking()
           .OrderBy(x => x.FirstName)
-          .Paging(pageNumber, pageSize)
+          .Paging(offset, limit)
           .Select(x => new ArtistCardViewModel
           {
             FirstName = x.FirstName,

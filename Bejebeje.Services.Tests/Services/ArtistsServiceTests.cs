@@ -184,11 +184,11 @@
     public async Task GetArtistsAsync_WithNoData_ReturnsAnEmptyListOfArtists()
     {
       // arrange
-      int pageNumber = 1;
-      int pageSize = 10;
+      int offset = 0;
+      int limit = 10;
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync(pageNumber, pageSize);
+      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync(offset, limit);
 
       // assert
       result.Should().BeOfType<List<ArtistCardViewModel>>();
@@ -203,8 +203,8 @@
       string artistLastName = "Cash";
       string artistSlug = "johnny-cash";
       int expectedArtistImageId = 1;
-      int pageNumber = 1;
-      int pageSize = 10;
+      int offset = 1;
+      int limit = 10;
 
       Artist artistFromDb = new Artist
       {
@@ -230,7 +230,7 @@
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync(pageNumber, pageSize);
+      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync(offset, limit);
 
       // assert
       result.Should().BeOfType<List<ArtistCardViewModel>>();
