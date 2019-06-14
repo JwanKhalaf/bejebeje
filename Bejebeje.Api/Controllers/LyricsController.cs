@@ -25,7 +25,7 @@
       this.logger = logger;
     }
 
-    [Route("v{version:apiVersion}/artists/{artistSlug}/[controller]")]
+    [Route("artists/{artistSlug}/[controller]")]
     [HttpGet]
     public async Task<IActionResult> GetLyrics(string artistSlug)
     {
@@ -50,7 +50,7 @@
       }
     }
 
-    [Route("v{version:apiVersion}/[controller]")]
+    [Route("[controller]")]
     [HttpGet]
     public async Task<IActionResult> SearchLyrics([FromQuery] string title)
     {
@@ -66,7 +66,7 @@
       return Ok(lyrics);
     }
 
-    [Route("v{version:apiVersion}/artists/{artistSlug}/[controller]/{lyricSlug}")]
+    [Route("artists/{artistSlug}/[controller]/{lyricSlug}")]
     [HttpGet]
     public async Task<IActionResult> GetSingleLyric(string artistSlug, string lyricSlug)
     {

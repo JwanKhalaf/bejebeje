@@ -24,7 +24,7 @@
       this.logger = logger;
     }
 
-    [Route("v{version:apiVersion}/[controller]")]
+    [Route("[controller]")]
     [HttpGet]
     public async Task<IActionResult> GetArtists([FromQuery] string name, int offset = 0, int limit = 10)
     {
@@ -46,7 +46,7 @@
       return Ok(artistsResponse);
     }
 
-    [Route("v{version:apiVersion}/[controller]/{artistSlug}")]
+    [Route("[controller]/{artistSlug}")]
     public async Task<IActionResult> GetArtistDetails(string artistSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
