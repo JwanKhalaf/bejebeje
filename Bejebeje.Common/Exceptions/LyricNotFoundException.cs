@@ -1,8 +1,8 @@
-﻿using System;
-using Bejebeje.Common.Extensions;
-
-namespace Bejebeje.Common.Exceptions
+﻿namespace Bejebeje.Common.Exceptions
 {
+  using System;
+  using Bejebeje.Common.Extensions;
+
   public class LyricNotFoundException : Exception
   {
     public LyricNotFoundException(string artistSlug, string lyricSlug)

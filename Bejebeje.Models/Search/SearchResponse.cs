@@ -1,8 +1,8 @@
-﻿namespace Bejebeje.ViewModels.Search
+﻿namespace Bejebeje.Models.Search
 {
   using Bejebeje.Common.Enums;
 
-  public class SearchResultViewModel
+  public class SearchResponse
   {
     public string Slug { get; set; }
 

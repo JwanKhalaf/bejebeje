@@ -6,8 +6,8 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Lyric;
   using Microsoft.EntityFrameworkCore;
 
   public class LyricsService : ILyricsService
@@ -35,7 +35,7 @@
         .Select(l => new LyricCardViewModel
         {
           Title = l.Title,
-          Slug = l.Slugs.Single(s => s.IsPrimary).Name
+          Slug = l.Slugs.Single(s => s.IsPrimary).Name,
         })
         .ToListAsync();
 
@@ -57,7 +57,7 @@
         .Select(x => new LyricCardViewModel
         {
           Title = x.Title,
-          Slug = x.Slugs.Single(s => s.IsPrimary).Name
+          Slug = x.Slugs.Single(s => s.IsPrimary).Name,
         })
         .ToListAsync();
 
@@ -75,7 +75,7 @@
         .Select(l => new LyricViewModel
         {
           Title = l.Title,
-          Body = l.Body
+          Body = l.Body,
         })
         .SingleOrDefaultAsync();
 

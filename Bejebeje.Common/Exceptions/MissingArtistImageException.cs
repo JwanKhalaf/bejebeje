@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Bejebeje.Common.Exceptions
+﻿namespace Bejebeje.Common.Exceptions
 {
+  using System;
+
   public class MissingArtistImageException : Exception
   {
     public MissingArtistImageException(string artistSlug)

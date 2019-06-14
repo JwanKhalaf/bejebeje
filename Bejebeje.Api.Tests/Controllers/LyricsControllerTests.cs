@@ -1,19 +1,19 @@
-﻿namespace Bejebeje.Api.Tests.Controllers
-{
-  using System;
-  using System.Collections.Generic;
-  using System.Linq;
-  using System.Threading.Tasks;
-  using Bejebeje.Api.Controllers;
-  using Bejebeje.Common.Exceptions;
-  using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Lyric;
-  using FluentAssertions;
-  using Microsoft.AspNetCore.Mvc;
-  using Microsoft.Extensions.Logging;
-  using Moq;
-  using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Bejebeje.Api.Controllers;
+using Bejebeje.Common.Exceptions;
+using Bejebeje.Services.Services.Interfaces;
+using Bejebeje.Models.Lyric;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
+using NUnit.Framework;
 
+namespace Bejebeje.Api.Tests.Controllers
+{
   [TestFixture]
   public class LyricsControllerTests
   {

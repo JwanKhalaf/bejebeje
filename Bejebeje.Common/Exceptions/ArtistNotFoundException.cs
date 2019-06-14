@@ -5,7 +5,7 @@
   public class ArtistNotFoundException : Exception
   {
     public ArtistNotFoundException(int artistId)
-      : base ($"The artist with Id: {artistId} could not be found.")
+      : base($"The artist with Id: {artistId} could not be found.")
     {
       ArtistId = artistId;
     }

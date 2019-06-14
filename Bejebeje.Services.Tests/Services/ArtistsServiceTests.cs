@@ -7,9 +7,9 @@
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Domain;
+  using Bejebeje.Models.Artist;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Tests.Helpers;
-  using Bejebeje.ViewModels.Artist;
   using FluentAssertions;
   using NUnit.Framework;
 
@@ -59,9 +59,9 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
-        }
+            IsPrimary = true,
+          },
+        },
       };
 
       Context.Artists.Add(fatsWaller);
@@ -108,16 +108,16 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
-        }
+            IsPrimary = true,
+          },
+        },
       };
 
       Context.Artists.Add(fatsWaller);
       Context.SaveChanges();
 
       // act
-      ArtistDetailsViewModel result = await artistsService.GetArtistDetailsAsync(artistSlug);
+      ArtistDetailsResponse result = await artistsService.GetArtistDetailsAsync(artistSlug);
 
       // assert
       result.Should().NotBeNull();
@@ -155,21 +155,21 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
+            IsPrimary = true,
+          },
         },
         Image = new ArtistImage
         {
           Data = imageBytes,
-          CreatedAt = DateTime.UtcNow
-        }
+          CreatedAt = DateTime.UtcNow,
+        },
       };
 
       Context.Artists.Add(fatsWaller);
       Context.SaveChanges();
 
       // act
-      ArtistDetailsViewModel result = await artistsService.GetArtistDetailsAsync(artistSlug);
+      ArtistDetailsResponse result = await artistsService.GetArtistDetailsAsync(artistSlug);
 
       // assert
       result.Should().NotBeNull();
@@ -183,12 +183,18 @@
     [Test]
     public async Task GetArtistsAsync_WithNoData_ReturnsAnEmptyListOfArtists()
     {
+      // arrange
+      int offset = 0;
+      int limit = 10;
+
       // act
-      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync();
+      PagedArtistsResponse result = await artistsService.GetArtistsAsync(offset, limit);
 
       // assert
-      result.Should().BeOfType<List<ArtistCardViewModel>>();
-      result.Should().BeEmpty();
+      result.Should().BeOfType<PagedArtistsResponse>();
+      result.Artists.Should().BeEmpty();
+      result.Paging.Offset.Should().Be(offset);
+      result.Paging.Limit.Should().Be(limit);
     }
 
     [Test]
@@ -199,6 +205,8 @@
       string artistLastName = "Cash";
       string artistSlug = "johnny-cash";
       int expectedArtistImageId = 1;
+      int offset = 0;
+      int limit = 10;
 
       Artist artistFromDb = new Artist
       {
@@ -207,7 +215,7 @@
         Image = new ArtistImage
         {
           Data = new byte[10],
-          CreatedAt = DateTime.UtcNow
+          CreatedAt = DateTime.UtcNow,
         },
         Slugs = new List<ArtistSlug>
         {
@@ -215,24 +223,26 @@
           {
             Name = artistSlug,
             IsPrimary = true,
-            CreatedAt = DateTime.UtcNow
-          }
-        }
+            CreatedAt = DateTime.UtcNow,
+          },
+        },
       };
 
       Context.Artists.Add(artistFromDb);
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.GetArtistsAsync();
+      PagedArtistsResponse result = await artistsService.GetArtistsAsync(offset, limit);
 
       // assert
-      result.Should().BeOfType<List<ArtistCardViewModel>>();
-      result.Should().HaveCount(1);
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().ImageId.Should().Be(expectedArtistImageId);
-      result.First().Slug.Should().Be(artistSlug);
+      result.Should().BeOfType<PagedArtistsResponse>();
+      result.Artists.Should().HaveCount(1);
+      result.Artists.First().FirstName.Should().Be(artistFirstName);
+      result.Artists.First().LastName.Should().Be(artistLastName);
+      result.Artists.First().ImageId.Should().Be(expectedArtistImageId);
+      result.Artists.First().Slugs.Should().HaveCount(1);
+      result.Artists.First().Slugs.First().Name.Should().Be(artistSlug);
+      result.Artists.First().Slugs.First().IsPrimary.Should().BeTrue();
     }
 
     [Test]
@@ -240,6 +250,8 @@
     {
       // arrange
       string artistName = "Watson";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -265,26 +277,26 @@
           {
             Name = artistSlug,
             IsPrimary = true,
-            CreatedAt = artistCreatedAt
-          }
+            CreatedAt = artistCreatedAt,
+          },
         },
         Image = new ArtistImage
         {
           Data = imageBytes,
-          CreatedAt = artistCreatedAt
-        }
+          CreatedAt = artistCreatedAt,
+        },
       };
 
       Context.Artists.Add(fatsWaller);
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistCardViewModel>>();
-      result.Should().HaveCount(0);
+      result.Should().BeOfType<PagedArtistsResponse>();
+      result.Artists.Should().HaveCount(0);
     }
 
     [Test]
@@ -292,6 +304,8 @@
     {
       // arrange
       string artistName = "fats";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -316,31 +330,38 @@
           {
             Name = artistSlug,
             IsPrimary = true,
-            CreatedAt = artistCreatedAt
-          }
+            CreatedAt = artistCreatedAt,
+          },
         },
         Image = new ArtistImage
         {
           Data = imageBytes,
-          CreatedAt = artistCreatedAt
-        }
+          CreatedAt = artistCreatedAt,
+        },
       };
 
       Context.Artists.Add(fatsWaller);
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistCardViewModel>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slug.Should().Be(artistSlug);
-      result.First().ImageId.Should().Be(1);
+      ICollection<ArtistsResponse> artists = result.Artists;
+
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
 
     [Test]
@@ -348,6 +369,8 @@
     {
       // arrange
       string artistName = "waller";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -372,31 +395,38 @@
           {
             Name = artistSlug,
             IsPrimary = true,
-            CreatedAt = artistCreatedAt
-          }
+            CreatedAt = artistCreatedAt,
+          },
         },
         Image = new ArtistImage
         {
           Data = imageBytes,
-          CreatedAt = artistCreatedAt
-        }
+          CreatedAt = artistCreatedAt,
+        },
       };
 
       Context.Artists.Add(fatsWaller);
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistCardViewModel>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slug.Should().Be(artistSlug);
-      result.First().ImageId.Should().Be(1);
+      ICollection<ArtistsResponse> artists = result.Artists;
+
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
 
     [Test]
@@ -404,6 +434,8 @@
     {
       // arrange
       string artistName = "nokia";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -428,31 +460,37 @@
           {
             Name = artistSlug,
             IsPrimary = true,
-            CreatedAt = artistCreatedAt
-          }
+            CreatedAt = artistCreatedAt,
+          },
         },
         Image = new ArtistImage
         {
           Data = imageBytes,
-          CreatedAt = artistCreatedAt
-        }
+          CreatedAt = artistCreatedAt,
+        },
       };
 
       Context.Artists.Add(fatsWaller);
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistCardViewModel>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
+      ICollection<ArtistsResponse> artists = result.Artists;
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slug.Should().Be(artistSlug);
-      result.First().ImageId.Should().Be(1);
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
 
     [Test]
@@ -460,6 +498,8 @@
     {
       // arrange
       string artistName = "fats wal";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -484,31 +524,37 @@
           {
             Name = artistSlug,
             IsPrimary = true,
-            CreatedAt = artistCreatedAt
-          }
+            CreatedAt = artistCreatedAt,
+          },
         },
         Image = new ArtistImage
         {
           Data = imageBytes,
-          CreatedAt = artistCreatedAt
-        }
+          CreatedAt = artistCreatedAt,
+        },
       };
 
       Context.Artists.Add(fatsWaller);
       Context.SaveChanges();
 
       // act
-      IList<ArtistCardViewModel> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistCardViewModel>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
+      ICollection<ArtistsResponse> artists = result.Artists;
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slug.Should().Be(artistSlug);
-      result.First().ImageId.Should().Be(1);
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
   }
 }

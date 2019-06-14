@@ -1,17 +1,16 @@
 ﻿namespace Bejebeje.Services.Services.Interfaces
 {
-  using System.Collections.Generic;
   using System.Threading.Tasks;
-  using Bejebeje.ViewModels.Artist;
+  using Bejebeje.Models.Artist;
 
   public interface IArtistsService
   {
     Task<int> GetArtistIdAsync(string artistSlug);
 
-    Task<ArtistDetailsViewModel> GetArtistDetailsAsync(string artistSlug);
+    Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug);
 
-    Task<IList<ArtistCardViewModel>> GetArtistsAsync();
+    Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit);
 
-    Task<IList<ArtistCardViewModel>> SearchArtistsAsync(string artistName);
+    Task<PagedArtistsResponse> SearchArtistsAsync(string artistName, int offset, int limit);
   }
 }

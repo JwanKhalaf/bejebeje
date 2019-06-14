@@ -1,8 +1,8 @@
-﻿namespace Bejebeje.ViewModels.Artist
+﻿namespace Bejebeje.Models.Artist
 {
   using System;
 
-  public class ArtistDetailsViewModel
+  public class ArtistDetailsResponse
   {
     public int Id { get; set; }
 

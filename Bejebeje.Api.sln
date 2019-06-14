@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Domain", "Bejebeje
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Services", "Bejebeje.Services\Bejebeje.Services.csproj", "{B591ED41-877E-4320-B204-718E8A9B844A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.ViewModels", "Bejebeje.ViewModels\Bejebeje.ViewModels.csproj", "{B1750691-5278-4EBA-97AF-AB5FFAF26422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Models", "Bejebeje.Models\Bejebeje.Models.csproj", "{B1750691-5278-4EBA-97AF-AB5FFAF26422}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Common", "Bejebeje.Common\Bejebeje.Common.csproj", "{BC421B76-0934-4B01-B755-7101102DE2E9}"
 EndProject
@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{827542D6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Api.Tests", "Bejebeje.Api.Tests\Bejebeje.Api.Tests.csproj", "{93E83E4A-CB2F-4071-8E45-34D117B281C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bejebeje.Services.Tests", "Bejebeje.Services.Tests\Bejebeje.Services.Tests.csproj", "{70E06816-AD45-46C2-BD21-86C957837E7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Services.Tests", "Bejebeje.Services.Tests\Bejebeje.Services.Tests.csproj", "{70E06816-AD45-46C2-BD21-86C957837E7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
