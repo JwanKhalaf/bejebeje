@@ -1,7 +1,6 @@
 ﻿namespace Bejebeje.Api.Controllers
 {
   using System;
-  using System.Collections.Generic;
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
@@ -27,26 +26,22 @@
 
     [Route("v{version:apiVersion}/[controller]")]
     [HttpGet]
-    public async Task<IActionResult> GetArtists([FromQuery] int offset = 0, int limit = 10)
+    public async Task<IActionResult> GetArtists([FromQuery] string name, int offset = 0, int limit = 10)
     {
       PagedArtistsResponse artistsResponse;
 
-      artistsResponse = await artistsService
+      if (string.IsNullOrEmpty(name))
+      {
+        artistsResponse = await artistsService
         .GetArtistsAsync(offset, limit)
         .ConfigureAwait(false);
-
-      return Ok(artistsResponse);
-    }
-
-    [Route("v{version:apiVersion}/[controller]")]
-    [HttpGet]
-    public async Task<IActionResult> GetArtists([FromQuery] string name)
-    {
-      ICollection<ArtistsResponse> artistsResponse;
-
-      artistsResponse = await artistsService
-        .SearchArtistsAsync(name)
+      }
+      else
+      {
+        artistsResponse = await artistsService
+        .SearchArtistsAsync(name, offset, limit)
         .ConfigureAwait(false);
+      }
 
       return Ok(artistsResponse);
     }

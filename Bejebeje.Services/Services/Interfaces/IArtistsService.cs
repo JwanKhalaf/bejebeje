@@ -1,6 +1,5 @@
 ﻿namespace Bejebeje.Services.Services.Interfaces
 {
-  using System.Collections.Generic;
   using System.Threading.Tasks;
   using Bejebeje.Models.Artist;
 
@@ -12,6 +11,6 @@
 
     Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit);
 
-    Task<ICollection<ArtistsResponse>> SearchArtistsAsync(string artistName);
+    Task<PagedArtistsResponse> SearchArtistsAsync(string artistName, int offset, int limit);
   }
 }

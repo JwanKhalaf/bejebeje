@@ -91,13 +91,8 @@
       return response;
     }
 
-    public async Task<ICollection<ArtistsResponse>> SearchArtistsAsync(string artistName)
+    public async Task<PagedArtistsResponse> SearchArtistsAsync(string artistName, int offset, int limit)
     {
-      if (string.IsNullOrEmpty(artistName))
-      {
-        return new List<ArtistsResponse>();
-      }
-
       string searchTermStandardized = artistName.Standardize();
 
       List<ArtistsResponse> matchedArtists = await context
@@ -119,7 +114,17 @@
           })
           .ToListAsync();
 
-      return matchedArtists;
+      PagedArtistsResponse pagedArtistsResponse = new PagedArtistsResponse
+      {
+        Artists = matchedArtists,
+        Paging = new PagingResponse
+        {
+          Offset = offset,
+          Limit = limit,
+        },
+      };
+
+      return pagedArtistsResponse;
     }
   }
 }

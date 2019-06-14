@@ -250,6 +250,8 @@
     {
       // arrange
       string artistName = "Watson";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -289,12 +291,12 @@
       Context.SaveChanges();
 
       // act
-      ICollection<ArtistsResponse> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistsResponse>>();
-      result.Should().HaveCount(0);
+      result.Should().BeOfType<PagedArtistsResponse>();
+      result.Artists.Should().HaveCount(0);
     }
 
     [Test]
@@ -302,6 +304,8 @@
     {
       // arrange
       string artistName = "fats";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -340,19 +344,24 @@
       Context.SaveChanges();
 
       // act
-      ICollection<ArtistsResponse> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistsResponse>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slugs.Should().HaveCount(1);
-      result.First().Slugs.First().Name.Should().Be(artistSlug);
-      result.First().Slugs.First().IsPrimary.Should().BeTrue();
-      result.First().ImageId.Should().Be(1);
+      ICollection<ArtistsResponse> artists = result.Artists;
+
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
 
     [Test]
@@ -360,6 +369,8 @@
     {
       // arrange
       string artistName = "waller";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -398,19 +409,24 @@
       Context.SaveChanges();
 
       // act
-      ICollection<ArtistsResponse> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistsResponse>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slugs.Should().HaveCount(1);
-      result.First().Slugs.First().Name.Should().Be(artistSlug);
-      result.First().Slugs.First().IsPrimary.Should().BeTrue();
-      result.First().ImageId.Should().Be(1);
+      ICollection<ArtistsResponse> artists = result.Artists;
+
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
 
     [Test]
@@ -418,6 +434,8 @@
     {
       // arrange
       string artistName = "nokia";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -456,19 +474,23 @@
       Context.SaveChanges();
 
       // act
-      ICollection<ArtistsResponse> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistsResponse>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
+      ICollection<ArtistsResponse> artists = result.Artists;
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slugs.Should().HaveCount(1);
-      result.First().Slugs.First().Name.Should().Be(artistSlug);
-      result.First().Slugs.First().IsPrimary.Should().BeTrue();
-      result.First().ImageId.Should().Be(1);
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
 
     [Test]
@@ -476,6 +498,8 @@
     {
       // arrange
       string artistName = "fats wal";
+      int offset = 0;
+      int limit = 10;
 
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
@@ -514,19 +538,23 @@
       Context.SaveChanges();
 
       // act
-      ICollection<ArtistsResponse> result = await artistsService.SearchArtistsAsync(artistName);
+      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<List<ArtistsResponse>>();
-      result.Should().HaveCount(1);
+      result.Should().BeOfType<PagedArtistsResponse>();
+      ICollection<ArtistsResponse> artists = result.Artists;
 
-      result.First().FirstName.Should().Be(artistFirstName);
-      result.First().LastName.Should().Be(artistLastName);
-      result.First().Slugs.Should().HaveCount(1);
-      result.First().Slugs.First().Name.Should().Be(artistSlug);
-      result.First().Slugs.First().IsPrimary.Should().BeTrue();
-      result.First().ImageId.Should().Be(1);
+      artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artist.ImageId.Should().Be(1);
     }
   }
 }
