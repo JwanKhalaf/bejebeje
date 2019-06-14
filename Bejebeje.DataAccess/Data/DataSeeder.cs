@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Bejebeje.DataAccess.Configuration;
-using Bejebeje.DataAccess.Context;
-using Bejebeje.Domain;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-
-namespace Bejebeje.DataAccess.Data
+﻿namespace Bejebeje.DataAccess.Data
 {
+  using System;
+  using System.Collections.Generic;
+  using System.IO;
+  using System.Linq;
+  using Bejebeje.DataAccess.Configuration;
+  using Bejebeje.DataAccess.Context;
+  using Bejebeje.Domain;
+  using Microsoft.EntityFrameworkCore;
+  using Microsoft.Extensions.DependencyInjection;
+  using Microsoft.Extensions.Options;
+
   public class DataSeeder
   {
     private InitialSeedConfiguration seedConfiguration { get; set; }

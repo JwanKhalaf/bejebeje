@@ -1,6 +1,7 @@
 ﻿namespace Bejebeje.Models.Artist
 {
-  public class ArtistViewModel
+  public class ArtistSearchResponse
   {
+
   }
 }

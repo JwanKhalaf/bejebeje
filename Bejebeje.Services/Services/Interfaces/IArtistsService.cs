@@ -8,10 +8,10 @@
   {
     Task<int> GetArtistIdAsync(string artistSlug);
 
-    Task<ArtistDetailsViewModel> GetArtistDetailsAsync(string artistSlug);
+    Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug);
 
-    Task<IList<ArtistCardViewModel>> GetArtistsAsync(int offset, int limit);
+    Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit);
 
-    Task<IList<ArtistCardViewModel>> SearchArtistsAsync(string artistName);
+    Task<ICollection<ArtistsResponse>> SearchArtistsAsync(string artistName);
   }
 }

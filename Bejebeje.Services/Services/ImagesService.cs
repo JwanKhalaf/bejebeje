@@ -6,7 +6,7 @@
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Domain;
-  using Interfaces;
+  using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
 
   public class ImagesService : IImagesService

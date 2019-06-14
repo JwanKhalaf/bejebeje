@@ -67,9 +67,9 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
-        }
+            IsPrimary = true,
+          },
+        },
       };
 
       Context.Artists.Add(fatsWaller);
@@ -112,14 +112,14 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
+            IsPrimary = true,
+          },
         },
         Image = new ArtistImage
         {
           Data = imageBytes,
-          CreatedAt = DateTime.UtcNow
-        }
+          CreatedAt = DateTime.UtcNow,
+        },
       };
 
       Context.Artists.Add(fatsWaller);

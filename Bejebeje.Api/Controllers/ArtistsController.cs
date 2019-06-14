@@ -5,8 +5,8 @@
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
-  using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.Models.Artist;
+  using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
 
@@ -27,24 +27,28 @@
 
     [Route("v{version:apiVersion}/[controller]")]
     [HttpGet]
-    public async Task<IActionResult> GetArtists([FromQuery] string name, int offset = 0, int limit = 10)
+    public async Task<IActionResult> GetArtists([FromQuery] int offset = 0, int limit = 10)
     {
-      IList<ArtistCardViewModel> artists;
+      PagedArtistsResponse artistsResponse;
 
-      if (string.IsNullOrEmpty(name))
-      {
-        artists = await artistsService
-          .GetArtistsAsync(offset, limit)
-          .ConfigureAwait(false);
-      }
-      else
-      {
-        artists = await artistsService
-          .SearchArtistsAsync(name)
-          .ConfigureAwait(false);
-      }
+      artistsResponse = await artistsService
+        .GetArtistsAsync(offset, limit)
+        .ConfigureAwait(false);
 
-      return Ok(artists);
+      return Ok(artistsResponse);
+    }
+
+    [Route("v{version:apiVersion}/[controller]")]
+    [HttpGet]
+    public async Task<IActionResult> GetArtists([FromQuery] string name)
+    {
+      ICollection<ArtistsResponse> artistsResponse;
+
+      artistsResponse = await artistsService
+        .SearchArtistsAsync(name)
+        .ConfigureAwait(false);
+
+      return Ok(artistsResponse);
     }
 
     [Route("v{version:apiVersion}/[controller]/{artistSlug}")]
@@ -57,7 +61,7 @@
 
       try
       {
-        ArtistDetailsViewModel artistDetails = await artistsService
+        ArtistDetailsResponse artistDetails = await artistsService
           .GetArtistDetailsAsync(artistSlug)
           .ConfigureAwait(false);
 

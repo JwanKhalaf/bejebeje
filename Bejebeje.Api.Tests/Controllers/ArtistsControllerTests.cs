@@ -6,8 +6,10 @@
   using System.Threading.Tasks;
   using Bejebeje.Api.Controllers;
   using Bejebeje.Common.Exceptions;
-  using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.Models.Artist;
+  using Bejebeje.Models.ArtistSlug;
+  using Bejebeje.Models.Paging;
+  using Bejebeje.Services.Services.Interfaces;
   using FluentAssertions;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
@@ -36,23 +38,23 @@
     }
 
     [Test]
-    public async Task GetArtists_WhenSearchParamIsNullAndWithNoArtistsFromTheService_ReturnsAnOkObjectResultWithEmptyList()
+    public async Task GetArtists_WhenNoArtistsReturnedFromTheService_ReturnsAnOkObjectResultWithEmptyList()
     {
       // arrange
       string searchParameter = null;
-      int offset = 1;
+      int offset = 0;
       int limit = 10;
 
       artistsServiceMock
         .Setup(x => x.GetArtistsAsync(offset, limit))
-        .ReturnsAsync(new List<ArtistCardViewModel>());
+        .ReturnsAsync(new PagedArtistsResponse());
 
       artistsServiceMock
         .Setup(x => x.SearchArtistsAsync(searchParameter))
         .Verifiable();
 
       // act
-      IActionResult result = await artistsController.GetArtists(searchParameter, offset, limit);
+      IActionResult result = await artistsController.GetArtists(offset, limit);
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -61,31 +63,61 @@
 
       okObjectResult.Should().NotBeNull();
 
-      List<ArtistCardViewModel> artists = okObjectResult.Value as List<ArtistCardViewModel>;
+      PagedArtistsResponse responseModel = okObjectResult.Value as PagedArtistsResponse;
 
-      artists.Should().BeEmpty();
+      responseModel.Artists.Should().BeEmpty();
       artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Once);
       artistsServiceMock.Verify(x => x.SearchArtistsAsync(searchParameter), Times.Never);
     }
 
     [Test]
-    public async Task GetArtists_WhenSearchParamIsEmptyStringAndWithNoArtistsFromTheService_ReturnsAnOkObjectResultWithEmptyList()
+    public async Task GetArtists_WhenArtistsAreReturnedFromTheService_ReturnsAnOkObjectResultWithArtists()
     {
       // arrange
-      string searchParameter = string.Empty;
-      int offset = 1;
+      string searchParameter = null;
+      string artistFirstName = "Johnny";
+      string artistLastName = "Cash";
+      int artistImageId = 1;
+      string artistSlug = "johnny-cash";
+      int offset = 0;
       int limit = 10;
+
+      PagedArtistsResponse artistsResponseFromService = new PagedArtistsResponse
+      {
+        Artists = new List<ArtistsResponse>
+        {
+          new ArtistsResponse
+          {
+            FirstName = artistFirstName,
+            LastName = artistLastName,
+            ImageId = artistImageId,
+            Slugs = new List<ArtistSlugResponse>
+            {
+              new ArtistSlugResponse
+              {
+                Name = artistSlug,
+                IsPrimary = true,
+              },
+            },
+          },
+        },
+        Paging = new PagingResponse
+        {
+          Offset = offset,
+          Limit = limit,
+        },
+      };
 
       artistsServiceMock
         .Setup(x => x.GetArtistsAsync(offset, limit))
-        .ReturnsAsync(new List<ArtistCardViewModel>());
+        .ReturnsAsync(artistsResponseFromService);
 
       artistsServiceMock
         .Setup(x => x.SearchArtistsAsync(searchParameter))
         .Verifiable();
 
       // act
-      IActionResult result = await artistsController.GetArtists(searchParameter, offset, limit);
+      IActionResult result = await artistsController.GetArtists(offset, limit);
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -94,9 +126,19 @@
 
       okObjectResult.Should().NotBeNull();
 
-      List<ArtistCardViewModel> artists = okObjectResult.Value as List<ArtistCardViewModel>;
+      PagedArtistsResponse responseModel = okObjectResult.Value as PagedArtistsResponse;
 
-      artists.Should().BeEmpty();
+      responseModel.Artists.Should().NotBeEmpty();
+      responseModel.Artists.Should().HaveCount(1);
+
+      ArtistsResponse artist = responseModel.Artists.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.ImageId.Should().Be(artistImageId);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
       artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Once);
       artistsServiceMock.Verify(x => x.SearchArtistsAsync(searchParameter), Times.Never);
     }
@@ -110,30 +152,37 @@
       string artistLastName = "Cash";
       int artistImageId = 1;
       string artistSlug = "johnny-cash";
-      int offset = 1;
+      int offset = 0;
       int limit = 10;
 
-      List<ArtistCardViewModel> artistsFromService = new List<ArtistCardViewModel>
+      List<ArtistsResponse> searchArtistsResponse = new List<ArtistsResponse>
       {
-        new ArtistCardViewModel
+        new ArtistsResponse
         {
           FirstName = artistFirstName,
           LastName = artistLastName,
           ImageId = artistImageId,
-          Slug = artistSlug
-        }
+          Slugs = new List<ArtistSlugResponse>
+          {
+            new ArtistSlugResponse
+            {
+              Name = artistSlug,
+              IsPrimary = true,
+            },
+          },
+        },
       };
 
       artistsServiceMock
         .Setup(x => x.GetArtistsAsync(offset, limit))
-        .ReturnsAsync(artistsFromService);
+        .Verifiable();
 
       artistsServiceMock
         .Setup(x => x.SearchArtistsAsync(searchParameter))
-        .Verifiable();
+        .ReturnsAsync(searchArtistsResponse);
 
       // act
-      IActionResult result = await artistsController.GetArtists(searchParameter, offset, limit);
+      IActionResult result = await artistsController.GetArtists(searchParameter);
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -142,52 +191,41 @@
 
       okObjectResult.Should().NotBeNull();
 
-      List<ArtistCardViewModel> artists = okObjectResult.Value as List<ArtistCardViewModel>;
+      List<ArtistsResponse> responseModel = okObjectResult.Value as List<ArtistsResponse>;
 
-      artists.Should().NotBeEmpty();
-      artists.Should().HaveCount(1);
-      artists.First().FirstName.Should().Be(artistFirstName);
-      artists.First().LastName.Should().Be(artistLastName);
-      artists.First().ImageId.Should().Be(artistImageId);
-      artists.First().Slug.Should().Be(artistSlug);
-      artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Once);
-      artistsServiceMock.Verify(x => x.SearchArtistsAsync(searchParameter), Times.Never);
+      responseModel.Should().NotBeEmpty();
+      responseModel.Should().HaveCount(1);
+
+      ArtistsResponse artist = responseModel.First();
+
+      artist.FirstName.Should().Be(artistFirstName);
+      artist.LastName.Should().Be(artistLastName);
+      artist.ImageId.Should().Be(artistImageId);
+      artist.Slugs.Should().HaveCount(1);
+      artist.Slugs.First().Name.Should().Be(artistSlug);
+      artist.Slugs.First().IsPrimary.Should().BeTrue();
+      artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Never);
+      artistsServiceMock.Verify(x => x.SearchArtistsAsync(searchParameter), Times.Once);
     }
 
     [Test]
-    public async Task GetArtists_WhenSearchParamIsEmptyStringAndWithArtistsFromTheService_ReturnsAnOkObjectResultWithArtists()
+    public async Task GetArtists_WhenSearchParamIsAnEmptyStringAndNoArtistsAreReturnedFromTheService_ReturnsAnOkObjectResultWithEmptyList()
     {
       // arrange
-      string searchParameter = "";
-      string artistFirstName = "Johnny";
-      string artistLastName = "Cash";
-      int artistImageId = 1;
-      string artistSlug = "johnny-cash";
-      int offset = 1;
+      string searchParameter = string.Empty;
+      int offset = 0;
       int limit = 10;
-
-
-      List<ArtistCardViewModel> artistsFromService = new List<ArtistCardViewModel>
-      {
-        new ArtistCardViewModel
-        {
-          FirstName = artistFirstName,
-          LastName = artistLastName,
-          ImageId = artistImageId,
-          Slug = artistSlug
-        }
-      };
 
       artistsServiceMock
         .Setup(x => x.GetArtistsAsync(offset, limit))
-        .ReturnsAsync(artistsFromService);
+        .Verifiable();
 
       artistsServiceMock
         .Setup(x => x.SearchArtistsAsync(searchParameter))
-        .Verifiable();
+        .ReturnsAsync(new List<ArtistsResponse>());
 
       // act
-      IActionResult result = await artistsController.GetArtists(searchParameter, offset, limit);
+      IActionResult result = await artistsController.GetArtists(searchParameter);
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -196,16 +234,11 @@
 
       okObjectResult.Should().NotBeNull();
 
-      List<ArtistCardViewModel> artists = okObjectResult.Value as List<ArtistCardViewModel>;
+      List<ArtistsResponse> responseModel = okObjectResult.Value as List<ArtistsResponse>;
 
-      artists.Should().NotBeEmpty();
-      artists.Should().HaveCount(1);
-      artists.First().FirstName.Should().Be(artistFirstName);
-      artists.First().LastName.Should().Be(artistLastName);
-      artists.First().ImageId.Should().Be(artistImageId);
-      artists.First().Slug.Should().Be(artistSlug);
-      artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Once);
-      artistsServiceMock.Verify(x => x.SearchArtistsAsync(searchParameter), Times.Never);
+      responseModel.Should().BeEmpty();
+      artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Never);
+      artistsServiceMock.Verify(x => x.SearchArtistsAsync(searchParameter), Times.Once);
     }
 
     [Test]
@@ -213,7 +246,7 @@
     {
       // arrange
       string searchParameter = "watson";
-      int offset = 1;
+      int offset = 0;
       int limit = 10;
 
       artistsServiceMock
@@ -222,10 +255,10 @@
 
       artistsServiceMock
         .Setup(x => x.SearchArtistsAsync(searchParameter))
-        .ReturnsAsync(new List<ArtistCardViewModel>());
+        .ReturnsAsync(new List<ArtistsResponse>());
 
       // act
-      IActionResult result = await artistsController.GetArtists(searchParameter, offset, limit);
+      IActionResult result = await artistsController.GetArtists(searchParameter);
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -234,7 +267,7 @@
 
       okObjectResult.Should().NotBeNull();
 
-      List<ArtistCardViewModel> artists = okObjectResult.Value as List<ArtistCardViewModel>;
+      List<ArtistsResponse> artists = okObjectResult.Value as List<ArtistsResponse>;
 
       artists.Should().BeEmpty();
       artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Never);
@@ -250,18 +283,25 @@
       string artistLastName = "Cash";
       int artistImageId = 1;
       string artistSlug = "johnny-cash";
-      int offset = 1;
+      int offset = 0;
       int limit = 10;
 
-      List<ArtistCardViewModel> artistsFromService = new List<ArtistCardViewModel>
+      List<ArtistsResponse> artistsFromService = new List<ArtistsResponse>
       {
-        new ArtistCardViewModel
+        new ArtistsResponse
         {
           FirstName = artistFirstName,
           LastName = artistLastName,
           ImageId = artistImageId,
-          Slug = artistSlug
-        }
+          Slugs = new List<ArtistSlugResponse>
+          {
+            new ArtistSlugResponse
+            {
+              Name = artistSlug,
+              IsPrimary = true,
+            },
+          },
+        },
       };
 
       artistsServiceMock
@@ -273,7 +313,7 @@
         .ReturnsAsync(artistsFromService);
 
       // act
-      IActionResult result = await artistsController.GetArtists(searchParameter, offset, limit);
+      IActionResult result = await artistsController.GetArtists(searchParameter);
 
       // assert
       result.Should().BeOfType<OkObjectResult>();
@@ -282,14 +322,16 @@
 
       okObjectResult.Should().NotBeNull();
 
-      List<ArtistCardViewModel> artists = okObjectResult.Value as List<ArtistCardViewModel>;
+      List<ArtistsResponse> artists = okObjectResult.Value as List<ArtistsResponse>;
 
       artists.Should().NotBeEmpty();
       artists.Should().HaveCount(1);
       artists.First().FirstName.Should().Be(artistFirstName);
       artists.First().LastName.Should().Be(artistLastName);
       artists.First().ImageId.Should().Be(artistImageId);
-      artists.First().Slug.Should().Be(artistSlug);
+      artists.First().Slugs.Should().HaveCount(1);
+      artists.First().Slugs.First().Name.Should().Be(artistSlug);
+      artists.First().Slugs.First().IsPrimary.Should().BeTrue();
       artistsServiceMock.Verify(x => x.GetArtistsAsync(offset, limit), Times.Never);
       artistsServiceMock.Verify(x => x.SearchArtistsAsync(searchParameter), Times.Once);
     }
@@ -335,14 +377,14 @@
       int artistImageId = 1;
       DateTime artistCreatedAt = DateTime.UtcNow;
 
-      ArtistDetailsViewModel fatsWallerDetails = new ArtistDetailsViewModel
+      ArtistDetailsResponse fatsWallerDetails = new ArtistDetailsResponse
       {
         Id = 1,
         FirstName = artistFirstName,
         LastName = artistLastName,
         ImageId = artistImageId,
         CreatedAt = artistCreatedAt,
-        Slug = artistSlug
+        Slug = artistSlug,
       };
 
       artistsServiceMock
@@ -359,7 +401,7 @@
 
       okObjectResult.Should().NotBeNull();
 
-      ArtistDetailsViewModel artistDetails = okObjectResult.Value as ArtistDetailsViewModel;
+      ArtistDetailsResponse artistDetails = okObjectResult.Value as ArtistDetailsResponse;
 
       artistDetails.Should().NotBeNull();
       artistDetails.Id.Should().Be(artistId);

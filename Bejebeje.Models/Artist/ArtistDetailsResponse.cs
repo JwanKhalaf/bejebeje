@@ -2,7 +2,7 @@
 {
   using System;
 
-  public class ArtistDetailsViewModel
+  public class ArtistDetailsResponse
   {
     public int Id { get; set; }
 

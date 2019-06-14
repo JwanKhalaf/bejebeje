@@ -6,10 +6,10 @@
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Domain;
+  using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.Services.Tests.Helpers;
-  using Bejebeje.Models.Lyric;
   using FluentAssertions;
   using Moq;
   using NUnit.Framework;
@@ -73,9 +73,9 @@
           {
             Name = lyricSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
-        }
+            IsPrimary = true,
+          },
+        },
       };
 
       Artist fatsWaller = new Artist
@@ -89,10 +89,10 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
+            IsPrimary = true,
+          },
         },
-        Lyrics = new List<Lyric> { writeMyselfALetterSong }
+        Lyrics = new List<Lyric> { writeMyselfALetterSong },
       };
 
       Context.Artists.Add(fatsWaller);
@@ -131,8 +131,8 @@
             Name = seedLyricSlug,
             IsPrimary = true,
             CreatedAt = seedLyricCreatedAt,
-          }
-        }
+          },
+        },
       };
 
       Context.Lyrics.Add(tnt);
@@ -165,9 +165,9 @@
           {
             Name = unmatchedLyricSlug,
             IsPrimary = true,
-            CreatedAt = seedLyricCreatedAt
-          }
-        }
+            CreatedAt = seedLyricCreatedAt,
+          },
+        },
       };
 
       Context.Lyrics.Add(tnt);
@@ -203,9 +203,9 @@
           {
             Name = uniqueLyricSlug,
             IsPrimary = true,
-            CreatedAt = seedLyricCreatedAt
-          }
-        }
+            CreatedAt = seedLyricCreatedAt,
+          },
+        },
       };
 
       Context.Lyrics.Add(tnt);
@@ -262,9 +262,9 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
-        }
+            IsPrimary = true,
+          },
+        },
       };
 
       Context.Artists.Add(adaBrown);
@@ -306,9 +306,9 @@
           {
             Name = lyricSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
-        }
+            IsPrimary = true,
+          },
+        },
       };
 
       Artist adaBrown = new Artist
@@ -322,10 +322,10 @@
           {
             Name = artistSlug,
             CreatedAt = DateTime.UtcNow,
-            IsPrimary = true
-          }
+            IsPrimary = true,
+          },
         },
-        Lyrics = new List<Lyric> { evilMamaBlue }
+        Lyrics = new List<Lyric> { evilMamaBlue },
       };
 
       Context.Artists.Add(adaBrown);
