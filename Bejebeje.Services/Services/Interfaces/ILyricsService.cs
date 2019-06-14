@@ -2,7 +2,7 @@
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
-  using Bejebeje.ViewModels.Lyric;
+  using Bejebeje.Models.Lyric;
 
   public interface ILyricsService
   {

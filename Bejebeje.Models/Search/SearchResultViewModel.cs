@@ -1,4 +1,4 @@
-﻿namespace Bejebeje.ViewModels.Search
+﻿namespace Bejebeje.Models.Search
 {
   using Bejebeje.Common.Enums;
 

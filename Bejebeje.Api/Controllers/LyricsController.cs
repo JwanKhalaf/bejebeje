@@ -6,7 +6,7 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Lyric;
+  using Bejebeje.Models.Lyric;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
 

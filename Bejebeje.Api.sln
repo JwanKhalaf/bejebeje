@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Domain", "Bejebeje
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Services", "Bejebeje.Services\Bejebeje.Services.csproj", "{B591ED41-877E-4320-B204-718E8A9B844A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.ViewModels", "Bejebeje.ViewModels\Bejebeje.ViewModels.csproj", "{B1750691-5278-4EBA-97AF-AB5FFAF26422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Models", "Bejebeje.Models\Bejebeje.Models.csproj", "{B1750691-5278-4EBA-97AF-AB5FFAF26422}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Common", "Bejebeje.Common\Bejebeje.Common.csproj", "{BC421B76-0934-4B01-B755-7101102DE2E9}"
 EndProject

@@ -1,4 +1,4 @@
-﻿namespace Bejebeje.ViewModels.Artist
+﻿namespace Bejebeje.Models.Artist
 {
   public class ArtistViewModel
   {

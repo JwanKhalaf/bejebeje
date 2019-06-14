@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>Bejebeje.ViewModels.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Bejebeje.Models.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>Bejebeje.ViewModels.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Bejebeje.Models.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

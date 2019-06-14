@@ -9,7 +9,7 @@
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.Services.Tests.Helpers;
-  using Bejebeje.ViewModels.Lyric;
+  using Bejebeje.Models.Lyric;
   using FluentAssertions;
   using Moq;
   using NUnit.Framework;

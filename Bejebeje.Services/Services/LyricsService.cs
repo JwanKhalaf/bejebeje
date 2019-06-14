@@ -7,7 +7,7 @@
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Lyric;
+  using Bejebeje.Models.Lyric;
   using Microsoft.EntityFrameworkCore;
 
   public class LyricsService : ILyricsService

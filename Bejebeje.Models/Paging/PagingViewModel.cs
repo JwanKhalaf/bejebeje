@@ -1,4 +1,4 @@
-﻿namespace Bejebeje.ViewModels.Paging
+﻿namespace Bejebeje.Models.Paging
 {
   public class PagingViewModel
   {

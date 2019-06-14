@@ -1,4 +1,4 @@
-﻿namespace Bejebeje.ViewModels.Lyric
+﻿namespace Bejebeje.Models.Lyric
 {
   public class LyricViewModel
   {

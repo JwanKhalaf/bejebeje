@@ -8,7 +8,7 @@
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Artist;
+  using Bejebeje.Models.Artist;
   using Microsoft.EntityFrameworkCore;
 
   public class ArtistsService : IArtistsService

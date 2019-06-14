@@ -9,7 +9,7 @@
   using Bejebeje.Domain;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Tests.Helpers;
-  using Bejebeje.ViewModels.Artist;
+  using Bejebeje.Models.Artist;
   using FluentAssertions;
   using NUnit.Framework;
 

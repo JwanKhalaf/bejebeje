@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bejebeje.Domain\Bejebeje.Domain.csproj" />
-    <ProjectReference Include="..\Bejebeje.ViewModels\Bejebeje.ViewModels.csproj" />
+    <ProjectReference Include="..\Bejebeje.Models\Bejebeje.Models.csproj" />
     <ProjectReference Include="..\Bejebeje.DataAccess\Bejebeje.DataAccess.csproj" />
   </ItemGroup>
 </Project>

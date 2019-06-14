@@ -7,7 +7,7 @@
   using Bejebeje.Api.Controllers;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Artist;
+  using Bejebeje.Models.Artist;
   using FluentAssertions;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
