@@ -6,6 +6,7 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Domain;
   using Bejebeje.Models.Artist;
   using Bejebeje.Models.ArtistSlug;
   using Bejebeje.Models.Paging;
@@ -64,19 +65,23 @@
 
     public async Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit)
     {
-      List<ArtistsResponse> artists = await context
+      IOrderedQueryable<Artist> orderedArtists = context
         .Artists
         .AsNoTracking()
-          .OrderBy(x => x.FirstName)
-          .Paging(offset, limit)
-          .Select(x => new ArtistsResponse
-          {
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Slugs = x.Slugs.Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary }).ToList(),
-            ImageId = x.Image == null ? 0 : x.Image.Id,
-          })
-          .ToListAsync();
+        .OrderBy(x => x.FirstName);
+
+      int totalRecords = await orderedArtists.CountAsync();
+
+      List<ArtistsResponse> artists = await orderedArtists
+        .Paging(offset, limit)
+        .Select(x => new ArtistsResponse
+        {
+          FirstName = x.FirstName,
+          LastName = x.LastName,
+          Slugs = x.Slugs.Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary }).ToList(),
+          ImageId = x.Image == null ? 0 : x.Image.Id,
+        })
+        .ToListAsync();
 
       PagedArtistsResponse response = new PagedArtistsResponse
       {
@@ -85,6 +90,7 @@
         {
           Offset = offset,
           Limit = limit,
+          Total = totalRecords,
         },
       };
 
