@@ -55,6 +55,9 @@
             Image = GetAuthorImage("acdc.jpg"),
           };
 
+          context.Authors.Add(acdcAuthor);
+          context.SaveChanges();
+
           Lyric tnt = new Lyric
           {
             Title = "TNT",
@@ -71,7 +74,7 @@
             },
             CreatedAt = DateTime.UtcNow,
             IsApproved = true,
-            Author = acdcAuthor
+            AuthorId = acdcAuthor.Id,
           };
 
           Lyric thunderstruck = new Lyric

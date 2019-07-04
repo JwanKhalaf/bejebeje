@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bejebeje.DataAccess.Migrations
 {
     [DbContext(typeof(BbContext))]
-    [Migration("20190704200253_InitialCreate")]
+    [Migration("20190704203120_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,9 +152,9 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_author");
+                        .HasName("pk_authors");
 
-                    b.ToTable("author");
+                    b.ToTable("authors");
                 });
 
             modelBuilder.Entity("Bejebeje.Domain.AuthorImage", b =>
@@ -227,7 +227,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<int>("ArtistId")
                         .HasColumnName("artist_id");
 
-                    b.Property<int>("AuthorId")
+                    b.Property<int?>("AuthorId")
                         .HasColumnName("author_id");
 
                     b.Property<string>("Body")
@@ -319,7 +319,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.HasOne("Bejebeje.Domain.Author", "Author")
                         .WithOne("Image")
                         .HasForeignKey("Bejebeje.Domain.AuthorImage", "AuthorId")
-                        .HasConstraintName("fk_author_image_author_author_id")
+                        .HasConstraintName("fk_author_image_authors_author_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -328,7 +328,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.HasOne("Bejebeje.Domain.Author")
                         .WithMany("Slugs")
                         .HasForeignKey("AuthorId")
-                        .HasConstraintName("fk_author_slug_author_author_id")
+                        .HasConstraintName("fk_author_slug_authors_author_id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -343,8 +343,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.HasOne("Bejebeje.Domain.Author", "Author")
                         .WithMany("Lyrics")
                         .HasForeignKey("AuthorId")
-                        .HasConstraintName("fk_lyrics_author_author_id")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasConstraintName("fk_lyrics_authors_author_id");
                 });
 
             modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>

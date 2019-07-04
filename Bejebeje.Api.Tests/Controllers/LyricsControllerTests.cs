@@ -6,8 +6,8 @@
   using System.Threading.Tasks;
   using Bejebeje.Api.Controllers;
   using Bejebeje.Common.Exceptions;
-  using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.Models.Lyric;
+  using Bejebeje.Services.Services.Interfaces;
   using FluentAssertions;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;

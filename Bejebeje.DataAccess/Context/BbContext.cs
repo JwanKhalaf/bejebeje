@@ -22,6 +22,8 @@
 
     public DbSet<ArtistImage> ArtistImages { get; set; }
 
+    public DbSet<Author> Authors { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
       base.OnModelCreating(builder);
@@ -30,6 +32,11 @@
             .HasOne(a => a.Image)
             .WithOne(a => a.Artist)
             .HasForeignKey<ArtistImage>(ai => ai.ArtistId);
+
+      builder.Entity<Author>()
+            .HasOne(a => a.Image)
+            .WithOne(a => a.Author)
+            .HasForeignKey<AuthorImage>(ai => ai.AuthorId);
 
       foreach (IMutableEntityType entity in builder.Model.GetEntityTypes())
       {
