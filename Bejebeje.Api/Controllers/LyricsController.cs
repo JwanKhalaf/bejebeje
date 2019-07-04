@@ -82,7 +82,7 @@
 
       try
       {
-        LyricViewModel lyric = await lyricsService
+        LyricResponse lyric = await lyricsService
           .GetSingleLyricAsync(artistSlug, lyricSlug)
           .ConfigureAwait(false);
 

@@ -336,7 +336,7 @@
         .ReturnsAsync(artistId);
 
       // act
-      LyricViewModel result = await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
+      LyricResponse result = await lyricsService.GetSingleLyricAsync(artistSlug, lyricSlug);
 
       // assert
       result.Should().NotBeNull();

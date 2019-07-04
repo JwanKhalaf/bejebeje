@@ -25,5 +25,11 @@
     public bool IsApproved { get; set; }
 
     public int ArtistId { get; set; }
+
+    public Artist Artist { get; set; }
+
+    public int AuthorId { get; set; }
+
+    public Author Author { get; set; }
   }
 }

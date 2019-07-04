@@ -279,7 +279,7 @@ namespace Bejebeje.Api.Tests.Controllers
       string lyricTitle = "A Boy Named Sue";
       string lyricBody = "Lyrics";
 
-      LyricViewModel lyricFromService = new LyricViewModel
+      LyricResponse lyricFromService = new LyricResponse
       {
         Title = lyricTitle,
         Body = lyricBody
@@ -299,7 +299,7 @@ namespace Bejebeje.Api.Tests.Controllers
 
       okObjectResult.Should().NotBeNull();
 
-      LyricViewModel lyric = okObjectResult.Value as LyricViewModel;
+      LyricResponse lyric = okObjectResult.Value as LyricResponse;
 
       lyric.Should().NotBeNull();
       lyric.Title.Should().Be(lyricTitle);
