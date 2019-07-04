@@ -39,6 +39,22 @@
 
           context.Database.Migrate();
 
+          Author acdcAuthor = new Author
+          {
+            FirstName = "AC/DC",
+            FullName = "AC/DC",
+            Biography = "<p>AC/DC are an Australian rock band formed in Sydney in 1973 by Scottish-born brothers Malcolm and Angus Young.[1] Their music has been variously described as hard rock, blues rock, and heavy metal;[2] however, the band themselves describe their music as simply 'rock and roll'.</p><p>AC/DC underwent several line-up changes before releasing their first album, High Voltage, in 1975. Membership subsequently stabilised around the Young brothers, singer Bon Scott, drummer Phil Rudd, and bass player Mark Evans. Evans was replaced by Cliff Williams in 1977 for the album Powerage.</p><p>In February 1980, a few months after recording the album Highway to Hell, lead singer and co-songwriter Bon Scott died of acute alcohol poisoning.[4] The group considered disbanding but stayed together, bringing in Brian Johnson as replacement for Scott.[5] Later that year, the band released their first album with Johnson, Back in Black, which they dedicated to Scott's memory. The album launched them to new heights of success and became one of the best selling albums of all time.</p>",
+            Slugs = new List<AuthorSlug>
+            {
+              new AuthorSlug
+              {
+                Name = "acdc",
+                IsPrimary = true,
+              },
+            },
+            Image = GetAuthorImage("acdc.jpg"),
+          };
+
           Lyric tnt = new Lyric
           {
             Title = "TNT",
@@ -54,7 +70,8 @@
               }
             },
             CreatedAt = DateTime.UtcNow,
-            IsApproved = true
+            IsApproved = true,
+            Author = acdcAuthor
           };
 
           Lyric thunderstruck = new Lyric
@@ -113,7 +130,7 @@
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
               Lyrics = new List<Lyric> { tnt, thunderstruck },
-              Image = GetImage("acdc.jpg")
+              Image = GetArtistImage("acdc.jpg")
             };
 
             Artist bbKing = new Artist
@@ -134,7 +151,7 @@
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
               Lyrics = new List<Lyric> { theThrillIsGone },
-              Image = GetImage("bbking.jpg")
+              Image = GetArtistImage("bbking.jpg")
             };
 
             Artist canaanSmith = new Artist
@@ -154,7 +171,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("csmith.jpg")
+              Image = GetArtistImage("csmith.jpg")
             };
 
             Artist damianMarley = new Artist
@@ -174,7 +191,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("damian-marley.jpg")
+              Image = GetArtistImage("damian-marley.jpg")
             };
 
             Artist davidBowie = new Artist
@@ -194,7 +211,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("dbowie.jpg")
+              Image = GetArtistImage("dbowie.jpg")
             };
 
             Artist edSheeran = new Artist
@@ -214,7 +231,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("esheeran.jpg")
+              Image = GetArtistImage("esheeran.jpg")
             };
 
             Artist fleetwoodMac = new Artist
@@ -234,7 +251,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("fmac.jpg")
+              Image = GetArtistImage("fmac.jpg")
             };
 
             Artist georgeMichael = new Artist
@@ -254,7 +271,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("gmichael.jpg")
+              Image = GetArtistImage("gmichael.jpg")
             };
 
             Artist howlingWolf = new Artist
@@ -274,7 +291,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("hwolf.jpg")
+              Image = GetArtistImage("hwolf.jpg")
             };
 
             Artist iceT = new Artist
@@ -294,7 +311,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("itea.jpg")
+              Image = GetArtistImage("itea.jpg")
             };
 
             Artist jenniferLopez = new Artist
@@ -314,7 +331,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("jlopez.jpg")
+              Image = GetArtistImage("jlopez.jpg")
             };
 
             Artist kennyRogers = new Artist
@@ -334,7 +351,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("krogers.jpg")
+              Image = GetArtistImage("krogers.jpg")
             };
 
             Artist ladyGaga = new Artist
@@ -354,7 +371,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("lgaga.jpg")
+              Image = GetArtistImage("lgaga.jpg")
             };
 
             Artist muddyWaters = new Artist
@@ -374,7 +391,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("mwaters.jpg")
+              Image = GetArtistImage("mwaters.jpg")
             };
 
             Artist neilYoung = new Artist
@@ -394,7 +411,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("nyoung.jpg")
+              Image = GetArtistImage("nyoung.jpg")
             };
 
             Artist ozzyOsbourne = new Artist
@@ -414,7 +431,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("oosbourne.jpg")
+              Image = GetArtistImage("oosbourne.jpg")
             };
 
             Artist pattiSmith = new Artist
@@ -434,7 +451,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("psmith.jpg")
+              Image = GetArtistImage("psmith.jpg")
             };
 
             Artist queen = new Artist
@@ -454,7 +471,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("queen.jpg")
+              Image = GetArtistImage("queen.jpg")
             };
 
             Artist rayCharles = new Artist
@@ -474,7 +491,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("rcharles.jpg")
+              Image = GetArtistImage("rcharles.jpg")
             };
 
             Artist sonnyBoyWilliamson = new Artist
@@ -494,7 +511,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("sboywilliamson.jpg")
+              Image = GetArtistImage("sboywilliamson.jpg")
             };
 
             Artist tBoneWalker = new Artist
@@ -514,7 +531,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("tbonewalker.jpg")
+              Image = GetArtistImage("tbonewalker.jpg")
             };
 
             Artist u2 = new Artist
@@ -534,7 +551,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("u2.jpg")
+              Image = GetArtistImage("u2.jpg")
             };
 
             Artist vanHalen = new Artist
@@ -554,7 +571,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("vhalen.jpg")
+              Image = GetArtistImage("vhalen.jpg")
             };
 
             Artist wheatus = new Artist
@@ -574,7 +591,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("wheatus.jpg")
+              Image = GetArtistImage("wheatus.jpg")
             };
 
             Artist xtc = new Artist
@@ -594,7 +611,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("xtc.jpg")
+              Image = GetArtistImage("xtc.jpg")
             };
 
             Artist yolandaBeCool = new Artist
@@ -614,7 +631,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("yolanda-be-cool.jpg")
+              Image = GetArtistImage("yolanda-be-cool.jpg")
             };
 
             Artist zacBrown = new Artist
@@ -634,7 +651,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("zbrown.jpg")
+              Image = GetArtistImage("zbrown.jpg")
             };
 
             List<Artist> artists = new List<Artist> { acdc, bbKing, canaanSmith, damianMarley, davidBowie, edSheeran, fleetwoodMac, georgeMichael, howlingWolf, iceT, jenniferLopez, kennyRogers, ladyGaga, muddyWaters, neilYoung, ozzyOsbourne, pattiSmith, queen, rayCharles, sonnyBoyWilliamson, tBoneWalker, u2, vanHalen, wheatus, xtc, yolandaBeCool, zacBrown };
@@ -650,7 +667,7 @@
       }
     }
 
-    private ArtistImage GetImage(string imageName)
+    private ArtistImage GetArtistImage(string imageName)
     {
       string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
       string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
@@ -666,6 +683,27 @@
         };
 
         return artistImage;
+      }
+
+      return null;
+    }
+
+    private AuthorImage GetAuthorImage(string imageName)
+    {
+      string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+      string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
+
+      if (File.Exists(imageFilePath))
+      {
+        byte[] imagesBytes = File.ReadAllBytes(imageFilePath);
+
+        AuthorImage authorImage = new AuthorImage
+        {
+          Data = imagesBytes,
+          CreatedAt = DateTime.UtcNow
+        };
+
+        return authorImage;
       }
 
       return null;

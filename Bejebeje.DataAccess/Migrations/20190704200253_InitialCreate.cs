@@ -29,6 +29,27 @@
           });
 
       migrationBuilder.CreateTable(
+          name: "author",
+          columns: table => new
+          {
+            id = table.Column<int>(nullable: false)
+                  .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+            first_name = table.Column<string>(nullable: true),
+            last_name = table.Column<string>(nullable: true),
+            full_name = table.Column<string>(nullable: true),
+            biography = table.Column<string>(nullable: true),
+            is_approved = table.Column<bool>(nullable: false),
+            user_id = table.Column<string>(nullable: true),
+            created_at = table.Column<DateTime>(nullable: false),
+            modified_at = table.Column<DateTime>(nullable: false),
+            is_deleted = table.Column<bool>(nullable: false)
+          },
+          constraints: table =>
+          {
+            table.PrimaryKey("pk_author", x => x.id);
+          });
+
+      migrationBuilder.CreateTable(
           name: "artist_images",
           columns: table => new
           {
@@ -75,6 +96,52 @@
           });
 
       migrationBuilder.CreateTable(
+          name: "author_image",
+          columns: table => new
+          {
+            id = table.Column<int>(nullable: false)
+                  .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+            data = table.Column<byte[]>(nullable: true),
+            created_at = table.Column<DateTime>(nullable: false),
+            modified_at = table.Column<DateTime>(nullable: true),
+            author_id = table.Column<int>(nullable: false)
+          },
+          constraints: table =>
+          {
+            table.PrimaryKey("pk_author_image", x => x.id);
+            table.ForeignKey(
+                      name: "fk_author_image_author_author_id",
+                      column: x => x.author_id,
+                      principalTable: "author",
+                      principalColumn: "id",
+                      onDelete: ReferentialAction.Cascade);
+          });
+
+      migrationBuilder.CreateTable(
+          name: "author_slug",
+          columns: table => new
+          {
+            id = table.Column<int>(nullable: false)
+                  .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+            name = table.Column<string>(nullable: true),
+            is_primary = table.Column<bool>(nullable: false),
+            created_at = table.Column<DateTime>(nullable: false),
+            modified_at = table.Column<DateTime>(nullable: false),
+            is_deleted = table.Column<bool>(nullable: false),
+            author_id = table.Column<int>(nullable: false)
+          },
+          constraints: table =>
+          {
+            table.PrimaryKey("pk_author_slug", x => x.id);
+            table.ForeignKey(
+                      name: "fk_author_slug_author_author_id",
+                      column: x => x.author_id,
+                      principalTable: "author",
+                      principalColumn: "id",
+                      onDelete: ReferentialAction.Cascade);
+          });
+
+      migrationBuilder.CreateTable(
           name: "lyrics",
           columns: table => new
           {
@@ -87,7 +154,8 @@
             modified_at = table.Column<DateTime>(nullable: false),
             is_deleted = table.Column<bool>(nullable: false),
             is_approved = table.Column<bool>(nullable: false),
-            artist_id = table.Column<int>(nullable: false)
+            artist_id = table.Column<int>(nullable: false),
+            author_id = table.Column<int>(nullable: false)
           },
           constraints: table =>
           {
@@ -96,6 +164,12 @@
                       name: "fk_lyrics_artists_artist_id",
                       column: x => x.artist_id,
                       principalTable: "artists",
+                      principalColumn: "id",
+                      onDelete: ReferentialAction.Cascade);
+            table.ForeignKey(
+                      name: "fk_lyrics_author_author_id",
+                      column: x => x.author_id,
+                      principalTable: "author",
                       principalColumn: "id",
                       onDelete: ReferentialAction.Cascade);
           });
@@ -136,6 +210,17 @@
           column: "artist_id");
 
       migrationBuilder.CreateIndex(
+          name: "ix_author_image_author_id",
+          table: "author_image",
+          column: "author_id",
+          unique: true);
+
+      migrationBuilder.CreateIndex(
+          name: "ix_author_slug_author_id",
+          table: "author_slug",
+          column: "author_id");
+
+      migrationBuilder.CreateIndex(
           name: "ix_lyric_slugs_lyric_id",
           table: "lyric_slugs",
           column: "lyric_id");
@@ -144,6 +229,11 @@
           name: "ix_lyrics_artist_id",
           table: "lyrics",
           column: "artist_id");
+
+      migrationBuilder.CreateIndex(
+          name: "ix_lyrics_author_id",
+          table: "lyrics",
+          column: "author_id");
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
@@ -155,6 +245,12 @@
           name: "artist_slug");
 
       migrationBuilder.DropTable(
+          name: "author_image");
+
+      migrationBuilder.DropTable(
+          name: "author_slug");
+
+      migrationBuilder.DropTable(
           name: "lyric_slugs");
 
       migrationBuilder.DropTable(
@@ -162,6 +258,9 @@
 
       migrationBuilder.DropTable(
           name: "artists");
+
+      migrationBuilder.DropTable(
+          name: "author");
     }
   }
 }

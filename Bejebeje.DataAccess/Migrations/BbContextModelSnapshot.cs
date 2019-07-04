@@ -115,6 +115,106 @@ namespace Bejebeje.DataAccess.Migrations
             b.ToTable("artist_slug");
           });
 
+      modelBuilder.Entity("Bejebeje.Domain.Author", b =>
+          {
+            b.Property<int>("Id")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnName("id");
+
+            b.Property<string>("Biography")
+                      .HasColumnName("biography");
+
+            b.Property<DateTime>("CreatedAt")
+                      .HasColumnName("created_at");
+
+            b.Property<string>("FirstName")
+                      .HasColumnName("first_name");
+
+            b.Property<string>("FullName")
+                      .HasColumnName("full_name");
+
+            b.Property<bool>("IsApproved")
+                      .HasColumnName("is_approved");
+
+            b.Property<bool>("IsDeleted")
+                      .HasColumnName("is_deleted");
+
+            b.Property<string>("LastName")
+                      .HasColumnName("last_name");
+
+            b.Property<DateTime>("ModifiedAt")
+                      .HasColumnName("modified_at");
+
+            b.Property<string>("UserId")
+                      .HasColumnName("user_id");
+
+            b.HasKey("Id")
+                      .HasName("pk_author");
+
+            b.ToTable("author");
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.AuthorImage", b =>
+          {
+            b.Property<int>("Id")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnName("id");
+
+            b.Property<int>("AuthorId")
+                      .HasColumnName("author_id");
+
+            b.Property<DateTime>("CreatedAt")
+                      .HasColumnName("created_at");
+
+            b.Property<byte[]>("Data")
+                      .HasColumnName("data");
+
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at");
+
+            b.HasKey("Id")
+                      .HasName("pk_author_image");
+
+            b.HasIndex("AuthorId")
+                      .IsUnique()
+                      .HasName("ix_author_image_author_id");
+
+            b.ToTable("author_image");
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.AuthorSlug", b =>
+          {
+            b.Property<int>("Id")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnName("id");
+
+            b.Property<int>("AuthorId")
+                      .HasColumnName("author_id");
+
+            b.Property<DateTime>("CreatedAt")
+                      .HasColumnName("created_at");
+
+            b.Property<bool>("IsDeleted")
+                      .HasColumnName("is_deleted");
+
+            b.Property<bool>("IsPrimary")
+                      .HasColumnName("is_primary");
+
+            b.Property<DateTime>("ModifiedAt")
+                      .HasColumnName("modified_at");
+
+            b.Property<string>("Name")
+                      .HasColumnName("name");
+
+            b.HasKey("Id")
+                      .HasName("pk_author_slug");
+
+            b.HasIndex("AuthorId")
+                      .HasName("ix_author_slug_author_id");
+
+            b.ToTable("author_slug");
+          });
+
       modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
           {
             b.Property<int>("Id")
@@ -123,6 +223,9 @@ namespace Bejebeje.DataAccess.Migrations
 
             b.Property<int>("ArtistId")
                       .HasColumnName("artist_id");
+
+            b.Property<int>("AuthorId")
+                      .HasColumnName("author_id");
 
             b.Property<string>("Body")
                       .HasColumnName("body");
@@ -150,6 +253,9 @@ namespace Bejebeje.DataAccess.Migrations
 
             b.HasIndex("ArtistId")
                       .HasName("ix_lyrics_artist_id");
+
+            b.HasIndex("AuthorId")
+                      .HasName("ix_lyrics_author_id");
 
             b.ToTable("lyrics");
           });
@@ -205,12 +311,36 @@ namespace Bejebeje.DataAccess.Migrations
                       .OnDelete(DeleteBehavior.Cascade);
           });
 
+      modelBuilder.Entity("Bejebeje.Domain.AuthorImage", b =>
+          {
+            b.HasOne("Bejebeje.Domain.Author", "Author")
+                      .WithOne("Image")
+                      .HasForeignKey("Bejebeje.Domain.AuthorImage", "AuthorId")
+                      .HasConstraintName("fk_author_image_author_author_id")
+                      .OnDelete(DeleteBehavior.Cascade);
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.AuthorSlug", b =>
+          {
+            b.HasOne("Bejebeje.Domain.Author")
+                      .WithMany("Slugs")
+                      .HasForeignKey("AuthorId")
+                      .HasConstraintName("fk_author_slug_author_author_id")
+                      .OnDelete(DeleteBehavior.Cascade);
+          });
+
       modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
           {
-            b.HasOne("Bejebeje.Domain.Artist")
+            b.HasOne("Bejebeje.Domain.Artist", "Artist")
                       .WithMany("Lyrics")
                       .HasForeignKey("ArtistId")
                       .HasConstraintName("fk_lyrics_artists_artist_id")
+                      .OnDelete(DeleteBehavior.Cascade);
+
+            b.HasOne("Bejebeje.Domain.Author", "Author")
+                      .WithMany("Lyrics")
+                      .HasForeignKey("AuthorId")
+                      .HasConstraintName("fk_lyrics_author_author_id")
                       .OnDelete(DeleteBehavior.Cascade);
           });
 
