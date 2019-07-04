@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
   using Bejebeje.Api.Controllers;
   using Bejebeje.Common.Exceptions;
+  using Bejebeje.Models.Author;
   using Bejebeje.Services.Services.Interfaces;
   using FluentAssertions;
   using Microsoft.AspNetCore.Mvc;
@@ -66,6 +67,51 @@
 
       // assert
       result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Test]
+    public async Task GetAuthorDetails_WhenAuthorExists_ReturnsOkResponseWithCorrectData()
+    {
+      // arrange
+      string authorSlug = "acdc";
+
+      int authorId = 1;
+      string authorFirstName = "AC/DC";
+      string authorBiography = "Awesome biography.";
+      int authorImageId = 1;
+      DateTime authorCreatedAt = new DateTime(2019, 07, 04, 12, 0, 0, DateTimeKind.Utc);
+
+      authorServiceMock
+        .Setup(x => x.GetAuthorDetailsAsync(authorSlug))
+        .ReturnsAsync(new AuthorDetailsResponse
+        {
+          Id = authorId,
+          FirstName = authorFirstName,
+          Slug = authorSlug,
+          Biography = authorBiography,
+          CreatedAt = authorCreatedAt,
+          ImageId = authorImageId,
+        });
+
+      // act
+      IActionResult result = await authorController.GetAuthorDetails(authorSlug);
+
+      // assert
+      result.Should().BeOfType<OkObjectResult>();
+
+      OkObjectResult okObjectResult = result as OkObjectResult;
+
+      okObjectResult.Should().NotBeNull();
+
+      AuthorDetailsResponse authorDetails = okObjectResult.Value as AuthorDetailsResponse;
+
+      authorDetails.Should().NotBeNull();
+      authorDetails.Id.Should().Be(authorId);
+      authorDetails.FirstName.Should().Be(authorFirstName);
+      authorDetails.LastName.Should().Be(null);
+      authorDetails.ImageId.Should().Be(authorImageId);
+      authorDetails.Slug.Should().Be(authorSlug);
+      authorDetails.CreatedAt.Should().Be(authorCreatedAt);
     }
   }
 }
