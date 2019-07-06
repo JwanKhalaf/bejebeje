@@ -6,6 +6,7 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Models.Author;
   using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
@@ -64,18 +65,21 @@
       return matchedLyrics;
     }
 
-    public async Task<LyricViewModel> GetSingleLyricAsync(string artistSlug, string lyricSlug)
+    public async Task<LyricResponse> GetSingleLyricAsync(string artistSlug, string lyricSlug)
     {
       int artistId = await artistsService.GetArtistIdAsync(artistSlug);
 
-      LyricViewModel lyric = await context
+      LyricResponse lyric = await context
         .Lyrics
         .AsNoTracking()
         .Where(l => l.ArtistId == artistId && l.Slugs.Any(s => s.Name == lyricSlug.Standardize()))
-        .Select(l => new LyricViewModel
+        .Select(l => new LyricResponse
         {
           Title = l.Title,
           Body = l.Body,
+          AuthorSlug = l.Author.Slugs.Where(s => s.IsPrimary).Single().Name,
+          CreatedAt = l.CreatedAt,
+          ModifiedAt = l.ModifiedAt,
         })
         .SingleOrDefaultAsync();
 

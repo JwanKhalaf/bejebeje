@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Bejebeje.Api.Controllers;
-using Bejebeje.Common.Exceptions;
-using Bejebeje.Services.Services.Interfaces;
-using Bejebeje.Models.Lyric;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-using NUnit.Framework;
-
-namespace Bejebeje.Api.Tests.Controllers
+﻿namespace Bejebeje.Api.Tests.Controllers
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Threading.Tasks;
+  using Bejebeje.Api.Controllers;
+  using Bejebeje.Common.Exceptions;
+  using Bejebeje.Models.Lyric;
+  using Bejebeje.Services.Services.Interfaces;
+  using FluentAssertions;
+  using Microsoft.AspNetCore.Mvc;
+  using Microsoft.Extensions.Logging;
+  using Moq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class LyricsControllerTests
   {
@@ -82,13 +82,13 @@ namespace Bejebeje.Api.Tests.Controllers
         new LyricCardViewModel
         {
           Title = firstSongTitle,
-          Slug = firstSongSlug
+          Slug = firstSongSlug,
         },
         new LyricCardViewModel
         {
           Title = secondSongTitle,
-          Slug = secondSongSlug
-        }
+          Slug = secondSongSlug,
+        },
       };
 
       lyricsServiceMock
@@ -132,7 +132,7 @@ namespace Bejebeje.Api.Tests.Controllers
     public async Task SearchLyrics_WhenParamIsEmpty_ThrowsAnArgumentNullException()
     {
       // arrange
-      string lyricTitle = "";
+      string lyricTitle = string.Empty;
 
       // act
       Func<Task> action = async () => await lyricsController.SearchLyrics(lyricTitle);
@@ -182,8 +182,8 @@ namespace Bejebeje.Api.Tests.Controllers
           new LyricCardViewModel
           {
             Title = seedLyricTitle,
-            Slug = seedLyricSlug
-          }
+            Slug = seedLyricSlug,
+          },
         });
 
       // act
@@ -279,10 +279,10 @@ namespace Bejebeje.Api.Tests.Controllers
       string lyricTitle = "A Boy Named Sue";
       string lyricBody = "Lyrics";
 
-      LyricViewModel lyricFromService = new LyricViewModel
+      LyricResponse lyricFromService = new LyricResponse
       {
         Title = lyricTitle,
-        Body = lyricBody
+        Body = lyricBody,
       };
 
       lyricsServiceMock
@@ -299,7 +299,7 @@ namespace Bejebeje.Api.Tests.Controllers
 
       okObjectResult.Should().NotBeNull();
 
-      LyricViewModel lyric = okObjectResult.Value as LyricViewModel;
+      LyricResponse lyric = okObjectResult.Value as LyricResponse;
 
       lyric.Should().NotBeNull();
       lyric.Title.Should().Be(lyricTitle);

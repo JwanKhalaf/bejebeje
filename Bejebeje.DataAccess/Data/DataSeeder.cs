@@ -39,62 +39,106 @@
 
           context.Database.Migrate();
 
-          Lyric tnt = new Lyric
-          {
-            Title = "TNT",
-            Body = @"<p>Oi, oi, oi<br/>Oi, oi, oi<br/>Oi, oi, oi<br/>Oi, oi, oi<br/>Oi, oi, oi</p><p>See me ride out of the sunset<br/>On your color TV screen<br/>Out for all that I can get<br/>If you know what I mean<br/>Women to the left of me<br/>And women to the right<br/>Ain't got no gun<br/>Ain't got no knife<br/>Don't you start no fight</p><p>'Cause I'm T.N.T. I'm dynamite<br/>T.N.T. and I'll win the fight<br/>T.N.T. I'm a power load<br/>T.N.T. watch me explode</p><p>I'm dirty, mean and mighty unclean<br/>I'm a wanted man<br/>Public enemy number one<br/>Understand<br/>So lock up your daughter<br/>Lock up your wife<br/>Lock up your back door<br/>And run for your life<br/>The man is back in town<br/>Don't you mess me 'round</p>",
-            UserId = userId,
-            Slugs = new List<LyricSlug>
-            {
-              new LyricSlug
-              {
-                Name = "tnt",
-                CreatedAt = DateTime.UtcNow,
-                IsPrimary = true
-              }
-            },
-            CreatedAt = DateTime.UtcNow,
-            IsApproved = true
-          };
-
-          Lyric thunderstruck = new Lyric
-          {
-            Title = "Thunderstruck",
-            Body = @"<p>I was caught<br/>In the middle of a railroad track (thunder)<br/>I looked round<br/>And I knew there was no turning back (thunder)<br/>My mind raced<br/>And I thought what could I do (thunder)<br/>And I knew<br/>There was no help, no help from you (thunder)<br/>Sound of the drums<br/>Beating in my heart<br/>The thunder of guns<br/>Tore me apart<br/>You've been<br/>Thunderstruck</p><p>Rode down the highway<br/>Broke the limit, we hit the town<br/>Went through to Texas, yeah Texas, and we had some fun<br/>We met some girls<br/>Some dancers who gave a good time<br/>Broke all the rules<br/>Played all the fools<br/>Yeah yeah they, they, they blew our minds<br/>And I was shaking at the knees<br/>Could I come again please<br/>Yeah them ladies were too kind<br/>You've been<br/>Thunderstruck</p>",
-            UserId = userId,
-            Slugs = new List<LyricSlug>
-            {
-              new LyricSlug
-              {
-                Name = "thunderstruck",
-                CreatedAt = DateTime.UtcNow,
-                IsPrimary = true
-              }
-            },
-            CreatedAt = DateTime.UtcNow,
-            IsApproved = true
-          };
-
-          Lyric theThrillIsGone = new Lyric
-          {
-            Title = "The Thrill Is Gone",
-            Body = @"<p>The thrill is gone<br/>The thrill is gone away<br/>The thrill is gone baby<br/>The thrill is gone away<br/>You know you done me wrong baby<br/>And you'll be sorry someday</p><p>The thrill is gone<br/>It's gone away from me<br/>The thrill is gone baby<br/>The thrill is gone away from me<br/>Although, I'll still live on<br/>But so lonely I'll be</p><p>The thrill is gone<br/>It's gone away for good<br/>The thrill is gone baby<br/>It's gone away for good<br/>Someday I know I'll be over it all baby<br/>Just like I know a good man should</p><p>You know I'm free, free now baby<br/>I'm free from your spell<br/>Oh I'm free, free, free now<br/>I'm free from your spell<br/>And now that it's all over<br/>All I can do is wish you well</p>",
-            UserId = userId,
-            Slugs = new List<LyricSlug>
-            {
-              new LyricSlug
-              {
-                Name = "the-thrill-is-gone",
-                CreatedAt = DateTime.UtcNow,
-                IsPrimary = true
-              }
-            },
-            CreatedAt = DateTime.UtcNow,
-            IsApproved = true
-          };
-
           if (!context.Artists.Any())
           {
+            Author acdcAuthor = new Author
+            {
+              FirstName = "AC/DC",
+              FullName = "AC/DC",
+              Biography = "<p>AC/DC are an Australian rock band formed in Sydney in 1973 by Scottish-born brothers Malcolm and Angus Young.[1] Their music has been variously described as hard rock, blues rock, and heavy metal;[2] however, the band themselves describe their music as simply 'rock and roll'.</p><p>AC/DC underwent several line-up changes before releasing their first album, High Voltage, in 1975. Membership subsequently stabilised around the Young brothers, singer Bon Scott, drummer Phil Rudd, and bass player Mark Evans. Evans was replaced by Cliff Williams in 1977 for the album Powerage.</p><p>In February 1980, a few months after recording the album Highway to Hell, lead singer and co-songwriter Bon Scott died of acute alcohol poisoning.[4] The group considered disbanding but stayed together, bringing in Brian Johnson as replacement for Scott.[5] Later that year, the band released their first album with Johnson, Back in Black, which they dedicated to Scott's memory. The album launched them to new heights of success and became one of the best selling albums of all time.</p>",
+              Slugs = new List<AuthorSlug>
+              {
+                new AuthorSlug
+                {
+                  Name = "acdc",
+                  IsPrimary = true,
+                  CreatedAt = DateTime.UtcNow,
+                },
+              },
+              Image = GetAuthorImage("acdc.jpg"),
+              CreatedAt = DateTime.UtcNow,
+            };
+
+            Author hWolfAuthor = new Author
+            {
+              FirstName = "Chester Arthur",
+              LastName = "Burnett",
+              FullName = "Chester Arthur Burnett",
+              Biography = "<p>Chester Arthur Burnett (June 10, 1910 – January 10, 1976), known as Howlin' Wolf, was a Chicago blues singer, guitarist, and harmonica player, originally from Mississippi.</p><p>With a booming voice and imposing physical presence, he is one of the best-known Chicago blues artists. The musician and critic Cub Koda noted, 'no one could match Howlin' Wolf for the singular ability to rock the house down to the foundation while simultaneously scaring its patrons out of its wits.'</p><p>Producer Sam Phillips recalled, 'When I heard Howlin' Wolf, I said, 'This is for me. This is where the soul of man never dies.' Several of his songs, including 'Smokestack Lightnin', 'Killing Floor' and 'Spoonful', have become blues and blues rock standards. In 2011, Rolling Stone magazine ranked him number 54 on its list of the '100 Greatest Artists of All Time'.</p>",
+              Slugs = new List<AuthorSlug>
+              {
+                new AuthorSlug
+                {
+                  Name = "howling-wolf",
+                  IsPrimary = true,
+                  CreatedAt = DateTime.UtcNow,
+                },
+              },
+              Image = GetAuthorImage("hwolf.jpg"),
+              CreatedAt = DateTime.UtcNow,
+              ModifiedAt = DateTime.UtcNow.AddMinutes(1),
+            };
+
+            context.Authors.Add(acdcAuthor);
+            context.Authors.Add(hWolfAuthor);
+            context.SaveChanges();
+
+            Lyric tnt = new Lyric
+            {
+              Title = "TNT",
+              Body = @"<p>Oi, oi, oi<br/>Oi, oi, oi<br/>Oi, oi, oi<br/>Oi, oi, oi<br/>Oi, oi, oi</p><p>See me ride out of the sunset<br/>On your color TV screen<br/>Out for all that I can get<br/>If you know what I mean<br/>Women to the left of me<br/>And women to the right<br/>Ain't got no gun<br/>Ain't got no knife<br/>Don't you start no fight</p><p>'Cause I'm T.N.T. I'm dynamite<br/>T.N.T. and I'll win the fight<br/>T.N.T. I'm a power load<br/>T.N.T. watch me explode</p><p>I'm dirty, mean and mighty unclean<br/>I'm a wanted man<br/>Public enemy number one<br/>Understand<br/>So lock up your daughter<br/>Lock up your wife<br/>Lock up your back door<br/>And run for your life<br/>The man is back in town<br/>Don't you mess me 'round</p>",
+              UserId = userId,
+              Slugs = new List<LyricSlug>
+              {
+                new LyricSlug
+                {
+                  Name = "tnt",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              CreatedAt = DateTime.UtcNow,
+              IsApproved = true,
+              AuthorId = acdcAuthor.Id,
+            };
+
+            Lyric thunderstruck = new Lyric
+            {
+              Title = "Thunderstruck",
+              Body = @"<p>I was caught<br/>In the middle of a railroad track (thunder)<br/>I looked round<br/>And I knew there was no turning back (thunder)<br/>My mind raced<br/>And I thought what could I do (thunder)<br/>And I knew<br/>There was no help, no help from you (thunder)<br/>Sound of the drums<br/>Beating in my heart<br/>The thunder of guns<br/>Tore me apart<br/>You've been<br/>Thunderstruck</p><p>Rode down the highway<br/>Broke the limit, we hit the town<br/>Went through to Texas, yeah Texas, and we had some fun<br/>We met some girls<br/>Some dancers who gave a good time<br/>Broke all the rules<br/>Played all the fools<br/>Yeah yeah they, they, they blew our minds<br/>And I was shaking at the knees<br/>Could I come again please<br/>Yeah them ladies were too kind<br/>You've been<br/>Thunderstruck</p>",
+              UserId = userId,
+              Slugs = new List<LyricSlug>
+              {
+                new LyricSlug
+                {
+                  Name = "thunderstruck",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              CreatedAt = DateTime.UtcNow,
+              IsApproved = true,
+              AuthorId = acdcAuthor.Id,
+            };
+
+            Lyric theThrillIsGone = new Lyric
+            {
+              Title = "The Thrill Is Gone",
+              Body = @"<p>The thrill is gone<br/>The thrill is gone away<br/>The thrill is gone baby<br/>The thrill is gone away<br/>You know you done me wrong baby<br/>And you'll be sorry someday</p><p>The thrill is gone<br/>It's gone away from me<br/>The thrill is gone baby<br/>The thrill is gone away from me<br/>Although, I'll still live on<br/>But so lonely I'll be</p><p>The thrill is gone<br/>It's gone away for good<br/>The thrill is gone baby<br/>It's gone away for good<br/>Someday I know I'll be over it all baby<br/>Just like I know a good man should</p><p>You know I'm free, free now baby<br/>I'm free from your spell<br/>Oh I'm free, free, free now<br/>I'm free from your spell<br/>And now that it's all over<br/>All I can do is wish you well</p>",
+              UserId = userId,
+              Slugs = new List<LyricSlug>
+              {
+                new LyricSlug
+                {
+                  Name = "the-thrill-is-gone",
+                  CreatedAt = DateTime.UtcNow,
+                  IsPrimary = true
+                }
+              },
+              CreatedAt = DateTime.UtcNow,
+              IsApproved = true
+            };
+
             Artist acdc = new Artist
             {
               FirstName = "AC/DC",
@@ -113,7 +157,7 @@
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
               Lyrics = new List<Lyric> { tnt, thunderstruck },
-              Image = GetImage("acdc.jpg")
+              Image = GetArtistImage("acdc.jpg")
             };
 
             Artist bbKing = new Artist
@@ -134,7 +178,7 @@
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
               Lyrics = new List<Lyric> { theThrillIsGone },
-              Image = GetImage("bbking.jpg")
+              Image = GetArtistImage("bbking.jpg")
             };
 
             Artist canaanSmith = new Artist
@@ -154,7 +198,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("csmith.jpg")
+              Image = GetArtistImage("csmith.jpg")
             };
 
             Artist damianMarley = new Artist
@@ -174,7 +218,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("damian-marley.jpg")
+              Image = GetArtistImage("damian-marley.jpg")
             };
 
             Artist davidBowie = new Artist
@@ -194,7 +238,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("dbowie.jpg")
+              Image = GetArtistImage("dbowie.jpg")
             };
 
             Artist edSheeran = new Artist
@@ -214,7 +258,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("esheeran.jpg")
+              Image = GetArtistImage("esheeran.jpg")
             };
 
             Artist fleetwoodMac = new Artist
@@ -234,7 +278,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("fmac.jpg")
+              Image = GetArtistImage("fmac.jpg")
             };
 
             Artist georgeMichael = new Artist
@@ -254,7 +298,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("gmichael.jpg")
+              Image = GetArtistImage("gmichael.jpg")
             };
 
             Artist howlingWolf = new Artist
@@ -274,7 +318,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("hwolf.jpg")
+              Image = GetArtistImage("hwolf.jpg")
             };
 
             Artist iceT = new Artist
@@ -294,7 +338,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("itea.jpg")
+              Image = GetArtistImage("itea.jpg")
             };
 
             Artist jenniferLopez = new Artist
@@ -314,7 +358,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("jlopez.jpg")
+              Image = GetArtistImage("jlopez.jpg")
             };
 
             Artist kennyRogers = new Artist
@@ -334,7 +378,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("krogers.jpg")
+              Image = GetArtistImage("krogers.jpg")
             };
 
             Artist ladyGaga = new Artist
@@ -354,7 +398,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("lgaga.jpg")
+              Image = GetArtistImage("lgaga.jpg")
             };
 
             Artist muddyWaters = new Artist
@@ -374,7 +418,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("mwaters.jpg")
+              Image = GetArtistImage("mwaters.jpg")
             };
 
             Artist neilYoung = new Artist
@@ -394,7 +438,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("nyoung.jpg")
+              Image = GetArtistImage("nyoung.jpg")
             };
 
             Artist ozzyOsbourne = new Artist
@@ -414,7 +458,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("oosbourne.jpg")
+              Image = GetArtistImage("oosbourne.jpg")
             };
 
             Artist pattiSmith = new Artist
@@ -434,7 +478,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("psmith.jpg")
+              Image = GetArtistImage("psmith.jpg")
             };
 
             Artist queen = new Artist
@@ -454,7 +498,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("queen.jpg")
+              Image = GetArtistImage("queen.jpg")
             };
 
             Artist rayCharles = new Artist
@@ -474,7 +518,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("rcharles.jpg")
+              Image = GetArtistImage("rcharles.jpg")
             };
 
             Artist sonnyBoyWilliamson = new Artist
@@ -494,7 +538,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("sboywilliamson.jpg")
+              Image = GetArtistImage("sboywilliamson.jpg")
             };
 
             Artist tBoneWalker = new Artist
@@ -514,7 +558,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("tbonewalker.jpg")
+              Image = GetArtistImage("tbonewalker.jpg")
             };
 
             Artist u2 = new Artist
@@ -534,7 +578,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("u2.jpg")
+              Image = GetArtistImage("u2.jpg")
             };
 
             Artist vanHalen = new Artist
@@ -554,7 +598,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("vhalen.jpg")
+              Image = GetArtistImage("vhalen.jpg")
             };
 
             Artist wheatus = new Artist
@@ -574,7 +618,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("wheatus.jpg")
+              Image = GetArtistImage("wheatus.jpg")
             };
 
             Artist xtc = new Artist
@@ -594,7 +638,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("xtc.jpg")
+              Image = GetArtistImage("xtc.jpg")
             };
 
             Artist yolandaBeCool = new Artist
@@ -614,7 +658,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("yolanda-be-cool.jpg")
+              Image = GetArtistImage("yolanda-be-cool.jpg")
             };
 
             Artist zacBrown = new Artist
@@ -634,7 +678,7 @@
               IsApproved = true,
               UserId = userId,
               CreatedAt = DateTime.UtcNow,
-              Image = GetImage("zbrown.jpg")
+              Image = GetArtistImage("zbrown.jpg")
             };
 
             List<Artist> artists = new List<Artist> { acdc, bbKing, canaanSmith, damianMarley, davidBowie, edSheeran, fleetwoodMac, georgeMichael, howlingWolf, iceT, jenniferLopez, kennyRogers, ladyGaga, muddyWaters, neilYoung, ozzyOsbourne, pattiSmith, queen, rayCharles, sonnyBoyWilliamson, tBoneWalker, u2, vanHalen, wheatus, xtc, yolandaBeCool, zacBrown };
@@ -650,7 +694,7 @@
       }
     }
 
-    private ArtistImage GetImage(string imageName)
+    private ArtistImage GetArtistImage(string imageName)
     {
       string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
       string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
@@ -666,6 +710,27 @@
         };
 
         return artistImage;
+      }
+
+      return null;
+    }
+
+    private AuthorImage GetAuthorImage(string imageName)
+    {
+      string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+      string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
+
+      if (File.Exists(imageFilePath))
+      {
+        byte[] imagesBytes = File.ReadAllBytes(imageFilePath);
+
+        AuthorImage authorImage = new AuthorImage
+        {
+          Data = imagesBytes,
+          CreatedAt = DateTime.UtcNow
+        };
+
+        return authorImage;
       }
 
       return null;

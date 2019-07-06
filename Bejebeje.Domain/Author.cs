@@ -4,7 +4,7 @@
   using System.Collections.Generic;
   using Bejebeje.Domain.Interfaces;
 
-  public class Artist : IBaseEntity, IApprovable
+  public class Author : IBaseEntity, IApprovable
   {
     public int Id { get; set; }
 
@@ -14,15 +14,17 @@
 
     public string FullName { get; set; }
 
-    public IEnumerable<ArtistSlug> Slugs { get; set; } = new List<ArtistSlug>();
+    public string Biography { get; set; }
+
+    public IEnumerable<AuthorSlug> Slugs { get; set; } = new List<AuthorSlug>();
+
+    public IEnumerable<Lyric> Lyrics { get; set; }
 
     public bool IsApproved { get; set; }
 
     public string UserId { get; set; }
 
-    public IEnumerable<Lyric> Lyrics { get; set; }
-
-    public ArtistImage Image { get; set; }
+    public AuthorImage Image { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

@@ -3,7 +3,7 @@
   using System;
   using Bejebeje.Domain.Interfaces;
 
-  public class ArtistSlug : IBaseEntity
+  public class AuthorSlug : IBaseEntity
   {
     public int Id { get; set; }
 
@@ -17,6 +17,6 @@
 
     public bool IsDeleted { get; set; }
 
-    public int ArtistId { get; set; }
+    public int AuthorId { get; set; }
   }
 }
