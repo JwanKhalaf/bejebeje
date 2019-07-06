@@ -1,6 +1,6 @@
 ﻿namespace Bejebeje.Models.Lyric
 {
-  using Bejebeje.Models.Author;
+  using System;
 
   public class LyricResponse
   {
@@ -8,6 +8,10 @@
 
     public string Body { get; set; }
 
-    public LyricAuthorResponse Author { get; set; }
+    public string AuthorSlug { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? ModifiedAt { get; set; }
   }
 }

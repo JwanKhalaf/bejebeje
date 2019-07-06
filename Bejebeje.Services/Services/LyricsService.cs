@@ -77,13 +77,9 @@
         {
           Title = l.Title,
           Body = l.Body,
-          Author = l.Author != null ? new LyricAuthorResponse
-          {
-            FirstName = l.Author.FirstName,
-            LastName = l.Author.LastName,
-            AuthorSlug = l.Author.Slugs.Where(s => s.IsPrimary).Single().Name,
-          }
-          : null,
+          AuthorSlug = l.Author.Slugs.Where(s => s.IsPrimary).Single().Name,
+          CreatedAt = l.CreatedAt,
+          ModifiedAt = l.ModifiedAt,
         })
         .SingleOrDefaultAsync();
 

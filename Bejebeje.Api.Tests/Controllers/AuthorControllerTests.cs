@@ -75,7 +75,6 @@
       // arrange
       string authorSlug = "acdc";
 
-      int authorId = 1;
       string authorFirstName = "AC/DC";
       string authorBiography = "Awesome biography.";
       int authorImageId = 1;
@@ -85,7 +84,6 @@
         .Setup(x => x.GetAuthorDetailsAsync(authorSlug))
         .ReturnsAsync(new AuthorDetailsResponse
         {
-          Id = authorId,
           FirstName = authorFirstName,
           Slug = authorSlug,
           Biography = authorBiography,
@@ -106,7 +104,6 @@
       AuthorDetailsResponse authorDetails = okObjectResult.Value as AuthorDetailsResponse;
 
       authorDetails.Should().NotBeNull();
-      authorDetails.Id.Should().Be(authorId);
       authorDetails.FirstName.Should().Be(authorFirstName);
       authorDetails.LastName.Should().Be(null);
       authorDetails.ImageId.Should().Be(authorImageId);

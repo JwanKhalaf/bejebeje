@@ -20,7 +20,7 @@ namespace Bejebeje.DataAccess.Migrations
                     is_approved = table.Column<bool>(nullable: false),
                     user_id = table.Column<string>(nullable: true),
                     created_at = table.Column<DateTime>(nullable: false),
-                    modified_at = table.Column<DateTime>(nullable: false),
+                    modified_at = table.Column<DateTime>(nullable: true),
                     is_deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -41,7 +41,7 @@ namespace Bejebeje.DataAccess.Migrations
                     is_approved = table.Column<bool>(nullable: false),
                     user_id = table.Column<string>(nullable: true),
                     created_at = table.Column<DateTime>(nullable: false),
-                    modified_at = table.Column<DateTime>(nullable: false),
+                    modified_at = table.Column<DateTime>(nullable: true),
                     is_deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -80,7 +80,7 @@ namespace Bejebeje.DataAccess.Migrations
                     name = table.Column<string>(nullable: true),
                     is_primary = table.Column<bool>(nullable: false),
                     created_at = table.Column<DateTime>(nullable: false),
-                    modified_at = table.Column<DateTime>(nullable: false),
+                    modified_at = table.Column<DateTime>(nullable: true),
                     is_deleted = table.Column<bool>(nullable: false),
                     artist_id = table.Column<int>(nullable: false)
                 },
@@ -126,7 +126,7 @@ namespace Bejebeje.DataAccess.Migrations
                     name = table.Column<string>(nullable: true),
                     is_primary = table.Column<bool>(nullable: false),
                     created_at = table.Column<DateTime>(nullable: false),
-                    modified_at = table.Column<DateTime>(nullable: false),
+                    modified_at = table.Column<DateTime>(nullable: true),
                     is_deleted = table.Column<bool>(nullable: false),
                     author_id = table.Column<int>(nullable: false)
                 },
@@ -151,7 +151,7 @@ namespace Bejebeje.DataAccess.Migrations
                     body = table.Column<string>(nullable: true),
                     user_id = table.Column<string>(nullable: true),
                     created_at = table.Column<DateTime>(nullable: false),
-                    modified_at = table.Column<DateTime>(nullable: false),
+                    modified_at = table.Column<DateTime>(nullable: true),
                     is_deleted = table.Column<bool>(nullable: false),
                     is_approved = table.Column<bool>(nullable: false),
                     artist_id = table.Column<int>(nullable: false),
@@ -183,7 +183,7 @@ namespace Bejebeje.DataAccess.Migrations
                     name = table.Column<string>(nullable: true),
                     is_primary = table.Column<bool>(nullable: false),
                     created_at = table.Column<DateTime>(nullable: false),
-                    modified_at = table.Column<DateTime>(nullable: false),
+                    modified_at = table.Column<DateTime>(nullable: true),
                     is_deleted = table.Column<bool>(nullable: false),
                     lyric_id = table.Column<int>(nullable: false)
                 },

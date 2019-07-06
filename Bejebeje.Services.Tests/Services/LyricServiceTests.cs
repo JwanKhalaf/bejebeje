@@ -295,20 +295,39 @@
       string lyricTitle = "Evil Mama Blues";
       string lyricBody = "song lyrics";
 
+      DateTime createdAt = new DateTime(2019, 7, 6, 12, 0, 0, DateTimeKind.Utc);
+
+      Author adaBrownAuthor = new Author
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        Slugs = new List<AuthorSlug>
+        {
+          new AuthorSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = createdAt,
+          },
+        },
+        CreatedAt = createdAt,
+      };
+
       Lyric evilMamaBlue = new Lyric
       {
         Title = lyricTitle,
         Body = lyricBody,
-        CreatedAt = DateTime.UtcNow,
+        CreatedAt = createdAt,
         Slugs = new List<LyricSlug>
         {
           new LyricSlug
           {
             Name = lyricSlug,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = createdAt,
             IsPrimary = true,
           },
         },
+        Author = adaBrownAuthor,
       };
 
       Artist adaBrown = new Artist
@@ -321,7 +340,7 @@
           new ArtistSlug
           {
             Name = artistSlug,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = createdAt,
             IsPrimary = true,
           },
         },
@@ -342,6 +361,9 @@
       result.Should().NotBeNull();
       result.Title.Should().Be(lyricTitle);
       result.Body.Should().Be(lyricBody);
+      result.AuthorSlug.Should().Be(artistSlug);
+      result.CreatedAt.Should().Be(createdAt);
+      result.ModifiedAt.Should().BeNull();
     }
   }
 }

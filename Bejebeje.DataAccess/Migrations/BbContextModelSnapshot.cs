@@ -43,7 +43,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<string>("LastName")
                         .HasColumnName("last_name");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnName("modified_at");
 
                     b.Property<string>("UserId")
@@ -101,7 +101,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<bool>("IsPrimary")
                         .HasColumnName("is_primary");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnName("modified_at");
 
                     b.Property<string>("Name")
@@ -143,7 +143,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<string>("LastName")
                         .HasColumnName("last_name");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnName("modified_at");
 
                     b.Property<string>("UserId")
@@ -201,7 +201,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<bool>("IsPrimary")
                         .HasColumnName("is_primary");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnName("modified_at");
 
                     b.Property<string>("Name")
@@ -240,7 +240,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnName("is_deleted");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnName("modified_at");
 
                     b.Property<string>("Title")
@@ -279,7 +279,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<int>("LyricId")
                         .HasColumnName("lyric_id");
 
-                    b.Property<DateTime>("ModifiedAt")
+                    b.Property<DateTime?>("ModifiedAt")
                         .HasColumnName("modified_at");
 
                     b.Property<string>("Name")
