@@ -6,7 +6,6 @@
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
-  using Bejebeje.Models.Author;
   using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
@@ -77,7 +76,7 @@
         {
           Title = l.Title,
           Body = l.Body,
-          AuthorSlug = l.Author.Slugs.Where(s => s.IsPrimary).Single().Name,
+          AuthorSlug = l.Author != null ? l.Author.Slugs.Where(s => s.IsPrimary).SingleOrDefault().Name : string.Empty,
           CreatedAt = l.CreatedAt,
           ModifiedAt = l.ModifiedAt,
         })
