@@ -18,6 +18,7 @@
     }
 
     [Route("[controller]/{authorSlug}")]
+    [HttpGet]
     public async Task<IActionResult> GetAuthorDetails(string authorSlug)
     {
       if (string.IsNullOrEmpty(authorSlug))

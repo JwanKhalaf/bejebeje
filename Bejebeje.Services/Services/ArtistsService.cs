@@ -13,13 +13,19 @@
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
+  using NodaTime;
 
   public class ArtistsService : IArtistsService
   {
+    private readonly IArtistSlugsService artistSlugsService;
+
     private readonly BbContext context;
 
-    public ArtistsService(BbContext context)
+    public ArtistsService(
+      IArtistSlugsService artistSlugsService,
+      BbContext context)
     {
+      this.artistSlugsService = artistSlugsService;
       this.context = context;
     }
 
@@ -38,6 +44,23 @@
       }
 
       return artistId.Value;
+    }
+
+    public async Task<bool> ArtistExistsAsync(string artistSlug)
+    {
+      int? artistId = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
+        .Select(x => (int?)x.Id)
+        .FirstOrDefaultAsync();
+
+      if (artistId == null)
+      {
+        return false;
+      }
+
+      return true;
     }
 
     public async Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug)
@@ -92,6 +115,40 @@
           Limit = limit,
           Total = totalRecords,
         },
+      };
+
+      return response;
+    }
+
+    public async Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request)
+    {
+      string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
+
+      string artistSlug = artistSlugsService.GetArtistSlug(artistFullName);
+
+      bool artistExists = await ArtistExistsAsync(artistSlug);
+
+      if (artistExists)
+      {
+        throw new ArtistExistsException(artistSlug);
+      }
+
+      Artist artist = new Artist
+      {
+        FirstName = request.FirstName,
+        LastName = request.LastName,
+        FullName = artistFullName,
+        Slugs = new List<ArtistSlug> { artistSlugsService.BuildArtistSlug(artistFullName) },
+        CreatedAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(),
+      };
+
+      context.Artists.Add(artist);
+      await context.SaveChangesAsync();
+
+      CreateNewArtistResponse response = new CreateNewArtistResponse
+      {
+        Slug = artistSlug,
+        CreatedAt = artist.CreatedAt,
       };
 
       return response;

@@ -7,9 +7,13 @@
   {
     Task<int> GetArtistIdAsync(string artistSlug);
 
+    Task<bool> ArtistExistsAsync(string artistSlug);
+
     Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug);
 
     Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit);
+
+    Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request);
 
     Task<PagedArtistsResponse> SearchArtistsAsync(string artistName, int offset, int limit);
   }

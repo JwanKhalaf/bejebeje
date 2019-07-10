@@ -47,6 +47,7 @@
     }
 
     [Route("[controller]/{artistSlug}")]
+    [HttpGet]
     public async Task<IActionResult> GetArtistDetails(string artistSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
@@ -67,6 +68,24 @@
         logger.LogError($"The requested artist was not found. {exception.ToLogData()}");
 
         return NotFound();
+      }
+    }
+
+    [Route("[controller]")]
+    [HttpPost]
+    public async Task<IActionResult> AddNewArtist(CreateNewArtistRequest request)
+    {
+      try
+      {
+        CreateNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
+
+        return CreatedAtAction(nameof(GetArtistDetails), new { artistSlug = response.Slug }, response);
+      }
+      catch (ArtistExistsException exception)
+      {
+        logger.LogError(exception, $"The artist already exists.");
+
+        return BadRequest();
       }
     }
   }

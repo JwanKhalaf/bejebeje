@@ -23,6 +23,7 @@
     }
 
     [Route("artists/{artistSlug}/image")]
+    [HttpGet]
     public async Task<IActionResult> GetArtistImage(string artistSlug)
     {
       if (artistSlug == null)
