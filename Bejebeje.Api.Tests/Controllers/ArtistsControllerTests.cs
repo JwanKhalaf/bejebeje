@@ -14,6 +14,7 @@
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
   using Moq;
+  using NodaTime;
   using NUnit.Framework;
 
   [TestFixture]
@@ -431,6 +432,71 @@
       artistDetails.ImageId.Should().Be(artistImageId);
       artistDetails.Slug.Should().Be(artistSlug);
       artistDetails.CreatedAt.Should().Be(artistCreatedAt);
+    }
+
+    [Test]
+    public async Task AddNewArtist_WhenArtistAlreadyExists_ReturnsBadRequest()
+    {
+      // arrange
+      string firstName = "James";
+      string lastNames = "Brown";
+      string slug = "james-brown";
+
+      CreateNewArtistRequest request = new CreateNewArtistRequest
+      {
+        FirstName = firstName,
+        LastName = lastNames,
+      };
+
+      artistsServiceMock
+        .Setup(x => x.CreateNewArtistAsync(request))
+        .ThrowsAsync(new ArtistExistsException(slug));
+
+      // act
+      IActionResult result = await artistsController.AddNewArtist(request);
+
+      // assert
+      result.Should().BeOfType<BadRequestResult>();
+    }
+
+    [Test]
+    public async Task AddNewArtist_WhenArtistDoesNotAlreadyExists_ReturnsCreatedAtRequest()
+    {
+      // arrange
+      string firstName = "James";
+      string lastNames = "Brown";
+      string slug = "james-brown";
+      DateTime createdAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc();
+
+      CreateNewArtistRequest request = new CreateNewArtistRequest
+      {
+        FirstName = firstName,
+        LastName = lastNames,
+      };
+
+      artistsServiceMock
+        .Setup(x => x.CreateNewArtistAsync(request))
+        .ReturnsAsync(new CreateNewArtistResponse
+        {
+          Slug = slug,
+          CreatedAt = createdAt,
+        });
+
+      // act
+      IActionResult result = await artistsController.AddNewArtist(request);
+
+      // assert
+      result.Should().BeOfType<CreatedAtActionResult>();
+
+      CreatedAtActionResult createdAtActionResult = result as CreatedAtActionResult;
+
+      createdAtActionResult.Should().NotBeNull();
+
+      CreateNewArtistResponse responseModel = createdAtActionResult.Value as CreateNewArtistResponse;
+
+      responseModel.Slug.Should().Be(slug);
+      responseModel.CreatedAt.Should().Be(createdAt);
+      artistsServiceMock.Verify(x => x.CreateNewArtistAsync(request), Times.Once);
     }
   }
 }
