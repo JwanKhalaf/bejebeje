@@ -73,13 +73,13 @@
 
     [Route("[controller]")]
     [HttpPost]
-    public async Task<IActionResult> AddNewArtist(AddNewArtistRequest request)
+    public async Task<IActionResult> AddNewArtist(CreateNewArtistRequest request)
     {
       try
       {
-        AddNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
+        CreateNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
 
-        return Created(response.Uri, response);
+        return CreatedAtAction(nameof(GetArtistDetails), new { artistSlug = response.Slug }, response);
       }
       catch (ArtistExistsException exception)
       {

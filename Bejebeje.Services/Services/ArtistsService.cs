@@ -120,7 +120,7 @@
       return response;
     }
 
-    public async Task<AddNewArtistResponse> CreateNewArtistAsync(AddNewArtistRequest request)
+    public async Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request)
     {
       string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
 
@@ -145,9 +145,10 @@
       context.Artists.Add(artist);
       await context.SaveChangesAsync();
 
-      AddNewArtistResponse response = new AddNewArtistResponse
+      CreateNewArtistResponse response = new CreateNewArtistResponse
       {
-        Uri = $"artists/{artist.Slugs.Where(y => y.IsPrimary).First().Name}",
+        Slug = artistSlug,
+        CreatedAt = artist.CreatedAt,
       };
 
       return response;

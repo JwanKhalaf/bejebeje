@@ -27,6 +27,8 @@
     {
       SetupDataContext();
 
+      artistSlugsServiceMock = new Mock<IArtistSlugsService>(MockBehavior.Strict);
+
       artistsService = new ArtistsService(
         artistSlugsServiceMock.Object,
         Context);
@@ -249,6 +251,26 @@
       result.Artists.First().Slugs.Should().HaveCount(1);
       result.Artists.First().Slugs.First().Name.Should().Be(artistSlug);
       result.Artists.First().Slugs.First().IsPrimary.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task CreateNewArtistAsync_WhenArtistAlreadyExists_ThrowsArtistExistsException()
+    {
+      // arrange
+      string firstName = "Queen";
+      string lastName = string.Empty;
+
+      CreateNewArtistRequest request = new CreateNewArtistRequest
+      {
+        FirstName = firstName,
+        LastName = lastName,
+      };
+
+      // act
+      Func<Task> action = async () => await artistsService.CreateNewArtistAsync(request);
+
+      // assert
+      await action.Should().ThrowAsync<ArtistExistsException>();
     }
 
     [Test]

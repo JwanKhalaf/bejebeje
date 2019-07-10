@@ -2,7 +2,7 @@
 {
   using System.ComponentModel.DataAnnotations;
 
-  public class AddNewArtistRequest
+  public class CreateNewArtistRequest
   {
     [Required]
     [MaxLength(100)]
