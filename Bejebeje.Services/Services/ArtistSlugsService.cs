@@ -1,6 +1,5 @@
 ﻿namespace Bejebeje.Services.Services
 {
-  using System.Collections.Generic;
   using Bejebeje.Common.Extensions;
   using Bejebeje.Domain;
   using Bejebeje.Services.Services.Interfaces;
@@ -8,22 +7,23 @@
 
   public class ArtistSlugsService : IArtistSlugsService
   {
-    public IEnumerable<ArtistSlug> BuildArtistSlugs(string artistFullName)
+    public string GetArtistSlug(string name)
     {
-      List<ArtistSlug> artistSlugs = new List<ArtistSlug>();
+      string artistFullNameLowercase = name.Trim().ToLower();
 
-      string artistFullNameLowercase = artistFullName.Trim().ToLower();
+      return artistFullNameLowercase.NormalizeStringForUrl();
+    }
 
+    public ArtistSlug BuildArtistSlug(string artistFullName)
+    {
       ArtistSlug artistSlug = new ArtistSlug
       {
-        Name = artistFullNameLowercase.NormalizeStringForUrl(),
+        Name = GetArtistSlug(artistFullName),
         CreatedAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(),
         IsPrimary = true,
       };
 
-      artistSlugs.Add(artistSlug);
-
-      return artistSlugs;
+      return artistSlug;
     }
   }
 }

@@ -46,6 +46,23 @@
       return artistId.Value;
     }
 
+    public async Task<bool> ArtistExistsAsync(string artistSlug)
+    {
+      int? artistId = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
+        .Select(x => (int?)x.Id)
+        .FirstOrDefaultAsync();
+
+      if (artistId == null)
+      {
+        return false;
+      }
+
+      return true;
+    }
+
     public async Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug)
     {
       int artistId = await GetArtistIdAsync(artistSlug);
@@ -107,12 +124,21 @@
     {
       string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
 
+      string artistSlug = artistSlugsService.GetArtistSlug(artistFullName);
+
+      bool artistExists = await ArtistExistsAsync(artistSlug);
+
+      if (artistExists)
+      {
+        throw new ArtistExistsException(artistSlug);
+      }
+
       Artist artist = new Artist
       {
         FirstName = request.FirstName,
         LastName = request.LastName,
         FullName = artistFullName,
-        Slugs = artistSlugsService.BuildArtistSlugs(artistFullName),
+        Slugs = new List<ArtistSlug> { artistSlugsService.BuildArtistSlug(artistFullName) },
         CreatedAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(),
       };
 

@@ -75,14 +75,18 @@
     [HttpPost]
     public async Task<IActionResult> AddNewArtist(AddNewArtistRequest request)
     {
-      if (request == null)
+      try
       {
+        AddNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
+
+        return Created(response.Uri, response);
+      }
+      catch (ArtistExistsException exception)
+      {
+        logger.LogError(exception, $"The artist already exists.");
+
         return BadRequest();
       }
-
-      AddNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
-
-      return Created(response.Uri, response);
     }
   }
 }

@@ -7,6 +7,8 @@
   {
     Task<int> GetArtistIdAsync(string artistSlug);
 
+    Task<bool> ArtistExistsAsync(string artistSlug);
+
     Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug);
 
     Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit);

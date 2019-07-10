@@ -64,6 +64,9 @@
         .AddScoped<IArtistsService, ArtistsService>();
 
       services
+        .AddScoped<IArtistSlugsService, ArtistSlugsService>();
+
+      services
         .AddScoped<ILyricsService, LyricsService>();
 
       services
