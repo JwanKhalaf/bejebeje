@@ -11,6 +11,8 @@
 
     Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit);
 
+    Task<AddNewArtistResponse> CreateNewArtistAsync(AddNewArtistRequest request);
+
     Task<PagedArtistsResponse> SearchArtistsAsync(string artistName, int offset, int limit);
   }
 }

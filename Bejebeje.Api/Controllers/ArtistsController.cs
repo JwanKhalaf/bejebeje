@@ -47,6 +47,7 @@
     }
 
     [Route("[controller]/{artistSlug}")]
+    [HttpGet]
     public async Task<IActionResult> GetArtistDetails(string artistSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
@@ -68,6 +69,20 @@
 
         return NotFound();
       }
+    }
+
+    [Route("[controller]")]
+    [HttpPost]
+    public async Task<IActionResult> AddNewArtist(AddNewArtistRequest request)
+    {
+      if (request == null)
+      {
+        return BadRequest();
+      }
+
+      AddNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
+
+      return Created(response.Uri, response);
     }
   }
 }

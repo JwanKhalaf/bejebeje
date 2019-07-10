@@ -9,13 +9,17 @@
   using Bejebeje.Domain;
   using Bejebeje.Models.Artist;
   using Bejebeje.Services.Services;
+  using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.Services.Tests.Helpers;
   using FluentAssertions;
+  using Moq;
   using NUnit.Framework;
 
   [TestFixture]
   public class ArtistsServiceTests : DatabaseTestBase
   {
+    private Mock<IArtistSlugsService> artistSlugsServiceMock;
+
     private ArtistsService artistsService;
 
     [SetUp]
@@ -23,7 +27,9 @@
     {
       SetupDataContext();
 
-      artistsService = new ArtistsService(Context);
+      artistsService = new ArtistsService(
+        artistSlugsServiceMock.Object,
+        Context);
     }
 
     [Test]

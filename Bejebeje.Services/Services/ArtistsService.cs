@@ -13,13 +13,19 @@
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
+  using NodaTime;
 
   public class ArtistsService : IArtistsService
   {
+    private readonly IArtistSlugsService artistSlugsService;
+
     private readonly BbContext context;
 
-    public ArtistsService(BbContext context)
+    public ArtistsService(
+      IArtistSlugsService artistSlugsService,
+      BbContext context)
     {
+      this.artistSlugsService = artistSlugsService;
       this.context = context;
     }
 
@@ -92,6 +98,30 @@
           Limit = limit,
           Total = totalRecords,
         },
+      };
+
+      return response;
+    }
+
+    public async Task<AddNewArtistResponse> CreateNewArtistAsync(AddNewArtistRequest request)
+    {
+      string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
+
+      Artist artist = new Artist
+      {
+        FirstName = request.FirstName,
+        LastName = request.LastName,
+        FullName = artistFullName,
+        Slugs = artistSlugsService.BuildArtistSlugs(artistFullName),
+        CreatedAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(),
+      };
+
+      context.Artists.Add(artist);
+      await context.SaveChangesAsync();
+
+      AddNewArtistResponse response = new AddNewArtistResponse
+      {
+        Uri = $"artists/{artist.Slugs.Where(y => y.IsPrimary).First().Name}",
       };
 
       return response;

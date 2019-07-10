@@ -1,5 +1,8 @@
 ﻿namespace Bejebeje.Common.Extensions
 {
+  using System;
+  using System.Globalization;
+  using System.Text;
   using System.Text.RegularExpressions;
 
   public static class StringExtensions
@@ -20,6 +23,33 @@
       }
 
       return string.Empty;
+    }
+
+    public static string NormalizeStringForUrl(this string name)
+    {
+      string lowerCaseName = name.Trim().ToLowerInvariant();
+      String normalizedString = lowerCaseName.Normalize(NormalizationForm.FormD);
+      StringBuilder stringBuilder = new StringBuilder();
+
+      foreach (char c in normalizedString)
+      {
+        switch (CharUnicodeInfo.GetUnicodeCategory(c))
+        {
+          case UnicodeCategory.LowercaseLetter:
+          case UnicodeCategory.UppercaseLetter:
+          case UnicodeCategory.DecimalDigitNumber:
+            stringBuilder.Append(c);
+            break;
+          case UnicodeCategory.SpaceSeparator:
+          case UnicodeCategory.ConnectorPunctuation:
+          case UnicodeCategory.DashPunctuation:
+            stringBuilder.Append('_');
+            break;
+        }
+      }
+      string result = stringBuilder.ToString();
+      return String.Join("-", result.Split(new char[] { '_' }
+        , StringSplitOptions.RemoveEmptyEntries));
     }
   }
 }
