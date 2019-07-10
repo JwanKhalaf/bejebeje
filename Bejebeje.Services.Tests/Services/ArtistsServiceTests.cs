@@ -13,6 +13,7 @@
   using Bejebeje.Services.Tests.Helpers;
   using FluentAssertions;
   using Moq;
+  using NodaTime;
   using NUnit.Framework;
 
   [TestFixture]
@@ -259,6 +260,30 @@
       // arrange
       string firstName = "Queen";
       string lastName = string.Empty;
+      string fullName = "Queen";
+      string artistSlug = "queen";
+
+      artistSlugsServiceMock
+        .Setup(x => x.GetArtistSlug(fullName))
+        .Returns(artistSlug);
+
+      Artist queen = new Artist
+      {
+        FirstName = "Queen",
+        FullName = "Queen",
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+          },
+        },
+        CreatedAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(),
+      };
+
+      Context.Artists.Add(queen);
+      Context.SaveChanges();
 
       CreateNewArtistRequest request = new CreateNewArtistRequest
       {
@@ -271,6 +296,42 @@
 
       // assert
       await action.Should().ThrowAsync<ArtistExistsException>();
+    }
+
+    [Test]
+    public async Task CreateNewArtistAsync_WhenArtistDoesNotAlreadyExists_CreatesNewArtist()
+    {
+      // arrange
+      string firstName = "Katie";
+      string lastName = "Melua";
+      string fullName = "Katie Melua";
+      string artistSlug = "katie-melua";
+
+      artistSlugsServiceMock
+        .Setup(x => x.GetArtistSlug(fullName))
+        .Returns(artistSlug);
+
+      artistSlugsServiceMock
+        .Setup(x => x.BuildArtistSlug(fullName))
+        .Returns(new ArtistSlug
+        {
+          Name = artistSlug,
+          CreatedAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(),
+        });
+
+      CreateNewArtistRequest request = new CreateNewArtistRequest
+      {
+        FirstName = firstName,
+        LastName = lastName,
+      };
+
+      // act
+      CreateNewArtistResponse result = await artistsService.CreateNewArtistAsync(request);
+
+      // assert
+      result.Should().BeOfType<CreateNewArtistResponse>();
+      result.Slug.Should().Be(artistSlug);
+      result.CreatedAt.Should().BeCloseTo(SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(), 100);
     }
 
     [Test]
