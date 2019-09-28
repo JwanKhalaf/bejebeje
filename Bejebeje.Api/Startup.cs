@@ -2,7 +2,6 @@
 {
   using Bejebeje.DataAccess.Configuration;
   using Bejebeje.DataAccess.Context;
-  using Bejebeje.DataAccess.Data;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Builder;
@@ -11,7 +10,8 @@
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
-  using Swashbuckle.AspNetCore.Swagger;
+  using Microsoft.Extensions.Hosting;
+  using Microsoft.OpenApi.Models;
 
   public class Startup
   {
@@ -28,10 +28,12 @@
       string databaseConnectionString = Configuration["Database:DefaultConnectionString"];
 
       services
-        .AddDbContext<BbContext>(options => options.UseNpgsql(databaseConnectionString));
+        .AddDbContext<BbContext>(options => options
+          .UseNpgsql(databaseConnectionString)
+          .UseSnakeCaseNamingConvention());
 
       services
-        .AddSingleton<DataSeeder>();
+        .AddScoped<IDataSeederService, DataSeederService>();
 
       services
         .Configure<InitialSeedConfiguration>(c =>
@@ -77,17 +79,17 @@
 
       services
         .AddMvc()
-        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
       services
         .AddSwaggerGen(c =>
         {
-          c.SwaggerDoc("v1", new Info { Title = "Bejebeje API", Version = "v1" });
+          c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bejebeje API", Version = "v1" });
         });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
       {
@@ -106,10 +108,18 @@
         app.UseHsts();
       }
 
+      app.UseRouting();
+
       app.UseCors("default");
+
       app.UseAuthentication();
+
       app.UseHttpsRedirection();
-      app.UseMvc();
+
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+      });
     }
   }
 }

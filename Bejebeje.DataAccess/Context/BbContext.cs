@@ -37,33 +37,6 @@
             .HasOne(a => a.Image)
             .WithOne(a => a.Author)
             .HasForeignKey<AuthorImage>(ai => ai.AuthorId);
-
-      foreach (IMutableEntityType entity in builder.Model.GetEntityTypes())
-      {
-        // replace table names
-        entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();
-
-        // replace column names
-        foreach (IMutableProperty property in entity.GetProperties())
-        {
-          property.Relational().ColumnName = property.Name.ToSnakeCase();
-        }
-
-        foreach (IMutableKey key in entity.GetKeys())
-        {
-          key.Relational().Name = key.Relational().Name.ToSnakeCase();
-        }
-
-        foreach (IMutableForeignKey key in entity.GetForeignKeys())
-        {
-          key.Relational().Name = key.Relational().Name.ToSnakeCase();
-        }
-
-        foreach (IMutableIndex index in entity.GetIndexes())
-        {
-          index.Relational().Name = index.Relational().Name.ToSnakeCase();
-        }
-      }
     }
   }
 }
