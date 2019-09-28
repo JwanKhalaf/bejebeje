@@ -1,4 +1,4 @@
-# Set Environment
+﻿# Set Environment
 
 In Bash, you run: export ASPNETCORE_ENVIRONMENT=Development
 

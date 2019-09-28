@@ -1,5 +1,5 @@
 # set base image as the dotnet 2.2 SDK.
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build-env
 
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
 # instructions that follows the WORKDIR instruction.
@@ -17,7 +17,7 @@ RUN dotnet test Bejebeje.Api.sln
 RUN dotnet publish Bejebeje.Api/Bejebeje.Api.csproj -c Release -o out
 
 # set base image as the dotnet 2.2 runtime.
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS runtime
 
 # telling the application what port to run on.
 ENV ASPNETCORE_URLS=http://*:5005
