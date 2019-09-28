@@ -28,7 +28,7 @@ WORKDIR /app
 
 # copy the contents of /app/out in the `build-env` and paste it in the
 # `/app` directory of the new runtime container.
-COPY --from=build-env /app/Bejebeje.Api/out .
+COPY --from=build-env /app/out .
 
 # set the entry point into the application.
 ENTRYPOINT ["dotnet", "Bejebeje.Api.dll", "-seed"]
