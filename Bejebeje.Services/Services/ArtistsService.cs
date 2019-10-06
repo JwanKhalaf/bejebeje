@@ -161,21 +161,19 @@
       List<ArtistsResponse> matchedArtists = await context
         .Artists
         .AsNoTracking()
-        .Where(x =>
-            EF.Functions.Like(x.FullName.Standardize(), $"%{searchTermStandardized}%") ||
-            x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{searchTermStandardized}%")))
-          .OrderBy(x => x.FirstName)
-          .Select(x => new ArtistsResponse
-          {
-            FirstName = x.FirstName,
-            LastName = x.LastName,
-            Slugs = x.Slugs
-              .Where(s => !s.IsDeleted)
-              .Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary })
-              .ToList(),
-            ImageId = x.Image.Id,
-          })
-          .ToListAsync();
+        .Where(x => EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+        .OrderBy(x => x.FirstName)
+        .Select(x => new ArtistsResponse
+        {
+          FirstName = x.FirstName,
+          LastName = x.LastName,
+          Slugs = x.Slugs
+            .Where(s => !s.IsDeleted)
+            .Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary })
+            .ToList(),
+          ImageId = x.Image.Id,
+        })
+        .ToListAsync();
 
       PagedArtistsResponse pagedArtistsResponse = new PagedArtistsResponse
       {
