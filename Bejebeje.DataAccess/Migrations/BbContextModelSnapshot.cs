@@ -14,114 +14,299 @@ namespace Bejebeje.DataAccess.Migrations
     {
 #pragma warning disable 612, 618
       modelBuilder
-          .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-          .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+          .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+          .HasAnnotation("ProductVersion", "3.0.0")
           .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
       modelBuilder.Entity("Bejebeje.Domain.Artist", b =>
           {
             b.Property<int>("Id")
                       .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
 
             b.Property<string>("FirstName")
-                      .HasColumnName("first_name");
+                      .HasColumnName("first_name")
+                      .HasColumnType("text");
 
-            b.Property<string>("ImageUrl")
-                      .HasColumnName("image_url");
+            b.Property<string>("FullName")
+                      .HasColumnName("full_name")
+                      .HasColumnType("text");
 
             b.Property<bool>("IsApproved")
-                      .HasColumnName("is_approved");
+                      .HasColumnName("is_approved")
+                      .HasColumnType("boolean");
 
             b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                      .HasColumnName("is_deleted")
+                      .HasColumnType("boolean");
 
             b.Property<string>("LastName")
-                      .HasColumnName("last_name");
+                      .HasColumnName("last_name")
+                      .HasColumnType("text");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
 
             b.Property<string>("UserId")
-                      .HasColumnName("user_id");
+                      .HasColumnName("user_id")
+                      .HasColumnType("text");
 
-            b.HasKey("Id")
-                      .HasName("pk_artists");
+            b.HasKey("Id");
 
             b.ToTable("artists");
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.ArtistImage", b =>
+          {
+            b.Property<int>("Id")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            b.Property<int>("ArtistId")
+                      .HasColumnName("artist_id")
+                      .HasColumnType("integer");
+
+            b.Property<DateTime>("CreatedAt")
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.Property<byte[]>("Data")
+                      .HasColumnName("data")
+                      .HasColumnType("bytea");
+
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.HasKey("Id");
+
+            b.HasIndex("ArtistId")
+                      .IsUnique();
+
+            b.ToTable("artist_images");
           });
 
       modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
           {
             b.Property<int>("Id")
                       .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             b.Property<int>("ArtistId")
-                      .HasColumnName("artist_id");
+                      .HasColumnName("artist_id")
+                      .HasColumnType("integer");
 
             b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
 
             b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                      .HasColumnName("is_deleted")
+                      .HasColumnType("boolean");
 
             b.Property<bool>("IsPrimary")
-                      .HasColumnName("is_primary");
+                      .HasColumnName("is_primary")
+                      .HasColumnType("boolean");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
 
             b.Property<string>("Name")
-                      .HasColumnName("name");
+                      .HasColumnName("name")
+                      .HasColumnType("text");
 
-            b.HasKey("Id")
-                      .HasName("pk_artist_slug");
+            b.HasKey("Id");
 
-            b.HasIndex("ArtistId")
-                      .HasName("ix_artist_slug_artist_id");
+            b.HasIndex("ArtistId");
 
             b.ToTable("artist_slug");
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.Author", b =>
+          {
+            b.Property<int>("Id")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            b.Property<string>("Biography")
+                      .HasColumnName("biography")
+                      .HasColumnType("text");
+
+            b.Property<DateTime>("CreatedAt")
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.Property<string>("FirstName")
+                      .HasColumnName("first_name")
+                      .HasColumnType("text");
+
+            b.Property<string>("FullName")
+                      .HasColumnName("full_name")
+                      .HasColumnType("text");
+
+            b.Property<bool>("IsApproved")
+                      .HasColumnName("is_approved")
+                      .HasColumnType("boolean");
+
+            b.Property<bool>("IsDeleted")
+                      .HasColumnName("is_deleted")
+                      .HasColumnType("boolean");
+
+            b.Property<string>("LastName")
+                      .HasColumnName("last_name")
+                      .HasColumnType("text");
+
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.Property<string>("UserId")
+                      .HasColumnName("user_id")
+                      .HasColumnType("text");
+
+            b.HasKey("Id");
+
+            b.ToTable("authors");
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.AuthorImage", b =>
+          {
+            b.Property<int>("Id")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            b.Property<int>("AuthorId")
+                      .HasColumnName("author_id")
+                      .HasColumnType("integer");
+
+            b.Property<DateTime>("CreatedAt")
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.Property<byte[]>("Data")
+                      .HasColumnName("data")
+                      .HasColumnType("bytea");
+
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.HasKey("Id");
+
+            b.HasIndex("AuthorId")
+                      .IsUnique();
+
+            b.ToTable("author_image");
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.AuthorSlug", b =>
+          {
+            b.Property<int>("Id")
+                      .ValueGeneratedOnAdd()
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            b.Property<int>("AuthorId")
+                      .HasColumnName("author_id")
+                      .HasColumnType("integer");
+
+            b.Property<DateTime>("CreatedAt")
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.Property<bool>("IsDeleted")
+                      .HasColumnName("is_deleted")
+                      .HasColumnType("boolean");
+
+            b.Property<bool>("IsPrimary")
+                      .HasColumnName("is_primary")
+                      .HasColumnType("boolean");
+
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.Property<string>("Name")
+                      .HasColumnName("name")
+                      .HasColumnType("text");
+
+            b.HasKey("Id");
+
+            b.HasIndex("AuthorId");
+
+            b.ToTable("author_slug");
           });
 
       modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
           {
             b.Property<int>("Id")
                       .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             b.Property<int>("ArtistId")
-                      .HasColumnName("artist_id");
+                      .HasColumnName("artist_id")
+                      .HasColumnType("integer");
 
-            b.Property<string>("Body")
-                      .HasColumnName("body");
+            b.Property<int?>("AuthorId")
+                      .HasColumnName("author_id")
+                      .HasColumnType("integer");
 
             b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
+
+            b.Property<string>("HtmlBody")
+                      .HasColumnName("html_body")
+                      .HasColumnType("text");
 
             b.Property<bool>("IsApproved")
-                      .HasColumnName("is_approved");
+                      .HasColumnName("is_approved")
+                      .HasColumnType("boolean");
 
             b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                      .HasColumnName("is_deleted")
+                      .HasColumnType("boolean");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+            b.Property<string>("MarkdownBody")
+                      .HasColumnName("markdown_body")
+                      .HasColumnType("text");
+
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
 
             b.Property<string>("Title")
-                      .HasColumnName("title");
+                      .HasColumnName("title")
+                      .HasColumnType("text");
 
             b.Property<string>("UserId")
-                      .HasColumnName("user_id");
+                      .HasColumnName("user_id")
+                      .HasColumnType("text");
 
-            b.HasKey("Id")
-                      .HasName("pk_lyrics");
+            b.HasKey("Id");
 
-            b.HasIndex("ArtistId")
-                      .HasName("ix_lyrics_artist_id");
+            b.HasIndex("ArtistId");
+
+            b.HasIndex("AuthorId");
 
             b.ToTable("lyrics");
           });
@@ -130,60 +315,97 @@ namespace Bejebeje.DataAccess.Migrations
           {
             b.Property<int>("Id")
                       .ValueGeneratedOnAdd()
-                      .HasColumnName("id");
+                      .HasColumnName("id")
+                      .HasColumnType("integer")
+                      .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             b.Property<DateTime>("CreatedAt")
-                      .HasColumnName("created_at");
+                      .HasColumnName("created_at")
+                      .HasColumnType("timestamp without time zone");
 
             b.Property<bool>("IsDeleted")
-                      .HasColumnName("is_deleted");
+                      .HasColumnName("is_deleted")
+                      .HasColumnType("boolean");
 
             b.Property<bool>("IsPrimary")
-                      .HasColumnName("is_primary");
+                      .HasColumnName("is_primary")
+                      .HasColumnType("boolean");
 
             b.Property<int>("LyricId")
-                      .HasColumnName("lyric_id");
+                      .HasColumnName("lyric_id")
+                      .HasColumnType("integer");
 
-            b.Property<DateTime>("ModifiedAt")
-                      .HasColumnName("modified_at");
+            b.Property<DateTime?>("ModifiedAt")
+                      .HasColumnName("modified_at")
+                      .HasColumnType("timestamp without time zone");
 
             b.Property<string>("Name")
-                      .HasColumnName("name");
+                      .HasColumnName("name")
+                      .HasColumnType("text");
 
-            b.HasKey("Id")
-                      .HasName("pk_lyric_slugs");
+            b.HasKey("Id");
 
-            b.HasIndex("LyricId")
-                      .HasName("ix_lyric_slugs_lyric_id");
+            b.HasIndex("LyricId");
 
             b.ToTable("lyric_slugs");
           });
 
+      modelBuilder.Entity("Bejebeje.Domain.ArtistImage", b =>
+          {
+            b.HasOne("Bejebeje.Domain.Artist", "Artist")
+                      .WithOne("Image")
+                      .HasForeignKey("Bejebeje.Domain.ArtistImage", "ArtistId")
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+          });
+
       modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
           {
-            b.HasOne("Bejebeje.Domain.Artist")
+            b.HasOne("Bejebeje.Domain.Artist", null)
                       .WithMany("Slugs")
                       .HasForeignKey("ArtistId")
-                      .HasConstraintName("fk_artist_slug_artists_artist_id")
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.AuthorImage", b =>
+          {
+            b.HasOne("Bejebeje.Domain.Author", "Author")
+                      .WithOne("Image")
+                      .HasForeignKey("Bejebeje.Domain.AuthorImage", "AuthorId")
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+          });
+
+      modelBuilder.Entity("Bejebeje.Domain.AuthorSlug", b =>
+          {
+            b.HasOne("Bejebeje.Domain.Author", null)
+                      .WithMany("Slugs")
+                      .HasForeignKey("AuthorId")
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
           });
 
       modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
           {
-            b.HasOne("Bejebeje.Domain.Artist")
+            b.HasOne("Bejebeje.Domain.Artist", "Artist")
                       .WithMany("Lyrics")
                       .HasForeignKey("ArtistId")
-                      .HasConstraintName("fk_lyrics_artists_artist_id")
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+
+            b.HasOne("Bejebeje.Domain.Author", "Author")
+                      .WithMany("Lyrics")
+                      .HasForeignKey("AuthorId");
           });
 
       modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
           {
-            b.HasOne("Bejebeje.Domain.Lyric")
+            b.HasOne("Bejebeje.Domain.Lyric", null)
                       .WithMany("Slugs")
                       .HasForeignKey("LyricId")
-                      .HasConstraintName("fk_lyric_slugs_lyrics_lyric_id")
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
           });
 #pragma warning restore 612, 618
     }

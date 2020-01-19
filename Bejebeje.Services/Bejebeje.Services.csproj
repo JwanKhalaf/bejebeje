@@ -1,20 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>Bejebeje.Services.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>Bejebeje.Services.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+    <Compile Include="..\Bejebeje.Api\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="NodaTime" Version="2.4.7" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -22,8 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bejebeje.Domain\Bejebeje.Domain.csproj" />
-    <ProjectReference Include="..\Bejebeje.ViewModels\Bejebeje.ViewModels.csproj" />
+    <ProjectReference Include="..\Bejebeje.Models\Bejebeje.Models.csproj" />
     <ProjectReference Include="..\Bejebeje.DataAccess\Bejebeje.DataAccess.csproj" />
   </ItemGroup>
-
 </Project>

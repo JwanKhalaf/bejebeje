@@ -20,36 +20,23 @@
 
     public DbSet<LyricSlug> LyricSlugs { get; set; }
 
+    public DbSet<ArtistImage> ArtistImages { get; set; }
+
+    public DbSet<Author> Authors { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
       base.OnModelCreating(builder);
 
-      foreach (IMutableEntityType entity in builder.Model.GetEntityTypes())
-      {
-        // replace table names
-        entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();
+      builder.Entity<Artist>()
+            .HasOne(a => a.Image)
+            .WithOne(a => a.Artist)
+            .HasForeignKey<ArtistImage>(ai => ai.ArtistId);
 
-        // replace column names
-        foreach (IMutableProperty property in entity.GetProperties())
-        {
-          property.Relational().ColumnName = property.Name.ToSnakeCase();
-        }
-
-        foreach (IMutableKey key in entity.GetKeys())
-        {
-          key.Relational().Name = key.Relational().Name.ToSnakeCase();
-        }
-
-        foreach (IMutableForeignKey key in entity.GetForeignKeys())
-        {
-          key.Relational().Name = key.Relational().Name.ToSnakeCase();
-        }
-
-        foreach (IMutableIndex index in entity.GetIndexes())
-        {
-          index.Relational().Name = index.Relational().Name.ToSnakeCase();
-        }
-      }
+      builder.Entity<Author>()
+            .HasOne(a => a.Image)
+            .WithOne(a => a.Author)
+            .HasForeignKey<AuthorImage>(ai => ai.AuthorId);
     }
   }
 }

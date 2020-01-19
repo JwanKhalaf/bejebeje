@@ -5,8 +5,8 @@
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
+  using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Lyric;
   using Microsoft.AspNetCore.Mvc;
   using Microsoft.Extensions.Logging;
 
@@ -27,17 +27,17 @@
 
     [Route("artists/{artistSlug}/[controller]")]
     [HttpGet]
-    public async Task<IActionResult> Get(string artistSlug)
+    public async Task<IActionResult> GetLyrics(string artistSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
       {
-        throw new ArgumentException("Missing artist slug", nameof(artistSlug));
+        throw new ArgumentNullException("Missing artist slug", nameof(artistSlug));
       }
 
       try
       {
         IList<LyricCardViewModel> lyrics = await lyricsService
-          .GetLyricsByArtistSlugAsync(artistSlug)
+          .GetLyricsAsync(artistSlug)
           .ConfigureAwait(false);
 
         return Ok(lyrics);
@@ -45,6 +45,58 @@
       catch (ArtistNotFoundException exception)
       {
         logger.LogError($"The requested artist was not found. {exception.ToLogData()}");
+
+        return NotFound();
+      }
+    }
+
+    [Route("[controller]")]
+    [HttpGet]
+    public async Task<IActionResult> SearchLyrics([FromQuery] string title)
+    {
+      if (string.IsNullOrEmpty(title))
+      {
+        throw new ArgumentNullException("Missing lyric title", nameof(title));
+      }
+
+      IList<LyricCardViewModel> lyrics = await lyricsService
+        .SearchLyricsAsync(title)
+        .ConfigureAwait(false);
+
+      return Ok(lyrics);
+    }
+
+    [Route("artists/{artistSlug}/[controller]/{lyricSlug}")]
+    [HttpGet]
+    public async Task<IActionResult> GetSingleLyric(string artistSlug, string lyricSlug)
+    {
+      if (string.IsNullOrEmpty(artistSlug))
+      {
+        throw new ArgumentNullException("Missing artist slug", nameof(artistSlug));
+      }
+
+      if (string.IsNullOrEmpty(lyricSlug))
+      {
+        throw new ArgumentNullException("Missing lyric slug", nameof(lyricSlug));
+      }
+
+      try
+      {
+        LyricResponse lyric = await lyricsService
+          .GetSingleLyricAsync(artistSlug, lyricSlug)
+          .ConfigureAwait(false);
+
+        return Ok(lyric);
+      }
+      catch (ArtistNotFoundException exception)
+      {
+        logger.LogError($"The requested artist was not found. {exception.ToLogData()}");
+
+        return NotFound();
+      }
+      catch (LyricNotFoundException exception)
+      {
+        logger.LogError($"The requested lyric was not found. {exception.ToLogData()}");
 
         return NotFound();
       }

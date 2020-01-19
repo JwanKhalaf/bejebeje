@@ -3,11 +3,12 @@
   using System;
   using System.Linq;
   using System.Net.Sockets;
-  using Bejebeje.DataAccess.Data;
-  using Microsoft.AspNetCore;
+  using System.Threading.Tasks;
+  using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Hosting;
-  using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
+  using Microsoft.Extensions.Hosting;
+  using Npgsql;
   using Polly;
   using Polly.Retry;
   using Serilog;
@@ -16,7 +17,7 @@
 
   public class Program
   {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
       string possibleSeedArgument = "-seed";
 
@@ -29,36 +30,37 @@
           .ToArray();
       }
 
-      IWebHost host = CreateWebHostBuilder(args).Build();
+      IHost host = CreateHostBuilder(args).Build();
 
       if (seedIsRequested)
       {
         Console.WriteLine("Database will be seeded with sample data if no data exists already.");
 
-        IConfiguration config = host
-          .Services
-          .GetRequiredService<IConfiguration>();
+        using (IServiceScope serviceScope = host.Services.CreateScope())
+        {
+          IDataSeederService dataSeederService = serviceScope.ServiceProvider.GetService<IDataSeederService>();
 
-        DataSeeder dataSeeder = host
-          .Services
-          .GetRequiredService<DataSeeder>();
+          AsyncRetryPolicy retryPolicy = Policy
+            .Handle<SocketException>()
+            .Or<PostgresException>()
+            .RetryAsync(50);
 
-        RetryPolicy retryPolicy = Policy
-          .Handle<SocketException>()
-          .Retry(5);
-
-        retryPolicy.Execute(() => dataSeeder.EnsureDataIsSeeded());
+          await retryPolicy.ExecuteAsync(() => dataSeederService.SeedDataAsync());
+        }
       }
 
-      host.Run();
+      await host.RunAsync();
     }
 
-    public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+    public static IHostBuilder CreateHostBuilder(string[] args)
     {
-      return WebHost
+      return Host
         .CreateDefaultBuilder(args)
-        .UseStartup<Startup>()
-        .UseSerilog(
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+          webBuilder
+          .UseStartup<Startup>()
+          .UseSerilog(
           (context, configuration) =>
           {
             configuration
@@ -72,6 +74,7 @@
                 outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
                 theme: AnsiConsoleTheme.Literate);
           });
+        });
     }
   }
 }

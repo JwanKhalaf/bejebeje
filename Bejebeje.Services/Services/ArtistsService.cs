@@ -3,35 +3,189 @@
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
+  using Bejebeje.Common.Exceptions;
+  using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Domain;
+  using Bejebeje.Models.Artist;
+  using Bejebeje.Models.ArtistSlug;
+  using Bejebeje.Models.Paging;
+  using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
-  using Bejebeje.ViewModels.Artist;
   using Microsoft.EntityFrameworkCore;
+  using NodaTime;
 
   public class ArtistsService : IArtistsService
   {
+    private readonly IArtistSlugsService artistSlugsService;
+
     private readonly BbContext context;
 
-    public ArtistsService(BbContext context)
+    public ArtistsService(
+      IArtistSlugsService artistSlugsService,
+      BbContext context)
     {
+      this.artistSlugsService = artistSlugsService;
       this.context = context;
     }
 
-    public async Task<IList<ArtistCardViewModel>> GetArtistsAsync()
+    public async Task<int> GetArtistIdAsync(string artistSlug)
     {
-      List<ArtistCardViewModel> artistCards = await context
-      .Artists
-      .AsNoTracking()
-      .Select(x => new ArtistCardViewModel
-      {
-        FirstName = x.FirstName,
-        LastName = x.LastName,
-        Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
-        ImageUrl = x.ImageUrl
-      })
-      .ToListAsync();
+      int? artistId = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
+        .Select(x => (int?)x.Id)
+        .FirstOrDefaultAsync();
 
-      return artistCards;
+      if (artistId == null)
+      {
+        throw new ArtistNotFoundException(artistSlug);
+      }
+
+      return artistId.Value;
+    }
+
+    public async Task<bool> ArtistExistsAsync(string artistSlug)
+    {
+      int? artistId = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
+        .Select(x => (int?)x.Id)
+        .FirstOrDefaultAsync();
+
+      if (artistId == null)
+      {
+        return false;
+      }
+
+      return true;
+    }
+
+    public async Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug)
+    {
+      int artistId = await GetArtistIdAsync(artistSlug);
+
+      ArtistDetailsResponse artist = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => x.Id == artistId)
+        .Select(x => new ArtistDetailsResponse
+        {
+          Id = x.Id,
+          FirstName = x.FirstName,
+          LastName = x.LastName,
+          Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
+          ImageId = x.Image != null ? x.Image.Id : 0,
+          CreatedAt = x.CreatedAt,
+          ModifiedAt = x.ModifiedAt,
+        })
+        .SingleOrDefaultAsync();
+
+      return artist;
+    }
+
+    public async Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit)
+    {
+      IOrderedQueryable<Artist> orderedArtists = context
+        .Artists
+        .AsNoTracking()
+        .OrderBy(x => x.FirstName);
+
+      int totalRecords = await orderedArtists.CountAsync();
+
+      List<ArtistsResponse> artists = await orderedArtists
+        .Paging(offset, limit)
+        .Select(x => new ArtistsResponse
+        {
+          FirstName = x.FirstName,
+          LastName = x.LastName,
+          Slugs = x.Slugs.Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary }).ToList(),
+          ImageId = x.Image == null ? 0 : x.Image.Id,
+        })
+        .ToListAsync();
+
+      PagedArtistsResponse response = new PagedArtistsResponse
+      {
+        Artists = artists,
+        Paging = new PagingResponse
+        {
+          Offset = offset,
+          Limit = limit,
+          Total = totalRecords,
+        },
+      };
+
+      return response;
+    }
+
+    public async Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request)
+    {
+      string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
+
+      string artistSlug = artistSlugsService.GetArtistSlug(artistFullName);
+
+      bool artistExists = await ArtistExistsAsync(artistSlug);
+
+      if (artistExists)
+      {
+        throw new ArtistExistsException(artistSlug);
+      }
+
+      Artist artist = new Artist
+      {
+        FirstName = request.FirstName,
+        LastName = request.LastName,
+        FullName = artistFullName,
+        Slugs = new List<ArtistSlug> { artistSlugsService.BuildArtistSlug(artistFullName) },
+        CreatedAt = SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc(),
+      };
+
+      context.Artists.Add(artist);
+      await context.SaveChangesAsync();
+
+      CreateNewArtistResponse response = new CreateNewArtistResponse
+      {
+        Slug = artistSlug,
+        CreatedAt = artist.CreatedAt,
+      };
+
+      return response;
+    }
+
+    public async Task<PagedArtistsResponse> SearchArtistsAsync(string artistName, int offset, int limit)
+    {
+      string searchTermStandardized = artistName.Standardize();
+
+      List<ArtistsResponse> matchedArtists = await context
+        .Artists
+        .AsNoTracking()
+        .Where(x => EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+        .OrderBy(x => x.FirstName)
+        .Select(x => new ArtistsResponse
+        {
+          FirstName = x.FirstName,
+          LastName = x.LastName,
+          Slugs = x.Slugs
+            .Where(s => !s.IsDeleted)
+            .Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary })
+            .ToList(),
+          ImageId = x.Image.Id,
+        })
+        .ToListAsync();
+
+      PagedArtistsResponse pagedArtistsResponse = new PagedArtistsResponse
+      {
+        Artists = matchedArtists,
+        Paging = new PagingResponse
+        {
+          Offset = offset,
+          Limit = limit,
+        },
+      };
+
+      return pagedArtistsResponse;
     }
   }
 }
