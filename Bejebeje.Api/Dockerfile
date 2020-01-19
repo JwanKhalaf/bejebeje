@@ -1,5 +1,5 @@
-# set base image as the dotnet 2.2 SDK.
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0 AS build-env
+# set base image as the dotnet 3.1 SDK.
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
 # instructions that follows the WORKDIR instruction.
