@@ -10,11 +10,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Compile Include="..\Bejebeje.Api\GlobalSuppressions.cs" Link="GlobalSuppressions.cs" />
   </ItemGroup>
@@ -24,7 +24,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
