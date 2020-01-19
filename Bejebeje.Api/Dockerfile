@@ -13,8 +13,8 @@ COPY . ./
 # we now publish the project into a folder called 'out'.
 RUN dotnet publish Bejebeje.Api/Bejebeje.Api.csproj -c Release -o out
 
-# set base image as the dotnet 2.2 runtime.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0 AS runtime
+# set base image as the dotnet 3.1 runtime.
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 
 # telling the application what port to run on.
 ENV ASPNETCORE_URLS=http://*:5005
