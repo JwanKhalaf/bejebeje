@@ -18,6 +18,8 @@ echo $TRAVIS_BRANCH
 
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
   echo "we're in true branch!"
+  echo "the develop tag is:"
+  echo $DOCKER_DEVELOP_TAG
   # tag the docker image with latest develop tag.
   docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$DOCKER_DEVELOP_TAG
 else
