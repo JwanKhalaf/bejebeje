@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DOCKER_TAG='latest'
-DOCKER_DEVELOP_TAG='latest-develop'
+DOCKER_DEVELOP_TAG='develop'
 
 # log into docker hub.
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
