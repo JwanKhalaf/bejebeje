@@ -1,3 +1,4 @@
+#!/bin/bash
 openssl aes-256-cbc -K $encrypted_3aae70881186_key -iv $encrypted_3aae70881186_iv -in deploy_key.enc -out ./deploy_key -d
 eval "$(ssh-agent -s)"
 chmod 600 ./deploy_key
