@@ -1,4 +1,5 @@
 DOCKER_TAG='latest'
+DOCKER_DEVELOP_TAG='latest-develop'
 
 # log into docker hub.
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -11,6 +12,12 @@ docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$DOCKER_TAG
 
 # tag the docker image with build number.
 docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$TRAVIS_BUILD_NUMBER
+
+if [ $TRAVIS_BRANCH == "develop"]
+then
+  # tag the docker image with latest develop tag.
+  docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$DOCKER_DEVELOP_TAG
+fi
 
 # push the docker image (tagged latest) to docker hub.
 docker push bejebeje/api:$DOCKER_TAG
