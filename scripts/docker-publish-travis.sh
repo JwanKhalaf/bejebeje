@@ -10,6 +10,9 @@ docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 docker build -f ./Dockerfile -t bejebeje/api:$DOCKER_TAG . --no-cache
 
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
+  # list docker images
+  docker images -a
+
   # tag the docker image with latest develop tag.
   docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$DOCKER_DEVELOP_TAG
 
