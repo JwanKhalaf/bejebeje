@@ -3,9 +3,6 @@
 echo "Current working directory is:"
 pwd
 
-echo "travis branch variable is:"
-echo "$TRAVIS_BRANCH"
-
 cd /var/www/html/api.bejebeje.com/
 
 echo "Now the current working directory is:"
