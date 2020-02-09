@@ -12,6 +12,10 @@ docker build -f ./Dockerfile -t bejebeje/api:$DOCKER_TAG -t bejebeje/api:$TRAVIS
 # tag the docker image with build number.
 docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$TRAVIS_BUILD_NUMBER
 
+echo "The travis branch variable is:"
+
+echo $TRAVIS_BRANCH
+
 if [ $TRAVIS_BRANCH == "develop"]; then
   # tag the docker image with latest develop tag.
   docker tag bejebeje/api:$DOCKER_TAG $DOCKER_USERNAME/bejebeje/api:$DOCKER_DEVELOP_TAG
