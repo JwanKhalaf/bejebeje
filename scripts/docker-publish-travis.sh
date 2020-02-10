@@ -1,3 +1,6 @@
+#!/bin/bash
+
+# define tag variable
 DOCKER_TAG='latest'
 
 # log into docker hub.
