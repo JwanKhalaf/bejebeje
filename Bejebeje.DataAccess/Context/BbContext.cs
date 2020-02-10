@@ -24,6 +24,8 @@
 
     public DbSet<Author> Authors { get; set; }
 
+    public DbSet<AuthorSlug> AuthorSlugs { get; set; }
+
     public DbSet<AuthorImage> AuthorImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
