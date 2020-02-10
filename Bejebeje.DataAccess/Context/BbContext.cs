@@ -14,7 +14,7 @@
 
     public DbSet<Artist> Artists { get; set; }
 
-    public DbSet<ArtistSlug> ArtistSlug { get; set; }
+    public DbSet<ArtistSlug> ArtistSlugs { get; set; }
 
     public DbSet<Lyric> Lyrics { get; set; }
 
@@ -23,6 +23,8 @@
     public DbSet<ArtistImage> ArtistImages { get; set; }
 
     public DbSet<Author> Authors { get; set; }
+
+    public DbSet<AuthorImage> AuthorImages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
