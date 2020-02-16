@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bejebeje.DataAccess.Migrations
 {
     [DbContext(typeof(BbContext))]
-    [Migration("20200210102455_InitialCreate")]
+    [Migration("20200216153150_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -273,13 +273,13 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasColumnName("author_id")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Body")
+                        .HasColumnName("body")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnName("created_at")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("HtmlBody")
-                        .HasColumnName("html_body")
-                        .HasColumnType("text");
 
                     b.Property<bool>("IsApproved")
                         .HasColumnName("is_approved")
@@ -288,10 +288,6 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnName("is_deleted")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("MarkdownBody")
-                        .HasColumnName("markdown_body")
-                        .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnName("modified_at")

@@ -66,7 +66,7 @@
       Lyric writeMyselfALetterSong = new Lyric
       {
         Title = lyricTitle,
-        MarkdownBody = lyricBody,
+        Body = lyricBody,
         Slugs = new List<LyricSlug>
         {
           new LyricSlug
@@ -316,7 +316,7 @@
       Lyric evilMamaBlue = new Lyric
       {
         Title = lyricTitle,
-        MarkdownBody = lyricBody,
+        Body = lyricBody,
         CreatedAt = createdAt,
         Slugs = new List<LyricSlug>
         {

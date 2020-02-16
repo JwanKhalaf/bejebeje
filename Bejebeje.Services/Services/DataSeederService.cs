@@ -80,7 +80,7 @@ Producer Sam Phillips recalled, 'When I heard Howlin' Wolf, I said, 'This is for
         Lyric tnt = new Lyric
         {
           Title = "TNT",
-          MarkdownBody = @"Oi, oi, oi
+          Body = @"Oi, oi, oi
 Oi, oi, oi
 Oi, oi, oi
 Oi, oi, oi
@@ -129,7 +129,7 @@ Don't you mess me 'round",
         Lyric thunderstruck = new Lyric
         {
           Title = "Thunderstruck",
-          MarkdownBody = @"I was caught
+          Body = @"I was caught
 In the middle of a railroad track (thunder)
 I looked round
 And I knew there was no turning back (thunder)
@@ -175,7 +175,7 @@ Thunderstruck",
         Lyric theThrillIsGone = new Lyric
         {
           Title = "The Thrill Is Gone",
-          MarkdownBody = @"The thrill is gone
+          Body = @"The thrill is gone
 The thrill is gone away
 The thrill is gone baby
 The thrill is gone away
