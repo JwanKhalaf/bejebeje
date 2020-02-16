@@ -75,7 +75,7 @@
         .Select(l => new LyricResponse
         {
           Title = l.Title,
-          Body = l.MarkdownBody,
+          Body = l.Body,
           AuthorSlug = l.Author != null ? l.Author.Slugs.Where(s => s.IsPrimary).SingleOrDefault().Name : string.Empty,
           CreatedAt = l.CreatedAt,
           ModifiedAt = l.ModifiedAt,
