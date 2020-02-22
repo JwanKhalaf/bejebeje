@@ -1,6 +1,7 @@
 ﻿namespace Bejebeje.Services.Services
 {
   using System.Collections.Generic;
+  using System.Globalization;
   using System.Linq;
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
@@ -20,6 +21,8 @@
     private readonly IArtistSlugsService artistSlugsService;
 
     private readonly BbContext context;
+
+    private TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public ArtistsService(
       IArtistSlugsService artistSlugsService,
@@ -99,8 +102,8 @@
         .Paging(offset, limit)
         .Select(x => new ArtistsResponse
         {
-          FirstName = x.FirstName,
-          LastName = x.LastName,
+          FirstName = textInfo.ToTitleCase(x.FirstName),
+          LastName = textInfo.ToTitleCase(x.LastName),
           Slugs = x.Slugs.Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary }).ToList(),
           ImageId = x.Image == null ? 0 : x.Image.Id,
         })
@@ -165,8 +168,8 @@
         .OrderBy(x => x.FirstName)
         .Select(x => new ArtistsResponse
         {
-          FirstName = x.FirstName,
-          LastName = x.LastName,
+          FirstName = textInfo.ToTitleCase(x.FirstName),
+          LastName = textInfo.ToTitleCase(x.LastName),
           Slugs = x.Slugs
             .Where(s => !s.IsDeleted)
             .Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary })
