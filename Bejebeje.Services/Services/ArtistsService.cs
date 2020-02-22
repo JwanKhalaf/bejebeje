@@ -77,8 +77,8 @@
         .Select(x => new ArtistDetailsResponse
         {
           Id = x.Id,
-          FirstName = x.FirstName,
-          LastName = x.LastName,
+          FirstName = textInfo.ToTitleCase(x.FirstName),
+          LastName = textInfo.ToTitleCase(x.LastName),
           Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
           ImageId = x.Image != null ? x.Image.Id : 0,
           CreatedAt = x.CreatedAt,
