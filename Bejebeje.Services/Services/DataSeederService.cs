@@ -29,8 +29,8 @@
       {
         Author acdcAuthor = new Author
         {
-          FirstName = "AC/DC",
-          FullName = "AC/DC",
+          FirstName = "ac/dc",
+          FullName = "ac/dc",
           Biography = @"AC/DC are an Australian rock band formed in Sydney in 1973 by Scottish-born brothers Malcolm and Angus Young. Their music has been variously described as hard rock, blues rock, and heavy metal; however, the band themselves describe their music as simply 'rock and roll'.
           
 AC/DC underwent several line-up changes before releasing their first album, High Voltage, in 1975. Membership subsequently stabilised around the Young brothers, singer Bon Scott, drummer Phil Rudd, and bass player Mark Evans. Evans was replaced by Cliff Williams in 1977 for the album Powerage.
@@ -51,9 +51,9 @@ In February 1980, a few months after recording the album Highway to Hell, lead s
 
         Author hWolfAuthor = new Author
         {
-          FirstName = "Chester Arthur",
-          LastName = "Burnett",
-          FullName = "Chester Arthur Burnett",
+          FirstName = "chester arthur",
+          LastName = "burnett",
+          FullName = "chester arthur burnett",
           Biography = @"Chester Arthur Burnett (June 10, 1910 – January 10, 1976), known as Howlin' Wolf, was a Chicago blues singer, guitarist, and harmonica player, originally from Mississippi.
           
 With a booming voice and imposing physical presence, he is one of the best-known Chicago blues artists. The musician and critic Cub Koda noted, 'no one could match Howlin' Wolf for the singular ability to rock the house down to the foundation while simultaneously scaring its patrons out of its wits.'
@@ -218,9 +218,9 @@ All I can do is wish you well",
 
         Artist acdc = new Artist
         {
-          FirstName = "AC/DC",
+          FirstName = "ac/dc",
           LastName = string.Empty,
-          FullName = "AC/DC",
+          FullName = "ac/dc",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -239,9 +239,9 @@ All I can do is wish you well",
 
         Artist bbKing = new Artist
         {
-          FirstName = "BB",
-          LastName = "King",
-          FullName = "BB King",
+          FirstName = "bb",
+          LastName = "king",
+          FullName = "bb king",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -260,9 +260,9 @@ All I can do is wish you well",
 
         Artist canaanSmith = new Artist
         {
-          FirstName = "Canaan",
-          LastName = "Smith",
-          FullName = "Canaan Smith",
+          FirstName = "canaan",
+          LastName = "smith",
+          FullName = "canaan smith",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -280,9 +280,9 @@ All I can do is wish you well",
 
         Artist damianMarley = new Artist
         {
-          FirstName = "Damian",
-          LastName = "Marley",
-          FullName = "Damian Marley",
+          FirstName = "damian",
+          LastName = "marley",
+          FullName = "damian marley",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -300,9 +300,9 @@ All I can do is wish you well",
 
         Artist davidBowie = new Artist
         {
-          FirstName = "David",
-          LastName = "Bowie",
-          FullName = "David Bowie",
+          FirstName = "david",
+          LastName = "bowie",
+          FullName = "david bowie",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -320,9 +320,9 @@ All I can do is wish you well",
 
         Artist edSheeran = new Artist
         {
-          FirstName = "Ed",
-          LastName = "Sheeran",
-          FullName = "Ed Sheeran",
+          FirstName = "ed",
+          LastName = "sheeran",
+          FullName = "ed sheeran",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -340,9 +340,9 @@ All I can do is wish you well",
 
         Artist fleetwoodMac = new Artist
         {
-          FirstName = "Fleetwood",
-          LastName = "Mac",
-          FullName = "Fleetwood Mac",
+          FirstName = "fleetwood",
+          LastName = "mac",
+          FullName = "fleetwood mac",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -360,9 +360,9 @@ All I can do is wish you well",
 
         Artist georgeMichael = new Artist
         {
-          FirstName = "George",
-          LastName = "Michael",
-          FullName = "George Michael",
+          FirstName = "george",
+          LastName = "michael",
+          FullName = "george michael",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -380,9 +380,9 @@ All I can do is wish you well",
 
         Artist howlingWolf = new Artist
         {
-          FirstName = "Howling",
-          LastName = "Wolf",
-          FullName = "Howling Wolf",
+          FirstName = "howling",
+          LastName = "wolf",
+          FullName = "howling wolf",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -400,9 +400,9 @@ All I can do is wish you well",
 
         Artist iceT = new Artist
         {
-          FirstName = "Ice",
-          LastName = "T",
-          FullName = "Ice T",
+          FirstName = "ice",
+          LastName = "t",
+          FullName = "ice t",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -420,9 +420,9 @@ All I can do is wish you well",
 
         Artist jenniferLopez = new Artist
         {
-          FirstName = "Jennifer",
-          LastName = "Lopez",
-          FullName = "Jennifer Lopez",
+          FirstName = "jennifer",
+          LastName = "lopez",
+          FullName = "jennifer lopez",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -440,9 +440,9 @@ All I can do is wish you well",
 
         Artist kennyRogers = new Artist
         {
-          FirstName = "Kenny",
-          LastName = "Rogers",
-          FullName = "Kenny Rogers",
+          FirstName = "kenny",
+          LastName = "rogers",
+          FullName = "kenny rogers",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -460,9 +460,9 @@ All I can do is wish you well",
 
         Artist ladyGaga = new Artist
         {
-          FirstName = "Lady",
-          LastName = "Gaga",
-          FullName = "Lady Gaga",
+          FirstName = "lady",
+          LastName = "gaga",
+          FullName = "lady gaga",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -480,9 +480,9 @@ All I can do is wish you well",
 
         Artist muddyWaters = new Artist
         {
-          FirstName = "Muddy",
-          LastName = "Waters",
-          FullName = "Muddy Waters",
+          FirstName = "muddy",
+          LastName = "waters",
+          FullName = "muddy waters",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -500,9 +500,9 @@ All I can do is wish you well",
 
         Artist neilYoung = new Artist
         {
-          FirstName = "Neil",
-          LastName = "Young",
-          FullName = "Neil Young",
+          FirstName = "neil",
+          LastName = "young",
+          FullName = "neil young",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -520,9 +520,9 @@ All I can do is wish you well",
 
         Artist ozzyOsbourne = new Artist
         {
-          FirstName = "Ozzy",
-          LastName = "Osbourne",
-          FullName = "Ozzy Osbourne",
+          FirstName = "ozzy",
+          LastName = "osbourne",
+          FullName = "ozzy osbourne",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -540,9 +540,9 @@ All I can do is wish you well",
 
         Artist pattiSmith = new Artist
         {
-          FirstName = "Patti",
-          LastName = "Smith",
-          FullName = "Patti Smith",
+          FirstName = "patti",
+          LastName = "smith",
+          FullName = "patti smith",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -560,9 +560,9 @@ All I can do is wish you well",
 
         Artist queen = new Artist
         {
-          FirstName = "Queen",
+          FirstName = "queen",
           LastName = string.Empty,
-          FullName = "Queen",
+          FullName = "queen",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -580,9 +580,9 @@ All I can do is wish you well",
 
         Artist rayCharles = new Artist
         {
-          FirstName = "Ray",
-          LastName = "Charles",
-          FullName = "Ray Charles",
+          FirstName = "ray",
+          LastName = "charles",
+          FullName = "ray charles",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -600,9 +600,9 @@ All I can do is wish you well",
 
         Artist sonnyBoyWilliamson = new Artist
         {
-          FirstName = "Sonny Boy",
-          LastName = "Williamson",
-          FullName = "Sonny Boy Williamson",
+          FirstName = "sonny boy",
+          LastName = "williamson",
+          FullName = "sonny boy williamson",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -620,9 +620,9 @@ All I can do is wish you well",
 
         Artist tBoneWalker = new Artist
         {
-          FirstName = "T Bone",
-          LastName = "Walker",
-          FullName = "T Bone Walker",
+          FirstName = "t bone",
+          LastName = "walker",
+          FullName = "t bone walker",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -640,9 +640,9 @@ All I can do is wish you well",
 
         Artist u2 = new Artist
         {
-          FirstName = "U2",
+          FirstName = "u2",
           LastName = string.Empty,
-          FullName = "U2",
+          FullName = "u2",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -660,9 +660,9 @@ All I can do is wish you well",
 
         Artist vanHalen = new Artist
         {
-          FirstName = "Van",
-          LastName = "Halen",
-          FullName = "Van Halen",
+          FirstName = "van",
+          LastName = "halen",
+          FullName = "van halen",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -680,9 +680,9 @@ All I can do is wish you well",
 
         Artist wheatus = new Artist
         {
-          FirstName = "Wheatus",
+          FirstName = "wheatus",
           LastName = string.Empty,
-          FullName = "Wheatus",
+          FullName = "wheatus",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -700,9 +700,9 @@ All I can do is wish you well",
 
         Artist xtc = new Artist
         {
-          FirstName = "XTC",
+          FirstName = "xtc",
           LastName = string.Empty,
-          FullName = "XTC",
+          FullName = "xtc",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -720,9 +720,9 @@ All I can do is wish you well",
 
         Artist yolandaBeCool = new Artist
         {
-          FirstName = "Yolanda",
-          LastName = "Be Cool",
-          FullName = "Yolanda Be Cool",
+          FirstName = "yolanda",
+          LastName = "be cool",
+          FullName = "yolanda be cool",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
@@ -740,9 +740,9 @@ All I can do is wish you well",
 
         Artist zacBrown = new Artist
         {
-          FirstName = "Zac",
-          LastName = "Brown",
-          FullName = "Zac Brown",
+          FirstName = "zac",
+          LastName = "brown",
+          FullName = "zac brown",
           Slugs = new List<ArtistSlug>
               {
                 new ArtistSlug
