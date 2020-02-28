@@ -7,6 +7,8 @@
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Models.Lyric;
+  using Bejebeje.Models.Paging;
+  using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
 
@@ -42,26 +44,49 @@
       return lyrics;
     }
 
-    public async Task<IList<LyricCardViewModel>> SearchLyricsAsync(string lyricName)
+    public async Task<PagedLyricSearchResponse> SearchLyricsAsync(string title, int offset, int limit)
     {
-      string lyricNameStandardized = lyricName.Standardize();
+      string titleStandardized = title.Standardize();
 
-      var test = context.Lyrics.ToList();
-
-      List<LyricCardViewModel> matchedLyrics = await context
+      int totalRecords = await context
         .Lyrics
         .AsNoTracking()
-        .Where(x =>
-          EF.Functions.Like(x.Title.Standardize(), $"%{lyricNameStandardized}%") ||
-          x.Slugs.Any(s => EF.Functions.Like(s.Name.Standardize(), $"%{lyricNameStandardized}%")))
-        .Select(x => new LyricCardViewModel
+        .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
+        .CountAsync();
+
+      List<LyricSearchResponse> matchedLyrics = await context
+        .Lyrics
+        .Include(l => l.Artist)
+        .Include(l => l.Slugs)
+        .AsNoTracking()
+        .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
+        .Paging(offset, limit)
+        .Select(x => new LyricSearchResponse
         {
           Title = x.Title,
-          Slug = x.Slugs.Single(s => s.IsPrimary).Name,
+          PrimarySlug = x.Slugs.Single(s => s.IsPrimary).Name,
+          Artist = new LyricSearchResponseArtist
+          {
+            FirstName = x.Artist.FirstName,
+            LastName = x.Artist.LastName,
+            PrimarySlug = x.Artist.Slugs.Single(s => s.IsPrimary).Name,
+            HasImage = x.Artist.Image != null,
+          },
         })
         .ToListAsync();
 
-      return matchedLyrics;
+      PagedLyricSearchResponse response = new PagedLyricSearchResponse
+      {
+        Lyrics = matchedLyrics,
+        Paging = new PagingResponse
+        {
+          Offset = offset,
+          Limit = limit,
+          Total = totalRecords,
+        },
+      };
+
+      return response;
     }
 
     public async Task<LyricResponse> GetSingleLyricAsync(string artistSlug, string lyricSlug)

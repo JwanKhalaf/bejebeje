@@ -112,9 +112,11 @@
     }
 
     [Test]
-    public async Task SearchLyricsAsync_WhenNoLyricsMatch_ReturnsAnEmptyListOfLyricCardViewModels()
+    public async Task SearchLyricsAsync_WhenNoLyricsMatch_ReturnsAPagedLyricSearchResponseWithEmptyListOfLyricSearchResponse()
     {
       // arrange
+      int offset = 0;
+      int limit = 10;
       string lyricTitle = "window";
       string seedLyricTitle = "TNT";
       string seedLyricSlug = "tnt";
@@ -139,17 +141,25 @@
       Context.SaveChanges();
 
       // act
-      IList<LyricCardViewModel> result = await lyricsService.SearchLyricsAsync(lyricTitle);
+      PagedLyricSearchResponse result = await lyricsService
+        .SearchLyricsAsync(lyricTitle, offset, limit);
 
       // assert
-      result.Should().BeOfType<List<LyricCardViewModel>>();
-      result.Should().BeEmpty();
+      result.Should().BeOfType<PagedLyricSearchResponse>();
+      result.Lyrics.Should().BeEmpty();
     }
 
     [Test]
-    public async Task SearchLyricsAsync_WhenThereIsMatchOnTitleOnly_ReturnsAPopulatedListOfLyricCardViewModels()
+    public async Task SearchLyricsAsync_WhenThereIsMatchOnTitleOnly_ReturnsAPagedLyricSearchResponseWithPopulatedListOfLyricSearchResponse()
     {
       // arrange
+      int offset = 0;
+      int limit = 10;
+
+      string artistFirstName = "ac/dc";
+      string artistSlug = "acdc";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
       string lyricTitle = "tnt";
       string seedLyricTitle = "TNT";
       string unmatchedLyricSlug = "door";
@@ -168,26 +178,50 @@
             CreatedAt = seedLyricCreatedAt,
           },
         },
+        Artist = new Artist
+        {
+          FirstName = artistFirstName,
+          FullName = artistFirstName,
+          IsApproved = true,
+          CreatedAt = artistCreatedAt,
+          Slugs = new List<ArtistSlug>
+          {
+            new ArtistSlug
+            {
+              Name = artistSlug,
+              CreatedAt = artistCreatedAt,
+              IsPrimary = true,
+            },
+          },
+        },
       };
 
       Context.Lyrics.Add(tnt);
       Context.SaveChanges();
 
       // act
-      IList<LyricCardViewModel> result = await lyricsService.SearchLyricsAsync(lyricTitle);
+      PagedLyricSearchResponse result = await lyricsService
+        .SearchLyricsAsync(lyricTitle, offset, limit);
 
       // assert
-      result.Should().BeOfType<List<LyricCardViewModel>>();
-      result.Should().NotBeEmpty();
-      result.Should().HaveCount(1);
-      result.First().Title.Should().Be(seedLyricTitle);
-      result.First().Slug.Should().Be(unmatchedLyricSlug);
+      result.Should().BeOfType<PagedLyricSearchResponse>();
+      result.Lyrics.Should().NotBeEmpty();
+      result.Lyrics.Should().HaveCount(1);
+      result.Lyrics.First().Title.Should().Be(seedLyricTitle);
+      result.Lyrics.First().PrimarySlug.Should().Be(unmatchedLyricSlug);
     }
 
     [Test]
-    public async Task SearchLyricsAsync_WhenThereIsMatchOnLyricSlugOnly_ReturnsAPopulatedListOfLyricCardViewModels()
+    public async Task SearchLyricsAsync_WhenThereIsMatchOnLyricSlugOnly_ReturnsAPagedLyricSearchResponseWithPopulatedListOfLyricSearchResponse()
     {
       // arrange
+      int offset = 0;
+      int limit = 10;
+
+      string artistFirstName = "ac/dc";
+      string artistSlug = "acdc";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
       string lyricTitle = "oen";
       string seedLyricTitle = "TNT";
       string uniqueLyricSlug = "uioenkl";
@@ -206,20 +240,37 @@
             CreatedAt = seedLyricCreatedAt,
           },
         },
+        Artist = new Artist
+        {
+          FirstName = artistFirstName,
+          FullName = artistFirstName,
+          IsApproved = true,
+          CreatedAt = artistCreatedAt,
+          Slugs = new List<ArtistSlug>
+          {
+            new ArtistSlug
+            {
+              Name = artistSlug,
+              CreatedAt = artistCreatedAt,
+              IsPrimary = true,
+            },
+          },
+        },
       };
 
       Context.Lyrics.Add(tnt);
       Context.SaveChanges();
 
       // act
-      IList<LyricCardViewModel> result = await lyricsService.SearchLyricsAsync(lyricTitle);
+      PagedLyricSearchResponse result = await lyricsService
+        .SearchLyricsAsync(lyricTitle, offset, limit);
 
       // assert
-      result.Should().BeOfType<List<LyricCardViewModel>>();
-      result.Should().NotBeEmpty();
-      result.Should().HaveCount(1);
-      result.First().Title.Should().Be(seedLyricTitle);
-      result.First().Slug.Should().Be(uniqueLyricSlug);
+      result.Should().BeOfType<PagedLyricSearchResponse>();
+      result.Lyrics.Should().NotBeEmpty();
+      result.Lyrics.Should().HaveCount(1);
+      result.Lyrics.First().Title.Should().Be(seedLyricTitle);
+      result.Lyrics.First().PrimarySlug.Should().Be(uniqueLyricSlug);
     }
 
     [Test]
