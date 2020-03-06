@@ -141,69 +141,69 @@
       await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    [Test]
-    public async Task SearchLyrics_WhenNoLyricsMatch_ReturnsAnEmptyListOfLyricCardViewModel()
-    {
-      // arrange
-      string lyricTitle = "tnt";
+    //[Test]
+    //public async Task SearchLyrics_WhenNoLyricsMatch_ReturnsAnEmptyListOfLyricCardViewModel()
+    //{
+    //  // arrange
+    //  string lyricTitle = "tnt";
 
-      lyricsServiceMock
-        .Setup(x => x.SearchLyricsAsync(lyricTitle))
-        .ReturnsAsync(new List<LyricCardViewModel>());
+    //  lyricsServiceMock
+    //    .Setup(x => x.SearchLyricsAsync(lyricTitle))
+    //    .ReturnsAsync(new List<LyricCardViewModel>());
 
-      // act
-      IActionResult result = await lyricsController.SearchLyrics(lyricTitle);
+    //  // act
+    //  IActionResult result = await lyricsController.SearchLyrics(lyricTitle);
 
-      // assert
-      result.Should().BeOfType<OkObjectResult>();
+    //  // assert
+    //  result.Should().BeOfType<OkObjectResult>();
 
-      OkObjectResult okObjectResult = result as OkObjectResult;
+    //  OkObjectResult okObjectResult = result as OkObjectResult;
 
-      okObjectResult.Should().NotBeNull();
+    //  okObjectResult.Should().NotBeNull();
 
-      List<LyricCardViewModel> lyrics = okObjectResult.Value as List<LyricCardViewModel>;
+    //  List<LyricCardViewModel> lyrics = okObjectResult.Value as List<LyricCardViewModel>;
 
-      lyrics.Should().NotBeNull();
-      lyrics.Should().BeEmpty();
-    }
+    //  lyrics.Should().NotBeNull();
+    //  lyrics.Should().BeEmpty();
+    //}
 
-    [Test]
-    public async Task SearchLyrics_WhenLyricsMatch_ReturnsAPopulatedListOfLyricCardViewModel()
-    {
-      // arrange
-      string lyricTitle = "tnt";
-      string seedLyricTitle = "TNT";
-      string seedLyricSlug = "tnt";
+    //[Test]
+    //public async Task SearchLyrics_WhenLyricsMatch_ReturnsAPopulatedListOfLyricCardViewModel()
+    //{
+    //  // arrange
+    //  string lyricTitle = "tnt";
+    //  string seedLyricTitle = "TNT";
+    //  string seedLyricSlug = "tnt";
 
-      lyricsServiceMock
-        .Setup(x => x.SearchLyricsAsync(lyricTitle))
-        .ReturnsAsync(new List<LyricCardViewModel>
-        {
-          new LyricCardViewModel
-          {
-            Title = seedLyricTitle,
-            Slug = seedLyricSlug,
-          },
-        });
+    //  lyricsServiceMock
+    //    .Setup(x => x.SearchLyricsAsync(lyricTitle))
+    //    .ReturnsAsync(new List<LyricCardViewModel>
+    //    {
+    //      new LyricCardViewModel
+    //      {
+    //        Title = seedLyricTitle,
+    //        Slug = seedLyricSlug,
+    //      },
+    //    });
 
-      // act
-      IActionResult result = await lyricsController.SearchLyrics(lyricTitle);
+    //  // act
+    //  IActionResult result = await lyricsController.SearchLyrics(lyricTitle);
 
-      // assert
-      result.Should().BeOfType<OkObjectResult>();
+    //  // assert
+    //  result.Should().BeOfType<OkObjectResult>();
 
-      OkObjectResult okObjectResult = result as OkObjectResult;
+    //  OkObjectResult okObjectResult = result as OkObjectResult;
 
-      okObjectResult.Should().NotBeNull();
+    //  okObjectResult.Should().NotBeNull();
 
-      List<LyricCardViewModel> lyrics = okObjectResult.Value as List<LyricCardViewModel>;
+    //  List<LyricCardViewModel> lyrics = okObjectResult.Value as List<LyricCardViewModel>;
 
-      lyrics.Should().NotBeNull();
-      lyrics.Should().HaveCount(1);
+    //  lyrics.Should().NotBeNull();
+    //  lyrics.Should().HaveCount(1);
 
-      lyrics.First().Title.Should().Be(seedLyricTitle);
-      lyrics.First().Slug.Should().Be(seedLyricSlug);
-    }
+    //  lyrics.First().Title.Should().Be(seedLyricTitle);
+    //  lyrics.First().Slug.Should().Be(seedLyricSlug);
+    //}
 
     [Test]
     public async Task GetSingleLyric_WhenArtistSlugParamIsNull_ThrowsAnArgumentNullException()
