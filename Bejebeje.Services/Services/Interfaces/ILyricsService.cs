@@ -8,7 +8,7 @@
   {
     Task<IList<LyricCardViewModel>> GetLyricsAsync(string artistSlug);
 
-    Task<IList<LyricCardViewModel>> SearchLyricsAsync(string lyricName);
+    Task<PagedLyricSearchResponse> SearchLyricsAsync(string lyricName, int offset, int limit);
 
     Task<LyricResponse> GetSingleLyricAsync(string artistSlug, string lyricSlug);
   }
