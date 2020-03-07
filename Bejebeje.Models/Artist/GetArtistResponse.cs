@@ -2,7 +2,7 @@
 {
   using System;
 
-  public class ArtistDetailsResponse
+  public class GetArtistResponse
   {
     public int Id { get; set; }
 
@@ -10,9 +10,11 @@
 
     public string LastName { get; set; }
 
-    public string Slug { get; set; }
+    public string FullName { get; set; }
 
-    public int ImageId { get; set; }
+    public string PrimarySlug { get; set; }
+
+    public bool HasImage { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

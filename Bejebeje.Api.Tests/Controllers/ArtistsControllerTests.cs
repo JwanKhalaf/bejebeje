@@ -295,19 +295,6 @@
     }
 
     [Test]
-    public async Task GetArtistDetailsAsync_WhenParamIsNull_ThrowsAnArgumentNullException()
-    {
-      // arrange
-      string artistSlug = null;
-
-      // act
-      Func<Task> action = async () => await artistsController.GetArtistDetails(artistSlug);
-
-      // assert
-      await action.Should().ThrowAsync<ArgumentNullException>();
-    }
-
-    [Test]
     public async Task GetArtistDetailsAsync_WhenServiceThrowsAArtistNotFoundException_ReturnsANotFoundResult()
     {
       // arrange
@@ -332,17 +319,19 @@
       int artistId = 1;
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
-      int artistImageId = 1;
+      string artistFullName = $"{artistFirstName} {artistLastName}";
+      bool artistHasImage = true;
       DateTime artistCreatedAt = DateTime.UtcNow;
 
-      ArtistDetailsResponse fatsWallerDetails = new ArtistDetailsResponse
+      GetArtistResponse fatsWallerDetails = new GetArtistResponse
       {
         Id = 1,
         FirstName = artistFirstName,
         LastName = artistLastName,
-        ImageId = artistImageId,
+        FullName = artistFullName,
+        HasImage = artistHasImage,
         CreatedAt = artistCreatedAt,
-        Slug = artistSlug,
+        PrimarySlug = artistSlug,
       };
 
       artistsServiceMock
@@ -359,14 +348,14 @@
 
       okObjectResult.Should().NotBeNull();
 
-      ArtistDetailsResponse artistDetails = okObjectResult.Value as ArtistDetailsResponse;
+      GetArtistResponse artistDetails = okObjectResult.Value as GetArtistResponse;
 
       artistDetails.Should().NotBeNull();
       artistDetails.Id.Should().Be(artistId);
       artistDetails.FirstName.Should().Be(artistFirstName);
       artistDetails.LastName.Should().Be(artistLastName);
-      artistDetails.ImageId.Should().Be(artistImageId);
-      artistDetails.Slug.Should().Be(artistSlug);
+      artistDetails.HasImage.Should().BeTrue();
+      artistDetails.PrimarySlug.Should().Be(artistSlug);
       artistDetails.CreatedAt.Should().Be(artistCreatedAt);
     }
 
