@@ -56,8 +56,8 @@
     {
       // arrange
       string artistSlug = "fats-waller";
-      string artistFirstName = "Fats";
-      string artistLastName = "Waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
       int expectedArtistId = 1;
 
       Artist fatsWaller = new Artist
@@ -104,51 +104,14 @@
     {
       // arrange
       string artistSlug = "fats-waller";
-      string artistFirstName = "Fats";
-      string artistLastName = "Waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      string artistFullName = $"{artistFirstName} {artistLastName}";
+
       int expectedArtistId = 1;
-      int expectedImageId = 0;
-
-      Artist fatsWaller = new Artist
-      {
-        FirstName = artistFirstName,
-        LastName = artistLastName,
-        CreatedAt = DateTime.UtcNow,
-        Slugs = new List<ArtistSlug>
-        {
-          new ArtistSlug
-          {
-            Name = artistSlug,
-            CreatedAt = DateTime.UtcNow,
-            IsPrimary = true,
-          },
-        },
-      };
-
-      Context.Artists.Add(fatsWaller);
-      Context.SaveChanges();
-
-      // act
-      ArtistDetailsResponse result = await artistsService.GetArtistDetailsAsync(artistSlug);
-
-      // assert
-      result.Should().NotBeNull();
-      result.Id.Should().Be(expectedArtistId);
-      result.FirstName.Should().Be(artistFirstName);
-      result.LastName.Should().Be(artistLastName);
-      result.Slug.Should().Be(artistSlug);
-      result.ImageId.Should().Be(expectedImageId);
-    }
-
-    [Test]
-    public async Task GetArtistDetailsAsync_WhenArtistDoesExistAndHasAnImage_ReturnsArtistDetailsWithCorrectImageId()
-    {
-      // arrange
-      string artistSlug = "fats-waller";
-      string artistFirstName = "Fats";
-      string artistLastName = "Waller";
-      int expectedArtistId = 1;
-      int expectedImageId = 1;
+      string expectedArtistFirstName = textInfo.ToTitleCase(artistFirstName);
+      string expectedArtistLastName = textInfo.ToTitleCase(artistLastName);
+      string expectedArtistFullName = textInfo.ToTitleCase(artistFullName);
 
       string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -160,6 +123,7 @@
       {
         FirstName = artistFirstName,
         LastName = artistLastName,
+        FullName = artistFullName,
         CreatedAt = DateTime.UtcNow,
         Slugs = new List<ArtistSlug>
         {
@@ -181,15 +145,74 @@
       Context.SaveChanges();
 
       // act
-      ArtistDetailsResponse result = await artistsService.GetArtistDetailsAsync(artistSlug);
+      GetArtistResponse result = await artistsService.GetArtistDetailsAsync(artistSlug);
 
       // assert
       result.Should().NotBeNull();
       result.Id.Should().Be(expectedArtistId);
-      result.FirstName.Should().Be(artistFirstName);
-      result.LastName.Should().Be(artistLastName);
-      result.Slug.Should().Be(artistSlug);
-      result.ImageId.Should().Be(expectedImageId);
+      result.FirstName.Should().Be(expectedArtistFirstName);
+      result.LastName.Should().Be(expectedArtistLastName);
+      result.FullName.Should().Be(expectedArtistFullName);
+      result.PrimarySlug.Should().Be(artistSlug);
+      result.HasImage.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task GetArtistDetailsAsync_WhenArtistDoesExistAndHasAnImage_ReturnsArtistDetailsWithCorrectImageId()
+    {
+      // arrange
+      string artistSlug = "fats-waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      string artistFullName = $"{artistFirstName} {artistLastName}";
+
+      int expectedArtistId = 1;
+      string expectedArtistFirstName = textInfo.ToTitleCase(artistFirstName);
+      string expectedArtistLastName = textInfo.ToTitleCase(artistLastName);
+      string expectedArtistFullName = textInfo.ToTitleCase(artistFullName);
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = artistFullName,
+        CreatedAt = DateTime.UtcNow,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            CreatedAt = DateTime.UtcNow,
+            IsPrimary = true,
+          },
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = DateTime.UtcNow,
+        },
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      GetArtistResponse result = await artistsService.GetArtistDetailsAsync(artistSlug);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Id.Should().Be(expectedArtistId);
+      result.FirstName.Should().Be(expectedArtistFirstName);
+      result.LastName.Should().Be(expectedArtistLastName);
+      result.FullName.Should().Be(expectedArtistFullName);
+      result.PrimarySlug.Should().Be(artistSlug);
+      result.HasImage.Should().BeTrue();
     }
 
     [Test]

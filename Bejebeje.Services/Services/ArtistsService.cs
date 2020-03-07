@@ -65,21 +65,22 @@
       return true;
     }
 
-    public async Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug)
+    public async Task<GetArtistResponse> GetArtistDetailsAsync(string artistSlug)
     {
       int artistId = await GetArtistIdAsync(artistSlug);
 
-      ArtistDetailsResponse artist = await context
+      GetArtistResponse artist = await context
         .Artists
         .AsNoTracking()
         .Where(x => x.Id == artistId)
-        .Select(x => new ArtistDetailsResponse
+        .Select(x => new GetArtistResponse
         {
           Id = x.Id,
           FirstName = textInfo.ToTitleCase(x.FirstName),
           LastName = textInfo.ToTitleCase(x.LastName),
-          Slug = x.Slugs.Where(y => y.IsPrimary).First().Name,
-          ImageId = x.Image != null ? x.Image.Id : 0,
+          FullName = textInfo.ToTitleCase(x.FullName),
+          PrimarySlug = x.Slugs.Single(y => !y.IsDeleted && y.IsPrimary).Name,
+          HasImage = x.Image != null,
           CreatedAt = x.CreatedAt,
           ModifiedAt = x.ModifiedAt,
         })

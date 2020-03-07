@@ -41,18 +41,13 @@
     [HttpGet]
     public async Task<IActionResult> GetArtistDetails(string artistSlug)
     {
-      if (string.IsNullOrEmpty(artistSlug))
-      {
-        throw new ArgumentNullException(nameof(artistSlug));
-      }
-
       try
       {
-        ArtistDetailsResponse artistDetails = await artistsService
+        GetArtistResponse response = await artistsService
           .GetArtistDetailsAsync(artistSlug)
           .ConfigureAwait(false);
 
-        return Ok(artistDetails);
+        return Ok(response);
       }
       catch (ArtistNotFoundException exception)
       {
