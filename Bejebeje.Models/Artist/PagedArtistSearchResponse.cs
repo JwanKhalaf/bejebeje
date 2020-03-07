@@ -3,9 +3,9 @@
   using System.Collections.Generic;
   using Bejebeje.Models.Paging;
 
-  public class PagedArtistsResponse
+  public class PagedArtistSearchResponse
   {
-    public ICollection<ArtistsResponse> Artists { get; set; } = new List<ArtistsResponse>();
+    public ICollection<ArtistSearchResponse> Artists { get; set; } = new List<ArtistSearchResponse>();
 
     public PagingResponse Paging { get; set; }
   }

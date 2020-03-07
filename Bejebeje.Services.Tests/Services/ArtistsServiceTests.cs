@@ -2,6 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
+  using System.Globalization;
   using System.IO;
   using System.Linq;
   using System.Threading.Tasks;
@@ -22,6 +23,8 @@
     private Mock<IArtistSlugsService> artistSlugsServiceMock;
 
     private ArtistsService artistsService;
+
+    private TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     [SetUp]
     public void Setup()
@@ -190,71 +193,6 @@
     }
 
     [Test]
-    public async Task GetArtistsAsync_WithNoData_ReturnsAnEmptyListOfArtists()
-    {
-      // arrange
-      int offset = 0;
-      int limit = 10;
-
-      // act
-      PagedArtistsResponse result = await artistsService.GetArtistsAsync(offset, limit);
-
-      // assert
-      result.Should().BeOfType<PagedArtistsResponse>();
-      result.Artists.Should().BeEmpty();
-      result.Paging.Offset.Should().Be(offset);
-      result.Paging.Limit.Should().Be(limit);
-    }
-
-    [Test]
-    public async Task GetArtistsAsync_WithData_ReturnsAListOfArtists()
-    {
-      // arrange
-      string artistFirstName = "Johnny";
-      string artistLastName = "Cash";
-      string artistSlug = "johnny-cash";
-      int expectedArtistImageId = 1;
-      int offset = 0;
-      int limit = 10;
-
-      Artist artistFromDb = new Artist
-      {
-        FirstName = artistFirstName,
-        LastName = artistLastName,
-        Image = new ArtistImage
-        {
-          Data = new byte[10],
-          CreatedAt = DateTime.UtcNow,
-        },
-        Slugs = new List<ArtistSlug>
-        {
-          new ArtistSlug
-          {
-            Name = artistSlug,
-            IsPrimary = true,
-            CreatedAt = DateTime.UtcNow,
-          },
-        },
-      };
-
-      Context.Artists.Add(artistFromDb);
-      Context.SaveChanges();
-
-      // act
-      PagedArtistsResponse result = await artistsService.GetArtistsAsync(offset, limit);
-
-      // assert
-      result.Should().BeOfType<PagedArtistsResponse>();
-      result.Artists.Should().HaveCount(1);
-      result.Artists.First().FirstName.Should().Be(artistFirstName);
-      result.Artists.First().LastName.Should().Be(artistLastName);
-      result.Artists.First().ImageId.Should().Be(expectedArtistImageId);
-      result.Artists.First().Slugs.Should().HaveCount(1);
-      result.Artists.First().Slugs.First().Name.Should().Be(artistSlug);
-      result.Artists.First().Slugs.First().IsPrimary.Should().BeTrue();
-    }
-
-    [Test]
     public async Task CreateNewArtistAsync_WhenArtistAlreadyExists_ThrowsArtistExistsException()
     {
       // arrange
@@ -380,11 +318,11 @@
       Context.SaveChanges();
 
       // act
-      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<PagedArtistsResponse>();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
       result.Artists.Should().HaveCount(0);
     }
 
@@ -396,10 +334,13 @@
       int offset = 0;
       int limit = 10;
 
-      string artistFirstName = "Fats";
-      string artistLastName = "Waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "something-different-from-first-and-last-name";
       DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
       string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -411,7 +352,7 @@
       {
         FirstName = artistFirstName,
         LastName = artistLastName,
-        FullName = $"{artistFirstName} {artistLastName}",
+        FullName = artistFullName,
         CreatedAt = artistCreatedAt,
         Slugs = new List<ArtistSlug>
         {
@@ -433,24 +374,21 @@
       Context.SaveChanges();
 
       // act
-      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<PagedArtistsResponse>();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
 
-      ICollection<ArtistsResponse> artists = result.Artists;
+      ICollection<ArtistSearchResponse> artists = result.Artists;
 
       artists.Should().HaveCount(1);
 
-      ArtistsResponse artist = artists.First();
+      ArtistSearchResponse artist = artists.First();
 
-      artist.FirstName.Should().Be(artistFirstName);
-      artist.LastName.Should().Be(artistLastName);
-      artist.Slugs.Should().HaveCount(1);
-      artist.Slugs.First().Name.Should().Be(artistSlug);
-      artist.Slugs.First().IsPrimary.Should().BeTrue();
-      artist.ImageId.Should().Be(1);
+      artist.FullName.Should().Be(expectedFullName);
+      artist.PrimarySlug.Should().Be(artistSlug);
+      artist.HasImage.Should().BeTrue();
     }
 
     [Test]
@@ -461,10 +399,13 @@
       int offset = 0;
       int limit = 10;
 
-      string artistFirstName = "Fats";
-      string artistLastName = "Waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "something-different-from-first-and-last-name";
       DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
       string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -476,7 +417,7 @@
       {
         FirstName = artistFirstName,
         LastName = artistLastName,
-        FullName = $"{artistFirstName} {artistLastName}",
+        FullName = artistFullName,
         CreatedAt = artistCreatedAt,
         Slugs = new List<ArtistSlug>
         {
@@ -498,24 +439,21 @@
       Context.SaveChanges();
 
       // act
-      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<PagedArtistsResponse>();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
 
-      ICollection<ArtistsResponse> artists = result.Artists;
+      ICollection<ArtistSearchResponse> artists = result.Artists;
 
       artists.Should().HaveCount(1);
 
-      ArtistsResponse artist = artists.First();
+      ArtistSearchResponse artist = artists.First();
 
-      artist.FirstName.Should().Be(artistFirstName);
-      artist.LastName.Should().Be(artistLastName);
-      artist.Slugs.Should().HaveCount(1);
-      artist.Slugs.First().Name.Should().Be(artistSlug);
-      artist.Slugs.First().IsPrimary.Should().BeTrue();
-      artist.ImageId.Should().Be(1);
+      artist.FullName.Should().Be(expectedFullName);
+      artist.PrimarySlug.Should().Be(artistSlug);
+      artist.HasImage.Should().BeTrue();
     }
 
     [Test]
@@ -526,10 +464,13 @@
       int offset = 0;
       int limit = 10;
 
-      string artistFirstName = "Fats";
-      string artistLastName = "Waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "nokia";
       DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
       string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -541,7 +482,7 @@
       {
         FirstName = artistFirstName,
         LastName = artistLastName,
-        FullName = $"{artistFirstName} {artistLastName}",
+        FullName = artistFullName,
         CreatedAt = artistCreatedAt,
         Slugs = new List<ArtistSlug>
         {
@@ -563,23 +504,20 @@
       Context.SaveChanges();
 
       // act
-      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<PagedArtistsResponse>();
-      ICollection<ArtistsResponse> artists = result.Artists;
+      result.Should().BeOfType<PagedArtistSearchResponse>();
+      ICollection<ArtistSearchResponse> artists = result.Artists;
 
       artists.Should().HaveCount(1);
 
-      ArtistsResponse artist = artists.First();
+      ArtistSearchResponse artist = artists.First();
 
-      artist.FirstName.Should().Be(artistFirstName);
-      artist.LastName.Should().Be(artistLastName);
-      artist.Slugs.Should().HaveCount(1);
-      artist.Slugs.First().Name.Should().Be(artistSlug);
-      artist.Slugs.First().IsPrimary.Should().BeTrue();
-      artist.ImageId.Should().Be(1);
+      artist.FullName.Should().Be(expectedFullName);
+      artist.PrimarySlug.Should().Be(artistSlug);
+      artist.HasImage.Should().BeTrue();
     }
 
     [Test]
@@ -590,10 +528,13 @@
       int offset = 0;
       int limit = 10;
 
-      string artistFirstName = "Fats";
-      string artistLastName = "Waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "fats-waller";
       DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
       string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -605,7 +546,7 @@
       {
         FirstName = artistFirstName,
         LastName = artistLastName,
-        FullName = $"{artistFirstName} {artistLastName}",
+        FullName = artistFullName,
         CreatedAt = artistCreatedAt,
         Slugs = new List<ArtistSlug>
         {
@@ -627,23 +568,20 @@
       Context.SaveChanges();
 
       // act
-      PagedArtistsResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
 
       // assert
       result.Should().NotBeNull();
-      result.Should().BeOfType<PagedArtistsResponse>();
-      ICollection<ArtistsResponse> artists = result.Artists;
+      result.Should().BeOfType<PagedArtistSearchResponse>();
+      ICollection<ArtistSearchResponse> artists = result.Artists;
 
       artists.Should().HaveCount(1);
 
-      ArtistsResponse artist = artists.First();
+      ArtistSearchResponse artist = artists.First();
 
-      artist.FirstName.Should().Be(artistFirstName);
-      artist.LastName.Should().Be(artistLastName);
-      artist.Slugs.Should().HaveCount(1);
-      artist.Slugs.First().Name.Should().Be(artistSlug);
-      artist.Slugs.First().IsPrimary.Should().BeTrue();
-      artist.ImageId.Should().Be(1);
+      artist.FullName.Should().Be(expectedFullName);
+      artist.PrimarySlug.Should().Be(artistSlug);
+      artist.HasImage.Should().BeTrue();
     }
   }
 }

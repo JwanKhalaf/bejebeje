@@ -26,22 +26,13 @@
 
     [Route("[controller]")]
     [HttpGet]
-    public async Task<IActionResult> GetArtists([FromQuery] string name, int offset = 0, int limit = 10)
+    public async Task<IActionResult> SearchArtists([FromQuery] string name, int offset = 0, int limit = 10)
     {
-      PagedArtistsResponse artistsResponse;
+      PagedArtistSearchResponse artistsResponse;
 
-      if (string.IsNullOrEmpty(name))
-      {
-        artistsResponse = await artistsService
-        .GetArtistsAsync(offset, limit)
-        .ConfigureAwait(false);
-      }
-      else
-      {
-        artistsResponse = await artistsService
+      artistsResponse = await artistsService
         .SearchArtistsAsync(name, offset, limit)
         .ConfigureAwait(false);
-      }
 
       return Ok(artistsResponse);
     }

@@ -9,7 +9,6 @@
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Domain;
   using Bejebeje.Models.Artist;
-  using Bejebeje.Models.ArtistSlug;
   using Bejebeje.Models.Paging;
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
@@ -89,40 +88,6 @@
       return artist;
     }
 
-    public async Task<PagedArtistsResponse> GetArtistsAsync(int offset, int limit)
-    {
-      IOrderedQueryable<Artist> orderedArtists = context
-        .Artists
-        .AsNoTracking()
-        .OrderBy(x => x.FirstName);
-
-      int totalRecords = await orderedArtists.CountAsync();
-
-      List<ArtistsResponse> artists = await orderedArtists
-        .Paging(offset, limit)
-        .Select(x => new ArtistsResponse
-        {
-          FirstName = textInfo.ToTitleCase(x.FirstName),
-          LastName = textInfo.ToTitleCase(x.LastName),
-          Slugs = x.Slugs.Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary }).ToList(),
-          ImageId = x.Image == null ? 0 : x.Image.Id,
-        })
-        .ToListAsync();
-
-      PagedArtistsResponse response = new PagedArtistsResponse
-      {
-        Artists = artists,
-        Paging = new PagingResponse
-        {
-          Offset = offset,
-          Limit = limit,
-          Total = totalRecords,
-        },
-      };
-
-      return response;
-    }
-
     public async Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request)
     {
       string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
@@ -157,34 +122,58 @@
       return response;
     }
 
-    public async Task<PagedArtistsResponse> SearchArtistsAsync(string artistName, int offset, int limit)
+    public async Task<PagedArtistSearchResponse> SearchArtistsAsync(string artistName, int offset, int limit)
     {
-      string searchTermStandardized = artistName.Standardize();
+      int totalRecords;
+      List<ArtistSearchResponse> artists;
 
-      List<ArtistsResponse> matchedArtists = await context
+      IOrderedQueryable<Artist> orderedArtists = context
         .Artists
         .AsNoTracking()
-        .Where(x => EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
-        .OrderBy(x => x.FirstName)
-        .Select(x => new ArtistsResponse
-        {
-          FirstName = textInfo.ToTitleCase(x.FirstName),
-          LastName = textInfo.ToTitleCase(x.LastName),
-          Slugs = x.Slugs
-            .Where(s => !s.IsDeleted)
-            .Select(s => new ArtistSlugResponse { Name = s.Name, IsPrimary = s.IsPrimary })
-            .ToList(),
-          ImageId = x.Image.Id,
-        })
-        .ToListAsync();
+        .OrderBy(x => x.FirstName);
 
-      PagedArtistsResponse pagedArtistsResponse = new PagedArtistsResponse
+      if (!string.IsNullOrEmpty(artistName))
       {
-        Artists = matchedArtists,
+        string searchTermStandardized = artistName.Standardize();
+
+        totalRecords = await orderedArtists
+          .Where(x => EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+          .CountAsync();
+
+        artists = await orderedArtists
+          .Where(x => EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+          .OrderBy(x => x.FirstName)
+          .Select(x => new ArtistSearchResponse
+          {
+            FullName = textInfo.ToTitleCase(x.FullName),
+            PrimarySlug = x.Slugs.Single(s => !s.IsDeleted && s.IsPrimary).Name,
+            HasImage = x.Image != null,
+          })
+          .ToListAsync();
+      }
+      else
+      {
+        totalRecords = await orderedArtists.CountAsync();
+
+        artists = await orderedArtists
+          .Paging(offset, limit)
+          .Select(x => new ArtistSearchResponse
+          {
+            FullName = textInfo.ToTitleCase(x.FullName),
+            PrimarySlug = x.Slugs.Single(s => !s.IsDeleted && s.IsPrimary).Name,
+            HasImage = x.Image != null,
+          })
+          .ToListAsync();
+      }
+
+      PagedArtistSearchResponse pagedArtistsResponse = new PagedArtistSearchResponse
+      {
+        Artists = artists,
         Paging = new PagingResponse
         {
           Offset = offset,
           Limit = limit,
+          Total = totalRecords,
         },
       };
 
