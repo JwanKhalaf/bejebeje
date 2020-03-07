@@ -54,11 +54,6 @@
     [HttpGet]
     public async Task<IActionResult> SearchLyrics([FromQuery] string title, int offset = 0, int limit = 10)
     {
-      if (string.IsNullOrEmpty(title))
-      {
-        throw new ArgumentNullException("Missing lyric title", nameof(title));
-      }
-
       PagedLyricSearchResponse response = await lyricsService
         .SearchLyricsAsync(title, offset, limit)
         .ConfigureAwait(false);
