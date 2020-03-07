@@ -57,6 +57,15 @@
         .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
         .CountAsync();
 
+      var test = await context
+        .Lyrics
+        .Include(l => l.Artist)
+        .Include(l => l.Slugs)
+        .AsNoTracking()
+        .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
+        .Paging(offset, limit)
+        .ToListAsync();
+
       List<LyricSearchResponse> matchedLyrics = await context
         .Lyrics
         .Include(l => l.Artist)
@@ -71,7 +80,7 @@
           Artist = new LyricSearchResponseArtist
           {
             FirstName = textInfo.ToTitleCase(x.Artist.FirstName),
-            LastName = textInfo.ToTitleCase(x.Artist.LastName),
+            LastName = string.IsNullOrEmpty(x.Artist.LastName) ? string.Empty : textInfo.ToTitleCase(x.Artist.LastName),
             PrimarySlug = x.Artist.Slugs.Single(s => s.IsPrimary).Name,
             HasImage = x.Artist.Image != null,
           },
