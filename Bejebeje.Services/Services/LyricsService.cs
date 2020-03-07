@@ -1,6 +1,7 @@
 ﻿namespace Bejebeje.Services.Services
 {
   using System.Collections.Generic;
+  using System.Globalization;
   using System.Linq;
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
@@ -17,6 +18,8 @@
     private readonly IArtistsService artistsService;
 
     private readonly BbContext context;
+
+    private TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public LyricsService(
       IArtistsService artistsService,
@@ -67,8 +70,8 @@
           PrimarySlug = x.Slugs.Single(s => s.IsPrimary).Name,
           Artist = new LyricSearchResponseArtist
           {
-            FirstName = x.Artist.FirstName,
-            LastName = x.Artist.LastName,
+            FirstName = textInfo.ToTitleCase(x.Artist.FirstName),
+            LastName = textInfo.ToTitleCase(x.Artist.LastName),
             PrimarySlug = x.Artist.Slugs.Single(s => s.IsPrimary).Name,
             HasImage = x.Artist.Image != null,
           },
