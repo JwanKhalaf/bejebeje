@@ -49,6 +49,19 @@
 
     public async Task<PagedLyricSearchResponse> SearchLyricsAsync(string title, int offset, int limit)
     {
+      PagedLyricSearchResponse response = new PagedLyricSearchResponse();
+
+      if (string.IsNullOrEmpty(title))
+      {
+        PagingResponse paging = new PagingResponse();
+        paging.Offset = offset;
+        paging.Limit = limit;
+
+        response.Paging = paging;
+
+        return response;
+      }
+
       string titleStandardized = title.Standardize();
 
       int totalRecords = await context
@@ -56,15 +69,6 @@
         .AsNoTracking()
         .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
         .CountAsync();
-
-      var test = await context
-        .Lyrics
-        .Include(l => l.Artist)
-        .Include(l => l.Slugs)
-        .AsNoTracking()
-        .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
-        .Paging(offset, limit)
-        .ToListAsync();
 
       List<LyricSearchResponse> matchedLyrics = await context
         .Lyrics
@@ -86,15 +90,12 @@
         })
         .ToListAsync();
 
-      PagedLyricSearchResponse response = new PagedLyricSearchResponse
+      response.Lyrics = matchedLyrics;
+      response.Paging = new PagingResponse
       {
-        Lyrics = matchedLyrics,
-        Paging = new PagingResponse
-        {
-          Offset = offset,
-          Limit = limit,
-          Total = totalRecords,
-        },
+        Offset = offset,
+        Limit = limit,
+        Total = totalRecords,
       };
 
       return response;
