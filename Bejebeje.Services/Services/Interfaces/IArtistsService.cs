@@ -9,7 +9,7 @@
 
     Task<bool> ArtistExistsAsync(string artistSlug);
 
-    Task<ArtistDetailsResponse> GetArtistDetailsAsync(string artistSlug);
+    Task<GetArtistResponse> GetArtistDetailsAsync(string artistSlug);
 
     Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request);
 
