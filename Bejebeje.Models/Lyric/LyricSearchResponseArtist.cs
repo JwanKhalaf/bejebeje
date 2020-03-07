@@ -2,9 +2,7 @@
 {
   public class LyricSearchResponseArtist
   {
-    public string FirstName { get; set; }
-
-    public string LastName { get; set; }
+    public string FullName { get; set; }
 
     public string PrimarySlug { get; set; }
 
