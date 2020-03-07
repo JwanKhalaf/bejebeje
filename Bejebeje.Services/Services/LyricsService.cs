@@ -79,8 +79,7 @@
           PrimarySlug = x.Slugs.Single(s => s.IsPrimary).Name,
           Artist = new LyricSearchResponseArtist
           {
-            FirstName = textInfo.ToTitleCase(x.Artist.FirstName),
-            LastName = string.IsNullOrEmpty(x.Artist.LastName) ? string.Empty : textInfo.ToTitleCase(x.Artist.LastName),
+            FullName = textInfo.ToTitleCase(x.Artist.FullName),
             PrimarySlug = x.Artist.Slugs.Single(s => s.IsPrimary).Name,
             HasImage = x.Artist.Image != null,
           },
