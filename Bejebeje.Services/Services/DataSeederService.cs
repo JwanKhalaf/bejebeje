@@ -45,7 +45,6 @@ In February 1980, a few months after recording the album Highway to Hell, lead s
                   CreatedAt = DateTime.UtcNow,
                 },
               },
-          Image = GetAuthorImage("acdc.jpg"),
           CreatedAt = DateTime.UtcNow,
         };
 
@@ -695,7 +694,6 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = userId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("wheatus.jpg"),
         };
 
         Artist xtc = new Artist

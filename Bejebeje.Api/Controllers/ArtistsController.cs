@@ -1,6 +1,5 @@
 ﻿namespace Bejebeje.Api.Controllers
 {
-  using System;
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;

@@ -39,7 +39,13 @@
       }
       catch (ArtistNotFoundException exception)
       {
-        logger.LogError($"The image for the requested artist with slug: {exception.ToLogData()} could not be found.");
+        logger.LogError($"The artist with slug: {exception.ToLogData()} could not be found.");
+
+        return NotFound();
+      }
+      catch (MissingArtistImageException)
+      {
+        logger.LogError($"The image for the requested artist could not be found.");
 
         return NotFound();
       }
