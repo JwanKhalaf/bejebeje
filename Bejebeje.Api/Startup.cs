@@ -22,7 +22,6 @@
 
     public IConfiguration Configuration { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
       string databaseConnectionString = Configuration["Database:DefaultConnectionString"];
@@ -53,7 +52,6 @@
       services
         .AddCors(options =>
         {
-          // this defines a CORS policy called "default"
           options.AddPolicy("default", policy =>
           {
             policy.WithOrigins(Configuration["FrontendCorsOrigin"])
@@ -88,9 +86,13 @@
         });
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(
+      IApplicationBuilder app,
+      DbContext context,
+      IWebHostEnvironment env)
     {
+      context.Database.Migrate();
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
@@ -104,7 +106,6 @@
       }
       else
       {
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
       }
 
