@@ -6,7 +6,7 @@ dotnet: 2.2
 branches:
   only:
     - master
-    - develop
+    - feature/run-migrations-automatically
 before_script:
   - chmod -R a+x scripts
 script:
