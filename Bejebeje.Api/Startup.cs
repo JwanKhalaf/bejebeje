@@ -88,7 +88,7 @@
 
     public void Configure(
       IApplicationBuilder app,
-      DbContext context,
+      BbContext context,
       IWebHostEnvironment env)
     {
       context.Database.Migrate();
