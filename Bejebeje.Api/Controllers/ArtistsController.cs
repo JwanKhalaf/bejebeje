@@ -1,5 +1,7 @@
 ﻿namespace Bejebeje.Api.Controllers
 {
+  using System;
+  using System.Linq;
   using System.Threading.Tasks;
   using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
@@ -25,11 +27,12 @@
 
     [Route("[controller]")]
     [HttpGet]
-    public async Task<IActionResult> SearchArtists([FromQuery] string name, int offset = 0, int limit = 10)
+    public async Task<IActionResult> SearchArtists(
+      [FromQuery] string name,
+      int offset = 0,
+      int limit = 10)
     {
-      PagedArtistSearchResponse artistsResponse;
-
-      artistsResponse = await artistsService
+      PagedArtistSearchResponse artistsResponse = await artistsService
         .SearchArtistsAsync(name, offset, limit)
         .ConfigureAwait(false);
 
