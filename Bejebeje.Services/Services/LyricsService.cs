@@ -36,7 +36,7 @@
       List<LyricCardViewModel> lyrics = await context
         .Lyrics
         .AsNoTracking()
-        .Where(l => l.ArtistId == artistId)
+        .Where(l => l.ArtistId == artistId && l.IsApproved && !l.IsDeleted)
         .OrderBy(l => l.Title)
         .Select(l => new LyricCardViewModel
         {

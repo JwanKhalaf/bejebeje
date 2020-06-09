@@ -21,7 +21,7 @@
 
     private readonly BbContext context;
 
-    private TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
+    private readonly TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public ArtistsService(
       IArtistSlugsService artistSlugsService,
@@ -36,7 +36,7 @@
       int? artistId = await context
         .Artists
         .AsNoTracking()
-        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()))
+        .Where(x => x.Slugs.Any(y => y.Name == artistSlug.Standardize()) && x.IsApproved && !x.IsDeleted)
         .Select(x => (int?)x.Id)
         .FirstOrDefaultAsync();
 
