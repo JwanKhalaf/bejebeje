@@ -31,7 +31,7 @@
     {
       if (string.IsNullOrEmpty(artistSlug))
       {
-        throw new ArgumentNullException("Missing artist slug", nameof(artistSlug));
+        throw new ArgumentNullException(nameof(artistSlug), "Missing artist slug");
       }
 
       try
@@ -52,7 +52,10 @@
 
     [Route("[controller]")]
     [HttpGet]
-    public async Task<IActionResult> SearchLyrics([FromQuery] string title, int offset = 0, int limit = 10)
+    public async Task<IActionResult> SearchLyrics(
+      [FromQuery] string title,
+      int offset = 0,
+      int limit = 10)
     {
       PagedLyricSearchResponse response = await lyricsService
         .SearchLyricsAsync(title, offset, limit)
@@ -63,16 +66,18 @@
 
     [Route("artists/{artistSlug}/[controller]/{lyricSlug}")]
     [HttpGet]
-    public async Task<IActionResult> GetSingleLyric(string artistSlug, string lyricSlug)
+    public async Task<IActionResult> GetSingleLyric(
+      string artistSlug,
+      string lyricSlug)
     {
       if (string.IsNullOrEmpty(artistSlug))
       {
-        throw new ArgumentNullException("Missing artist slug", nameof(artistSlug));
+        throw new ArgumentNullException(nameof(artistSlug), "Missing artist slug");
       }
 
       if (string.IsNullOrEmpty(lyricSlug))
       {
-        throw new ArgumentNullException("Missing lyric slug", nameof(lyricSlug));
+        throw new ArgumentNullException(nameof(lyricSlug), "Missing lyric slug");
       }
 
       try
