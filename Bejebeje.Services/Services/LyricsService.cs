@@ -19,7 +19,7 @@
 
     private readonly BbContext context;
 
-    private TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
+    private readonly TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public LyricsService(
       IArtistsService artistsService,
@@ -37,6 +37,7 @@
         .Lyrics
         .AsNoTracking()
         .Where(l => l.ArtistId == artistId)
+        .OrderBy(l => l.Title)
         .Select(l => new LyricCardViewModel
         {
           Title = l.Title,
