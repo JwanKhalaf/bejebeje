@@ -59,6 +59,8 @@
       string artistFirstName = "fats";
       string artistLastName = "waller";
       int expectedArtistId = 1;
+      bool isDeleted = false;
+      bool isApproved = true;
 
       Artist fatsWaller = new Artist
       {
@@ -74,6 +76,8 @@
             IsPrimary = true,
           },
         },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);
@@ -107,6 +111,8 @@
       string artistFirstName = "fats";
       string artistLastName = "waller";
       string artistFullName = $"{artistFirstName} {artistLastName}";
+      bool isDeleted = false;
+      bool isApproved = true;
 
       int expectedArtistId = 1;
       string expectedArtistFirstName = textInfo.ToTitleCase(artistFirstName);
@@ -139,6 +145,8 @@
           Data = imageBytes,
           CreatedAt = DateTime.UtcNow,
         },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);
@@ -165,6 +173,8 @@
       string artistFirstName = "fats";
       string artistLastName = "waller";
       string artistFullName = $"{artistFirstName} {artistLastName}";
+      bool isDeleted = false;
+      bool isApproved = true;
 
       int expectedArtistId = 1;
       string expectedArtistFirstName = textInfo.ToTitleCase(artistFirstName);
@@ -197,6 +207,8 @@
           Data = imageBytes,
           CreatedAt = DateTime.UtcNow,
         },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);

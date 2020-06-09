@@ -58,25 +58,8 @@
       string artistSlug = "fats-waller";
       string artistFirstName = "Fats";
       string artistLastName = "Waller";
-
-      string lyricSlug = "write-myself-a-letter";
-      string lyricTitle = "Write Myself A Letter";
-      string lyricBody = "Song lyrics";
-
-      Lyric writeMyselfALetterSong = new Lyric
-      {
-        Title = lyricTitle,
-        Body = lyricBody,
-        Slugs = new List<LyricSlug>
-        {
-          new LyricSlug
-          {
-            Name = lyricSlug,
-            CreatedAt = DateTime.UtcNow,
-            IsPrimary = true,
-          },
-        },
-      };
+      bool isDeleted = false;
+      bool isApproved = true;
 
       Artist fatsWaller = new Artist
       {
@@ -92,7 +75,8 @@
             IsPrimary = true,
           },
         },
-        Lyrics = new List<Lyric> { writeMyselfALetterSong },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);
@@ -106,9 +90,8 @@
       IList<LyricCardViewModel> result = await lyricsService.GetLyricsAsync(artistSlug);
 
       // assert
-      result.Should().NotBeEmpty();
-      result.First().Title.Should().Be(lyricTitle);
-      result.First().Slug.Should().Be(lyricSlug);
+      result.Should().BeOfType<List<LyricCardViewModel>>();
+      result.Should().BeEmpty();
     }
 
     [Test]
