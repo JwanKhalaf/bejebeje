@@ -63,12 +63,16 @@
         return response;
       }
 
-      string titleStandardized = title.Standardize();
+      string titleStandardized = title.NormalizeStringForUrl();
 
       int totalRecords = await context
         .Lyrics
         .AsNoTracking()
-        .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
+        .Where(x =>
+          (EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%")
+          || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
+          && x.IsApproved
+          && !x.IsDeleted)
         .CountAsync();
 
       List<LyricSearchResponse> matchedLyrics = await context
@@ -76,7 +80,11 @@
         .Include(l => l.Artist)
         .Include(l => l.Slugs)
         .AsNoTracking()
-        .Where(x => EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
+        .Where(x =>
+          (EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%")
+          || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
+          && x.IsApproved
+          && !x.IsDeleted)
         .Paging(offset, limit)
         .Select(x => new LyricSearchResponse
         {
