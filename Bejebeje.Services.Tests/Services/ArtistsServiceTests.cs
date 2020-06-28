@@ -20,11 +20,11 @@
   [TestFixture]
   public class ArtistsServiceTests : DatabaseTestBase
   {
+    private readonly TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
+
     private Mock<IArtistSlugsService> artistSlugsServiceMock;
 
     private ArtistsService artistsService;
-
-    private TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     [SetUp]
     public void Setup()
@@ -43,6 +43,82 @@
     {
       // arrange
       string artistSlug = "john-doe";
+
+      // act
+      Func<Task> action = async () => await artistsService.GetArtistIdAsync(artistSlug);
+
+      // assert
+      await action.Should().ThrowAsync<ArtistNotFoundException>();
+    }
+
+    [Test]
+    public async Task GetArtistIdAsync_WhenArtistDoesExistButIsNotMarkedAsApproved_ThrowsAnArtistNotFoundException()
+    {
+      // arrange
+      string artistSlug = "fats-waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      bool isDeleted = false;
+      bool isApproved = false;
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        CreatedAt = DateTime.UtcNow,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            CreatedAt = DateTime.UtcNow,
+            IsPrimary = true,
+          },
+        },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      Func<Task> action = async () => await artistsService.GetArtistIdAsync(artistSlug);
+
+      // assert
+      await action.Should().ThrowAsync<ArtistNotFoundException>();
+    }
+
+    [Test]
+    public async Task GetArtistIdAsync_WhenArtistDoesExistButIsMarkedAsDeleted_ThrowsAnArtistNotFoundException()
+    {
+      // arrange
+      string artistSlug = "fats-waller";
+      string artistFirstName = "fats";
+      string artistLastName = "waller";
+      bool isDeleted = true;
+      bool isApproved = true;
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        CreatedAt = DateTime.UtcNow,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            CreatedAt = DateTime.UtcNow,
+            IsPrimary = true,
+          },
+        },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
 
       // act
       Func<Task> action = async () => await artistsService.GetArtistIdAsync(artistSlug);
@@ -362,6 +438,122 @@
     }
 
     [Test]
+    public async Task SearchArtistsAsync_WhenThereIsAMatchButArtistIsNotApproved_ReturnsAnEmptyListOfArtistCardViewModels()
+    {
+      // arrange
+      string artistName = "Waller";
+      int offset = 0;
+      int limit = 10;
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistFullName = "Fats Waller";
+      string artistSlug = "fats-waller";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = false;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = artistFullName,
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt,
+          },
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt,
+        },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
+      result.Artists.Should().HaveCount(0);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenThereIsAMatchButArtistIsDeleted_ReturnsAnEmptyListOfArtistCardViewModels()
+    {
+      // arrange
+      string artistName = "Waller";
+      int offset = 0;
+      int limit = 10;
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistFullName = "Fats Waller";
+      string artistSlug = "fats-waller";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = false;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = artistFullName,
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt,
+          },
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt,
+        },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(artistName, offset, limit);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
+      result.Artists.Should().HaveCount(0);
+    }
+
+    [Test]
     public async Task SearchArtistsAsync_WhenThereIsAMatchOnFirstNameOnly_ReturnsAPopulatedListOfArtistCardViewModels()
     {
       // arrange
@@ -374,6 +566,8 @@
       string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "something-different-from-first-and-last-name";
       DateTime artistCreatedAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = true;
 
       string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
@@ -403,6 +597,8 @@
           Data = imageBytes,
           CreatedAt = artistCreatedAt,
         },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);
@@ -439,6 +635,8 @@
       string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "something-different-from-first-and-last-name";
       DateTime artistCreatedAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = true;
 
       string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
@@ -468,6 +666,8 @@
           Data = imageBytes,
           CreatedAt = artistCreatedAt,
         },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);
@@ -504,6 +704,8 @@
       string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "nokia";
       DateTime artistCreatedAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = true;
 
       string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
@@ -533,6 +735,8 @@
           Data = imageBytes,
           CreatedAt = artistCreatedAt,
         },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);
@@ -568,6 +772,8 @@
       string artistFullName = $"{artistFirstName} {artistLastName}";
       string artistSlug = "fats-waller";
       DateTime artistCreatedAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = true;
 
       string expectedFullName = textInfo.ToTitleCase(artistFullName);
 
@@ -597,6 +803,8 @@
           Data = imageBytes,
           CreatedAt = artistCreatedAt,
         },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
       };
 
       Context.Artists.Add(fatsWaller);
@@ -617,6 +825,183 @@
       artist.FullName.Should().Be(expectedFullName);
       artist.PrimarySlug.Should().Be(artistSlug);
       artist.HasImage.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenArtistNameParamIsEmptyStringAndNoArtistsExist_ReturnsAnEmptyListOfArtistCardViewModels()
+    {
+      // arrange
+      int offset = 0;
+      int limit = 10;
+
+      // act
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(string.Empty, offset, limit);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
+      result.Artists.Should().HaveCount(0);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenArtistNameParamIsEmptyStringAndApprovedNonDeletedArtistsExist_ReturnsAPopulatedListOfArtistCardViewModels()
+    {
+      // arrange
+      int offset = 0;
+      int limit = 10;
+
+      string artistFirstName = "Fats";
+      string artistLastName = "Waller";
+      string artistFullName = "Fats Waller";
+      string artistSlug = "fats-waller";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = true;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string filePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+
+      byte[] imageBytes = await File.ReadAllBytesAsync(filePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = artistFirstName,
+        LastName = artistLastName,
+        FullName = artistFullName,
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            IsPrimary = true,
+            CreatedAt = artistCreatedAt,
+          },
+        },
+        Image = new ArtistImage
+        {
+          Data = imageBytes,
+          CreatedAt = artistCreatedAt,
+        },
+        IsDeleted = isDeleted,
+        IsApproved = isApproved,
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.SaveChanges();
+
+      // act
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(string.Empty, offset, limit);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
+      result.Artists.Should().HaveCount(1);
+
+      List<ArtistSearchResponse> artists = result.Artists.ToList();
+      ArtistSearchResponse artist = artists.First();
+      artist.FullName.Should().Be(artistFullName);
+      artist.HasImage.Should().BeTrue();
+      artist.PrimarySlug.Should().Be(artistSlug);
+    }
+
+    [Test]
+    public async Task SearchArtistsAsync_WhenArtistNameParamIsEmptyStringAndSomeNonApprovedArtistsExist_ReturnsAPopulatedListOfArtistCardViewModels()
+    {
+      // arrange
+      int offset = 0;
+      int limit = 10;
+
+      string firstArtistFirstName = "Fats";
+      string firstArtistLastName = "Waller";
+      string firstArtistFullName = "Fats Waller";
+      string firstArtistSlug = "fats-waller";
+      DateTime firstArtistCreatedAt = DateTime.UtcNow;
+      bool firstArtistIsDeleted = false;
+      bool firstArtistIsApproved = true;
+
+      string secondArtistFirstName = "Queen";
+      string secondArtistLastName = string.Empty;
+      string secondArtistFullName = "Queen";
+      string secondArtistSlug = "queen";
+      DateTime secondArtistCreatedAt = DateTime.UtcNow;
+      bool secondArtistIsDeleted = false;
+      bool secondArtistIsApproved = false;
+
+      string baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+
+      string firstArtistFilePath = baseDirectoryPath + "/Assets/fats-waller.jpg";
+      byte[] firstArtistImageBytes = await File.ReadAllBytesAsync(firstArtistFilePath);
+
+      string secondArtistFilePath = baseDirectoryPath + "/Assets/queen.jpg";
+      byte[] secondArtistImageBytes = await File.ReadAllBytesAsync(secondArtistFilePath);
+
+      Artist fatsWaller = new Artist
+      {
+        FirstName = firstArtistFirstName,
+        LastName = firstArtistLastName,
+        FullName = firstArtistFullName,
+        CreatedAt = firstArtistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = firstArtistSlug,
+            IsPrimary = true,
+            CreatedAt = firstArtistCreatedAt,
+          },
+        },
+        Image = new ArtistImage
+        {
+          Data = firstArtistImageBytes,
+          CreatedAt = firstArtistCreatedAt,
+        },
+        IsDeleted = firstArtistIsDeleted,
+        IsApproved = firstArtistIsApproved,
+      };
+
+      Artist queen = new Artist
+      {
+        FirstName = secondArtistFirstName,
+        LastName = secondArtistLastName,
+        FullName = secondArtistFullName,
+        CreatedAt = secondArtistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = secondArtistSlug,
+            IsPrimary = true,
+            CreatedAt = secondArtistCreatedAt,
+          },
+        },
+        Image = new ArtistImage
+        {
+          Data = secondArtistImageBytes,
+          CreatedAt = secondArtistCreatedAt,
+        },
+        IsDeleted = secondArtistIsDeleted,
+        IsApproved = secondArtistIsApproved,
+      };
+
+      Context.Artists.Add(fatsWaller);
+      Context.Artists.Add(queen);
+      Context.SaveChanges();
+
+      // act
+      PagedArtistSearchResponse result = await artistsService.SearchArtistsAsync(string.Empty, offset, limit);
+
+      // assert
+      result.Should().NotBeNull();
+      result.Should().BeOfType<PagedArtistSearchResponse>();
+      result.Artists.Should().HaveCount(1);
+
+      List<ArtistSearchResponse> artists = result.Artists.ToList();
+      ArtistSearchResponse artist = artists.First();
+      artist.FullName.Should().Be(firstArtistFullName);
+      artist.HasImage.Should().BeTrue();
+      artist.PrimarySlug.Should().Be(firstArtistSlug);
     }
   }
 }
