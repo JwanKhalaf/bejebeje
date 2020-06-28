@@ -6,7 +6,6 @@ dotnet: 2.2
 branches:
   only:
     - master
-    - bug/searching-for-lyrics-with-space
 before_script:
   - chmod -R a+x scripts
 script:
