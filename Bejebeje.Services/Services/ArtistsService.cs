@@ -135,14 +135,22 @@
 
       if (!string.IsNullOrEmpty(artistName))
       {
-        string searchTermStandardized = artistName.Standardize();
+        string searchTermStandardized = artistName.NormalizeStringForUrl();
 
         totalRecords = await orderedArtists
-          .Where(x => EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+          .Where(x =>
+            (EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%")
+            || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+            && x.IsApproved
+            && !x.IsDeleted)
           .CountAsync();
 
         artists = await orderedArtists
-          .Where(x => EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%") || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+          .Where(x =>
+            (EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%")
+            || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
+            && x.IsApproved
+            && !x.IsDeleted)
           .OrderBy(x => x.FirstName)
           .Select(x => new ArtistSearchResponse
           {
@@ -154,9 +162,12 @@
       }
       else
       {
-        totalRecords = await orderedArtists.CountAsync();
+        totalRecords = await orderedArtists
+          .Where(x => x.IsApproved && !x.IsDeleted)
+          .CountAsync();
 
         artists = await orderedArtists
+          .Where(x => x.IsApproved && !x.IsDeleted)
           .Paging(offset, limit)
           .Select(x => new ArtistSearchResponse
           {
