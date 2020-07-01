@@ -85,6 +85,7 @@
           || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
           && x.IsApproved
           && !x.IsDeleted)
+        .OrderBy(l => l.Title)
         .Paging(offset, limit)
         .Select(x => new LyricSearchResponse
         {

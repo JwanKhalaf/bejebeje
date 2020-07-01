@@ -743,7 +743,7 @@
       bool isDeleted = false;
       bool isApproved = true;
 
-      Lyric tnt = new Lyric
+      Lyric backInBlack = new Lyric
       {
         Title = seedLyricTitle,
         CreatedAt = seedLyricCreatedAt,
@@ -776,7 +776,7 @@
         IsApproved = isApproved,
       };
 
-      Context.Lyrics.Add(tnt);
+      Context.Lyrics.Add(backInBlack);
       Context.SaveChanges();
 
       // act
@@ -789,6 +789,105 @@
       result.Lyrics.Should().HaveCount(1);
       result.Lyrics.First().Title.Should().Be(seedLyricTitle);
       result.Lyrics.First().PrimarySlug.Should().Be(uniqueLyricSlug);
+    }
+
+    [Test]
+    public async Task SearchLyricsAsync_WhenThereIsAMatch_ReturnsAPagedLyricSearchResponseWithPopulatedOrderedListOfLyricSearchResponse()
+    {
+      // arrange
+      int offset = 0;
+      int limit = 10;
+
+      string lyricTitleToSearch = "back";
+
+      string artistFirstName = "ac/dc";
+      string artistSlug = "acdc";
+      DateTime artistCreatedAt = DateTime.UtcNow;
+
+      string seedLyricTitleOne = "Back in black";
+      string seedLyricSlugOne = "back-in-black";
+      DateTime seedLyricCreatedAtOne = DateTime.UtcNow;
+      bool seedLyricIsDeletedOne = false;
+      bool seedLyricIsApprovedOne = true;
+
+      string seedLyricTitleTwo = "TNT";
+      string seedLyricSlugTwo = "tnt-back";
+      DateTime seedLyricCreatedAtTwo = DateTime.UtcNow;
+      bool seedLyricIsDeletedTwo = false;
+      bool seedLyricIsApprovedTwo = true;
+
+      Artist acdc = new Artist
+      {
+        FirstName = artistFirstName,
+        FullName = artistFirstName,
+        IsApproved = true,
+        CreatedAt = artistCreatedAt,
+        Slugs = new List<ArtistSlug>
+        {
+          new ArtistSlug
+          {
+            Name = artistSlug,
+            CreatedAt = artistCreatedAt,
+            IsPrimary = true,
+          },
+        },
+      };
+
+      Context.Artists.Add(acdc);
+      Context.SaveChanges();
+
+      Lyric backInBlack = new Lyric
+      {
+        Title = seedLyricTitleOne,
+        CreatedAt = seedLyricCreatedAtOne,
+        Slugs = new List<LyricSlug>
+        {
+          new LyricSlug
+          {
+            Name = seedLyricSlugOne,
+            IsPrimary = true,
+            CreatedAt = seedLyricCreatedAtOne,
+          },
+        },
+        Artist = acdc,
+        IsDeleted = seedLyricIsDeletedOne,
+        IsApproved = seedLyricIsApprovedOne,
+      };
+
+      Lyric tnt = new Lyric
+      {
+        Title = seedLyricTitleTwo,
+        CreatedAt = seedLyricCreatedAtTwo,
+        Slugs = new List<LyricSlug>
+        {
+          new LyricSlug
+          {
+            Name = seedLyricSlugTwo,
+            IsPrimary = true,
+            CreatedAt = seedLyricCreatedAtTwo,
+          },
+        },
+        Artist = acdc,
+        IsDeleted = seedLyricIsDeletedTwo,
+        IsApproved = seedLyricIsApprovedTwo,
+      };
+
+      Context.Lyrics.Add(tnt);
+      Context.Lyrics.Add(backInBlack);
+      Context.SaveChanges();
+
+      // act
+      PagedLyricSearchResponse result = await lyricsService
+        .SearchLyricsAsync(lyricTitleToSearch, offset, limit);
+
+      // assert
+      result.Should().BeOfType<PagedLyricSearchResponse>();
+      result.Lyrics.Should().NotBeEmpty();
+      result.Lyrics.Should().HaveCount(2);
+      result.Lyrics.First().Title.Should().Be(seedLyricTitleOne);
+      result.Lyrics.First().PrimarySlug.Should().Be(seedLyricSlugOne);
+      result.Lyrics.Last().Title.Should().Be(seedLyricTitleTwo);
+      result.Lyrics.Last().PrimarySlug.Should().Be(seedLyricSlugTwo);
     }
 
     [Test]
