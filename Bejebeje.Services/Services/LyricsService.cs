@@ -1,4 +1,7 @@
-﻿namespace Bejebeje.Services.Services
+﻿using System;
+using Npgsql;
+
+namespace Bejebeje.Services.Services
 {
   using System.Collections.Generic;
   using System.Globalization;
@@ -135,6 +138,32 @@
       }
 
       return lyric;
+    }
+
+    public async Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync()
+    {
+      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = new LyricRecentSubmissionViewModel();
+
+      string connectionString = "Server=localhost;Port=5432;Database=bejebeje;User Id=bejebeje_user;Password=admin;";
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, a.first_name, a.last_name from lyrics as l inner join artists as a on l.artist_id = a.id order by l.created_at desc limit 1;", connection);
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        int lyricId = Convert.ToInt32(reader[0]);
+        string lyricTitle = Convert.ToString(reader[1]);
+        string artistFullName = Convert.ToString(reader[2]) + " " + Convert.ToString(reader[3]);
+
+        lyricRecentSubmissionViewModel.Id = lyricId;
+        lyricRecentSubmissionViewModel.Title = lyricTitle;
+        lyricRecentSubmissionViewModel.ArtistName = artistFullName;
+      }
+
+      return lyricRecentSubmissionViewModel;
     }
   }
 }

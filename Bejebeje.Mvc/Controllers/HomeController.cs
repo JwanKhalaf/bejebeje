@@ -3,24 +3,33 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Bejebeje.Models.Lyric;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Bejebeje.Mvc.Models;
+using Bejebeje.Services.Services.Interfaces;
 
 namespace Bejebeje.Mvc.Controllers
 {
   public class HomeController : Controller
   {
+    private readonly ILyricsService _lyricsService;
+
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(
+      ILyricsService lyricsService,
+      ILogger<HomeController> logger)
     {
+      _lyricsService = lyricsService;
       _logger = logger;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-      return View();
+      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = await _lyricsService.GetRecentLyricsAsync();
+      
+      return View(lyricRecentSubmissionViewModel);
     }
 
     public IActionResult Privacy()
