@@ -12,19 +12,51 @@
 }
 
 body {
-  background-color: #242424;
+  background-color: #2A2E34;
+}
+
+/* header */
+header {
+  padding: 1.2em;
 }
 
 h1 {
-  color: #d9d9d9;
+  font-family: 'Roboto', sans-serif;
+  color: #ffffff;
   font-size: 2rem;
 }
 
 .recent {
   list-style: none;
+  padding: 0 1.2em;
 }
 
-.recent li {
-  padding: 20px;
-  background-color: aqua;
+.recent .card {
+  padding: 1.2em;
+  background-color: #212428;
+  margin-bottom: 1em;
+  display: flex;
+  flex-direction: row;
+  border-radius: 5px;
+}
+
+.card__image {
+  border-radius: 5px;
+}
+
+.card__meta {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.2em;
+  justify-content: center;
+}
+
+.card__title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-bottom: 0.7em;
+}
+
+.card__artist-name {
+  color: #ffffff;
 }

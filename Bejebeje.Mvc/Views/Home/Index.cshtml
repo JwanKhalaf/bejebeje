@@ -1,15 +1,23 @@
-﻿@model Bejebeje.Models.Lyric.LyricRecentSubmissionViewModel
+﻿@using Bejebeje.Models.Lyric
+@model Bejebeje.Models.Lyric.LyricRecentSubmissionViewModel
 
 @{
   ViewData["Title"] = "Home Page";
 }
 
-<h1>Recent</h1>
+<header>
+  <h1>Recent submissions</h1>
+</header>
 
 <ul class="recent">
-  <li>
-    <img src="https://placehold.it/100x100" alt="artist image" />
-    <h2>@Model.Title</h2>
-    <h3>@Model.ArtistName</h3>
-  </li>
+  @foreach (LyricItemViewModel item in Model.Lyrics)
+  {
+    <li class="card">
+      <img class="card__image" src="https://placehold.it/100x100" alt="artist image" />
+      <div class="card__meta">
+        <h2 class="card__title">@item.Title</h2>
+        <h3 class="card__artist-name">@item.ArtistName</h3>
+      </div>
+    </li>
+  }
 </ul>

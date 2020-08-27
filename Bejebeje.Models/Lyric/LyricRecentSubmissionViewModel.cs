@@ -1,11 +1,9 @@
-﻿namespace Bejebeje.Models.Lyric
+﻿using System.Collections.Generic;
+
+namespace Bejebeje.Models.Lyric
 {
   public class LyricRecentSubmissionViewModel
   {
-    public int Id { get; set; }
-
-    public string Title { get; set; }
-
-    public string ArtistName { get; set; }
+    public IEnumerable<LyricItemViewModel> Lyrics { get; set; }
   }
 }

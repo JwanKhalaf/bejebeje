@@ -143,25 +143,30 @@ namespace Bejebeje.Services.Services
     public async Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync()
     {
       LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = new LyricRecentSubmissionViewModel();
+      List<LyricItemViewModel> lyricItemViewModels = new List<LyricItemViewModel>();
 
       string connectionString = "Server=localhost;Port=5432;Database=bejebeje;User Id=bejebeje_user;Password=admin;";
 
       await using NpgsqlConnection connection = new NpgsqlConnection(connectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, a.first_name, a.last_name from lyrics as l inner join artists as a on l.artist_id = a.id order by l.created_at desc limit 1;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title, a.first_name, a.last_name from lyrics as l inner join artists as a on l.artist_id = a.id order by l.created_at desc limit 10;", connection);
+
       await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
       while (await reader.ReadAsync())
       {
-        int lyricId = Convert.ToInt32(reader[0]);
-        string lyricTitle = Convert.ToString(reader[1]);
-        string artistFullName = Convert.ToString(reader[2]) + " " + Convert.ToString(reader[3]);
+        LyricItemViewModel lyricItemViewModel = new LyricItemViewModel();
+        string lyricTitle = Convert.ToString(reader[0]).Truncate(9);
+        string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[1]) + " " + Convert.ToString(reader[2]));
 
-        lyricRecentSubmissionViewModel.Id = lyricId;
-        lyricRecentSubmissionViewModel.Title = lyricTitle;
-        lyricRecentSubmissionViewModel.ArtistName = artistFullName;
+        lyricItemViewModel.Title = lyricTitle;
+        lyricItemViewModel.ArtistName = artistFullName;
+
+        lyricItemViewModels.Add(lyricItemViewModel);
       }
+
+      lyricRecentSubmissionViewModel.Lyrics = lyricItemViewModels;
 
       return lyricRecentSubmissionViewModel;
     }
