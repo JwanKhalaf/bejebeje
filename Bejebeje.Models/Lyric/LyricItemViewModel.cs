@@ -5,5 +5,7 @@
     public string Title { get; set; }
 
     public string ArtistName { get; set; }
+
+    public string ArtistPrimarySlug { get; set; }
   }
 }

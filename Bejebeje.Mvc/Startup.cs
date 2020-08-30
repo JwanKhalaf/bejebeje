@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Bejebeje.DataAccess.Context;
+using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
 using Bejebeje.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,12 +24,18 @@ namespace Bejebeje.Mvc
     // use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      string databaseConnectionString = Configuration["Database:DefaultConnectionString"];
+      string connectionString = Configuration["ConnectionString"];
+
+      services
+        .Configure<DatabaseOptions>(Configuration);
 
       services
         .AddDbContext<BbContext>(options => options
-          .UseNpgsql(databaseConnectionString)
+          .UseNpgsql(connectionString)
           .UseSnakeCaseNamingConvention());
+
+      services
+        .AddScoped<IImagesService, ImagesService>();
 
       services
         .AddScoped<IArtistSlugsService, ArtistSlugsService>();

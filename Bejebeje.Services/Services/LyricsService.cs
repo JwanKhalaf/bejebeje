@@ -1,4 +1,6 @@
 ﻿using System;
+using Bejebeje.Services.Config;
+using Microsoft.Extensions.Options;
 using Npgsql;
 
 namespace Bejebeje.Services.Services
@@ -18,6 +20,8 @@ namespace Bejebeje.Services.Services
 
   public class LyricsService : ILyricsService
   {
+    private readonly DatabaseOptions _databaseOptions;
+
     private readonly IArtistsService artistsService;
 
     private readonly BbContext context;
@@ -25,30 +29,43 @@ namespace Bejebeje.Services.Services
     private readonly TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public LyricsService(
+      IOptionsMonitor<DatabaseOptions> optionsAccessor,
       IArtistsService artistsService,
       BbContext context)
     {
+      _databaseOptions = optionsAccessor.CurrentValue;
       this.artistsService = artistsService;
       this.context = context;
     }
 
-    public async Task<IList<LyricCardViewModel>> GetLyricsAsync(string artistSlug)
+    public async Task<IList<LyricCardViewModel>> GetLyricsAsync(
+      string artistSlug)
     {
-      int artistId = await artistsService.GetArtistIdAsync(artistSlug);
+      List<LyricCardViewModel> lyricCardViewModels = new List<LyricCardViewModel>();
 
-      List<LyricCardViewModel> lyrics = await context
-        .Lyrics
-        .AsNoTracking()
-        .Where(l => l.ArtistId == artistId && l.IsApproved && !l.IsDeleted)
-        .OrderBy(l => l.Title)
-        .Select(l => new LyricCardViewModel
-        {
-          Title = l.Title,
-          Slug = l.Slugs.Single(s => s.IsPrimary).Name,
-        })
-        .ToListAsync();
+      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+      await connection.OpenAsync();
 
-      return lyrics;
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id where artist_slugs.name = @artist_slug order by l.title asc;", connection);
+
+      command.Parameters.AddWithValue("@artist_slug", artistSlug);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        LyricCardViewModel lyricCardViewModel = new LyricCardViewModel();
+
+        string lyricTitle = Convert.ToString(reader[0]);
+        string lyricSlug = "slug";
+
+        lyricCardViewModel.Title = lyricTitle;
+        lyricCardViewModel.Slug = lyricSlug;
+
+        lyricCardViewModels.Add(lyricCardViewModel);
+      }
+
+      return lyricCardViewModels;
     }
 
     public async Task<PagedLyricSearchResponse> SearchLyricsAsync(string title, int offset, int limit)
@@ -145,12 +162,10 @@ namespace Bejebeje.Services.Services
       LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = new LyricRecentSubmissionViewModel();
       List<LyricItemViewModel> lyricItemViewModels = new List<LyricItemViewModel>();
 
-      string connectionString = "Server=localhost;Port=5432;Database=bejebeje;User Id=bejebeje_user;Password=admin;";
-
-      await using NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select l.title, a.first_name, a.last_name from lyrics as l inner join artists as a on l.artist_id = a.id order by l.created_at desc limit 10;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title, a.first_name, a.last_name, artist_slugs.name from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id where artist_slugs.is_primary = true order by l.created_at desc limit 10;", connection);
 
       await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -159,9 +174,11 @@ namespace Bejebeje.Services.Services
         LyricItemViewModel lyricItemViewModel = new LyricItemViewModel();
         string lyricTitle = Convert.ToString(reader[0]).Truncate(9);
         string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[1]) + " " + Convert.ToString(reader[2]));
+        string artistPrimarySlug = Convert.ToString(reader[3]);
 
         lyricItemViewModel.Title = lyricTitle;
         lyricItemViewModel.ArtistName = artistFullName;
+        lyricItemViewModel.ArtistPrimarySlug = artistPrimarySlug;
 
         lyricItemViewModels.Add(lyricItemViewModel);
       }

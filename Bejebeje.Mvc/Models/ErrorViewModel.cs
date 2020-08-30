@@ -1,5 +1,3 @@
-using System;
-
 namespace Bejebeje.Mvc.Models
 {
   public class ErrorViewModel

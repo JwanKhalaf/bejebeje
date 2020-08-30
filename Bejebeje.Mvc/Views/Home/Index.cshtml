@@ -2,22 +2,26 @@
 @model Bejebeje.Models.Lyric.LyricRecentSubmissionViewModel
 
 @{
-  ViewData["Title"] = "Home Page";
+  ViewData["Title"] = "Home";
 }
 
 <header>
-  <h1>Recent submissions</h1>
+  <h1>Home</h1>
 </header>
 
-<ul class="recent">
-  @foreach (LyricItemViewModel item in Model.Lyrics)
-  {
-    <li class="card">
-      <img class="card__image" src="https://placehold.it/100x100" alt="artist image" />
-      <div class="card__meta">
-        <h2 class="card__title">@item.Title</h2>
-        <h3 class="card__artist-name">@item.ArtistName</h3>
-      </div>
-    </li>
-  }
-</ul>
+<div class="section">
+  <h2 class="section__title">New this week</h2>
+
+  <ul class="recent">
+    @foreach (LyricItemViewModel item in Model.Lyrics)
+    {
+      <li class="card">
+        <img class="card__image" src="@Url.Action("GetArtistImage", "ArtistImage", new { artistSlug = item.ArtistPrimarySlug })" width="80" height="80" alt="artist image" />
+        <div class="card__meta">
+          <h2 class="card__title">@item.Title</h2>
+          <a asp-controller="Artist" asp-action="Index" asp-route-artistSlug="@item.ArtistPrimarySlug"><h3 class="card__artist-name">@item.ArtistName</h3></a>
+        </div>
+      </li>
+    }
+  </ul>
+</div>

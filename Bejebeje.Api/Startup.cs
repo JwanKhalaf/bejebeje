@@ -1,4 +1,6 @@
-﻿namespace Bejebeje.Api
+﻿using Bejebeje.Services.Config;
+
+namespace Bejebeje.Api
 {
   using Bejebeje.DataAccess.Configuration;
   using Bejebeje.DataAccess.Context;
@@ -24,11 +26,14 @@
 
     public void ConfigureServices(IServiceCollection services)
     {
-      string databaseConnectionString = Configuration["Database:DefaultConnectionString"];
+      string connectionString = Configuration["ConnectionString"];
+
+      services
+        .Configure<DatabaseOptions>(Configuration);
 
       services
         .AddDbContext<BbContext>(options => options
-          .UseNpgsql(databaseConnectionString)
+          .UseNpgsql(connectionString)
           .UseSnakeCaseNamingConvention());
 
       services
@@ -37,7 +42,7 @@
       services
         .Configure<InitialSeedConfiguration>(c =>
         {
-          c.ConnectionString = databaseConnectionString;
+          c.ConnectionString = connectionString;
         });
 
       services
