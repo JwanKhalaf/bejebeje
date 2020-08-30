@@ -19,7 +19,7 @@
         <img class="card__image" src="@Url.Action("GetArtistImage", "ArtistImage", new { artistSlug = item.ArtistPrimarySlug })" width="80" height="80" alt="artist image" />
         <div class="card__meta">
           <h2 class="card__title">@item.Title</h2>
-          <a asp-controller="Artist" asp-action="Index" asp-route-artistSlug="@item.ArtistPrimarySlug"><h3 class="card__artist-name">@item.ArtistName</h3></a>
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug"><h3 class="card__artist-name">@item.ArtistName</h3></a>
         </div>
       </li>
     }

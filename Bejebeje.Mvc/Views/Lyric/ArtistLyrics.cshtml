@@ -1,0 +1,8 @@
+﻿@model IEnumerable<Bejebeje.Models.Lyric.LyricCardViewModel>
+
+<ul>
+  @foreach (var lyricCardViewModel in Model)
+  {
+    <li>@lyricCardViewModel.Title</li>
+  }
+</ul>

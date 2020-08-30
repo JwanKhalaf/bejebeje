@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using Bejebeje.Services.Services.Interfaces;
+﻿using Bejebeje.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using Bejebeje.Models.Lyric;
 
 namespace Bejebeje.Mvc.Controllers
 {
@@ -19,16 +16,6 @@ namespace Bejebeje.Mvc.Controllers
     {
       this.lyricsService = lyricsService;
       this.logger = logger;
-    }
-
-    [Route("artists/{artistSlug}/lyrics")]
-    public async Task<IActionResult> Index(
-      string artistSlug)
-    {
-      IList<LyricCardViewModel> viewModel = await lyricsService
-        .GetLyricsAsync(artistSlug);
-
-      return View(viewModel);
     }
   }
 }

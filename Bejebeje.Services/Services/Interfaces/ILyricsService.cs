@@ -14,7 +14,7 @@ namespace Bejebeje.Services.Services.Interfaces
       int offset,
       int limit);
 
-    Task<LyricResponse> GetSingleLyricAsync(
+    Task<LyricViewModel> GetSingleLyricAsync(
       string artistSlug,
       string lyricSlug);
 

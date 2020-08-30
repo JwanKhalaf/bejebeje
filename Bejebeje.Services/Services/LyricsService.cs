@@ -131,30 +131,36 @@ namespace Bejebeje.Services.Services
       return response;
     }
 
-    public async Task<LyricResponse> GetSingleLyricAsync(string artistSlug, string lyricSlug)
+    public async Task<LyricViewModel> GetSingleLyricAsync(
+      string artistSlug,
+      string lyricSlug)
     {
-      int artistId = await artistsService.GetArtistIdAsync(artistSlug);
+      LyricViewModel lyricViewModel = new LyricViewModel();
 
-      LyricResponse lyric = await context
-        .Lyrics
-        .AsNoTracking()
-        .Where(l => l.ArtistId == artistId && l.Slugs.Any(s => s.Name == lyricSlug.Standardize()))
-        .Select(l => new LyricResponse
-        {
-          Title = l.Title,
-          Body = l.Body,
-          AuthorSlug = l.Author != null ? l.Author.Slugs.Where(s => s.IsPrimary).SingleOrDefault().Name : string.Empty,
-          CreatedAt = l.CreatedAt,
-          ModifiedAt = l.ModifiedAt,
-        })
-        .SingleOrDefaultAsync();
+      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+      await connection.OpenAsync();
 
-      if (lyric == null)
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title, l.body, l.created_at, l.modified_at from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id where ls.name = @lyric_slug and artist_slugs.name = @artist_slug;", connection);
+
+      command.Parameters.AddWithValue("@artist_slug", artistSlug);
+      command.Parameters.AddWithValue("@lyric_slug", lyricSlug);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
       {
-        throw new LyricNotFoundException(artistSlug, lyricSlug);
+        string lyricTitle = Convert.ToString(reader[0]);
+        string lyricBody = Convert.ToString(reader[1]);
+        DateTime lyricCreatedAt = Convert.ToDateTime(reader[2]);
+        DateTime? lyricModifiedAt = reader[3] == System.DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[3]);
+
+        lyricViewModel.Title = lyricTitle;
+        lyricViewModel.Body = lyricBody;
+        lyricViewModel.CreatedAt = lyricCreatedAt;
+        lyricViewModel.ModifiedAt = lyricModifiedAt;
       }
 
-      return lyric;
+      return lyricViewModel;
     }
 
     public async Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync()
