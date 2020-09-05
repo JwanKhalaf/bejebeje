@@ -1,14 +1,21 @@
-﻿.c-recent-lyric {
+﻿.recent {
   display: flex;
   flex-direction: column;
 
-  &__image {
+  &__lyric-link {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__artist-link {
+  }
+
+  &__artist-image {
     border-radius: 5px;
     margin-bottom: 0.5em;
   }
 
-
-  &__lyric {
+  &__lyric-title {
     font-family: $font-serif;
     font-size: 0.8rem;
     color: rgba($white, .50);
@@ -16,7 +23,7 @@
   }
 
 
-  &__artist {
+  &__artist-name {
     font-family: $font-sans-serif;
     font-size: 0.6rem;
     color: rgba($white, .25);
