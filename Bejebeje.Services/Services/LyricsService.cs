@@ -201,7 +201,7 @@
         string lyricPrimarySlug = Convert.ToString(reader[1]);
         string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[2]) + " " + Convert.ToString(reader[3]));
         string artistPrimarySlug = Convert.ToString(reader[4]);
-        bool artistHasImage = reader[4] != System.DBNull.Value;
+        bool artistHasImage = reader[5] != System.DBNull.Value;
 
         lyricItemViewModel.Title = lyricTitle;
         lyricItemViewModel.LyricPrimarySlug = lyricPrimarySlug;
