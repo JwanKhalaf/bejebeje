@@ -2,7 +2,7 @@
   background-color: $color-dark;
 }
 
-.artist-lyrics-header {
+.header {
   position: relative;
   margin-bottom: 3em;
   padding: $padding-standard;
@@ -40,5 +40,5 @@
   font-family: $font-serif;
   font-size: 1.1rem;
   line-height: 1.65rem;
-  padding: 0 $padding-standard;
+  padding: 0 2.5rem;
 }

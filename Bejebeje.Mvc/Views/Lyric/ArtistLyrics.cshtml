@@ -5,23 +5,23 @@
   ViewData["Description"] = $"{Model.Artist.FullName} lyrics. Gotinê stranê {Model.Artist.FullName}. {Model.Artist.FullName} sözleri";
 }
 
-<div class="artist-lyrics-header">
-  <div class="artist-lyrics-header__image-wrapper">
+<div class="header">
+  <div class="header__image-wrapper">
     @if (Model.Artist.HasImage)
     {
-      <img class="artist-lyrics-header__image"
+      <img class="header__image"
            src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = Model.Artist.PrimarySlug})"
            alt="@Model.Artist.FullName image" />
     }
     else
     {
-      <img class="artist-lyrics-header__image"
+      <img class="header__image"
            src="https://picsum.photos/400/400"
            alt="bejebeje artist placeholder image" />
     }
   </div>
 
-  <h1 class="artist-lyrics-header__title">@Model.Artist.FullName Lyrics</h1>
+  <h1 class="header__title">@Model.Artist.FullName Lyrics</h1>
 </div>
 
 <ul class="lyrics">
