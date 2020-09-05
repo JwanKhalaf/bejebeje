@@ -1,5 +1,6 @@
 ﻿namespace Bejebeje.Services.Services
 {
+  using System;
   using System.Collections.Generic;
   using System.Globalization;
   using System.Linq;
@@ -9,14 +10,20 @@
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Domain;
   using Bejebeje.Models.Artist;
+  using Bejebeje.Models.Lyric;
   using Bejebeje.Models.Paging;
+  using Bejebeje.Services.Config;
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
+  using Microsoft.Extensions.Options;
   using NodaTime;
+  using Npgsql;
 
   public class ArtistsService : IArtistsService
   {
+    private readonly DatabaseOptions databaseOptions;
+
     private readonly IArtistSlugsService artistSlugsService;
 
     private readonly BbContext context;
@@ -24,14 +31,17 @@
     private readonly TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public ArtistsService(
+      IOptionsMonitor<DatabaseOptions> optionsAccessor,
       IArtistSlugsService artistSlugsService,
       BbContext context)
     {
+      this.databaseOptions = optionsAccessor.CurrentValue;
       this.artistSlugsService = artistSlugsService;
       this.context = context;
     }
 
-    public async Task<int> GetArtistIdAsync(string artistSlug)
+    public async Task<int> GetArtistIdAsync(
+      string artistSlug)
     {
       int? artistId = await context
         .Artists
@@ -48,7 +58,8 @@
       return artistId.Value;
     }
 
-    public async Task<bool> ArtistExistsAsync(string artistSlug)
+    public async Task<bool> ArtistExistsAsync(
+      string artistSlug)
     {
       int? artistId = await context
         .Artists
@@ -65,31 +76,47 @@
       return true;
     }
 
-    public async Task<GetArtistResponse> GetArtistDetailsAsync(string artistSlug)
+    public async Task<ArtistViewModel> GetArtistDetailsAsync(
+      string artistSlug)
     {
-      int artistId = await GetArtistIdAsync(artistSlug);
+      ArtistViewModel artistViewModel = new ArtistViewModel();
 
-      GetArtistResponse artist = await context
-        .Artists
-        .AsNoTracking()
-        .Where(x => x.Id == artistId)
-        .Select(x => new GetArtistResponse
-        {
-          Id = x.Id,
-          FirstName = textInfo.ToTitleCase(x.FirstName),
-          LastName = textInfo.ToTitleCase(x.LastName),
-          FullName = textInfo.ToTitleCase(x.FullName),
-          PrimarySlug = x.Slugs.Single(y => !y.IsDeleted && y.IsPrimary).Name,
-          HasImage = x.Image != null,
-          CreatedAt = x.CreatedAt,
-          ModifiedAt = x.ModifiedAt,
-        })
-        .SingleOrDefaultAsync();
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
 
-      return artist;
+      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, images.data as image_data, a.created_at, a.modified_at from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id left join artist_images as images on images.artist_id = a.id where aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true order by a.first_name asc;";
+
+      await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+      command.Parameters.AddWithValue("@artist_slug", artistSlug);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        int artistId = Convert.ToInt32(reader[0]);
+        string firstName = textInfo.ToTitleCase(Convert.ToString(reader[1]));
+        string lastName = textInfo.ToTitleCase(Convert.ToString(reader[2]));
+        string artistPrimarySlug = Convert.ToString(reader[3]);
+        bool artistHasImage = reader[4] != System.DBNull.Value;
+        DateTime createdAt = Convert.ToDateTime(reader[5]);
+        DateTime? modifiedAt = reader[6] == System.DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
+
+        artistViewModel.Id = artistId;
+        artistViewModel.FirstName = firstName;
+        artistViewModel.LastName = lastName;
+        artistViewModel.FullName = $"{firstName} {lastName}";
+        artistViewModel.PrimarySlug = artistPrimarySlug;
+        artistViewModel.HasImage = artistHasImage;
+        artistViewModel.CreatedAt = createdAt;
+        artistViewModel.ModifiedAt = modifiedAt;
+      }
+
+      return artistViewModel;
     }
 
-    public async Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request)
+    public async Task<CreateNewArtistResponse> CreateNewArtistAsync(
+      CreateNewArtistRequest request)
     {
       string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
 
@@ -123,7 +150,10 @@
       return response;
     }
 
-    public async Task<PagedArtistSearchResponse> SearchArtistsAsync(string artistName, int offset, int limit)
+    public async Task<PagedArtistSearchResponse> SearchArtistsAsync(
+      string artistName,
+      int offset,
+      int limit)
     {
       int totalRecords;
       List<ArtistSearchResponse> artists;

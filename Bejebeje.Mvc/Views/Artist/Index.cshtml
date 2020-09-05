@@ -1,8 +1,16 @@
-﻿@model IEnumerable<Bejebeje.Models.Lyric.LyricCardViewModel>
+﻿@model Bejebeje.Models.Artist.ArtistLyricsViewModel
 
-<ul>
-  @foreach (var lyricCardViewModel in Model)
+@{
+  ViewData["Title"] = $"{Model.Artist.FullName} lyrics";
+  ViewData["Description"] = $"{Model.Artist.FullName} lyrics. Gotinê stranê {Model.Artist.FullName}. {Model.Artist.FullName} sözleri";
+}
+
+
+<ul class="lcards">
+  @foreach (var lyricCardViewModel in Model.Lyrics)
   {
-    <li>@lyricCardViewModel.Title</li>
+    <li class="lcard">
+      <h4>@lyricCardViewModel.Title</h4>
+    </li>
   }
 </ul>

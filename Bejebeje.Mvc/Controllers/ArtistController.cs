@@ -1,9 +1,9 @@
-﻿using Bejebeje.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace Bejebeje.Mvc.Controllers
+﻿namespace Bejebeje.Mvc.Controllers
 {
+    using Bejebeje.Services.Services.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
   public class ArtistController : Controller
   {
     private readonly ILyricsService lyricsService;

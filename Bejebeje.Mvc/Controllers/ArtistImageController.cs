@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using Bejebeje.Common.Exceptions;
-using Bejebeje.Common.Extensions;
-using Bejebeje.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace Bejebeje.Mvc.Controllers
+﻿namespace Bejebeje.Mvc.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using Bejebeje.Common.Exceptions;
+    using Bejebeje.Common.Extensions;
+    using Bejebeje.Services.Services.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
   public class ArtistImageController : Controller
   {
     private readonly IImagesService imagesService;

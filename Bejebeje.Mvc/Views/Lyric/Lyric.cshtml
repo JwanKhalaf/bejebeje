@@ -1,5 +1,27 @@
-﻿@model Bejebeje.Models.Lyric.LyricViewModel
+﻿@model Bejebeje.Models.Lyric.LyricDetailsViewModel
 
-@Model.Title
-<br />
-@Model.Body
+<div class="lyric_details">
+
+  @if (Model.Artist.HasImage)
+  {
+    <img class="card__image"
+         src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = Model.Artist.PrimarySlug})"
+         width="120"
+         height="120"
+         alt="artist image" />
+  }
+  else
+  {
+    <img class="card__image"
+         src="https://picsum.photos/80/80"
+         width="120"
+         height="120"
+         alt="artist image" />
+  }
+
+  <h1>@Model.Title</h1>
+
+  <div class="lyric-body">
+    @Model.Body
+  </div>
+</div>

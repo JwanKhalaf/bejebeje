@@ -1,19 +1,18 @@
-﻿using Bejebeje.Services.Config;
-
-namespace Bejebeje.Api
+﻿namespace Bejebeje.Api
 {
-  using Bejebeje.DataAccess.Configuration;
-  using Bejebeje.DataAccess.Context;
-  using Bejebeje.Services.Services;
-  using Bejebeje.Services.Services.Interfaces;
-  using Microsoft.AspNetCore.Builder;
-  using Microsoft.AspNetCore.Hosting;
-  using Microsoft.AspNetCore.Mvc;
-  using Microsoft.EntityFrameworkCore;
-  using Microsoft.Extensions.Configuration;
-  using Microsoft.Extensions.DependencyInjection;
-  using Microsoft.Extensions.Hosting;
-  using Microsoft.OpenApi.Models;
+    using Bejebeje.DataAccess.Configuration;
+    using Bejebeje.DataAccess.Context;
+    using Bejebeje.Services.Config;
+    using Bejebeje.Services.Services;
+    using Bejebeje.Services.Services.Interfaces;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.OpenApi.Models;
 
   public class Startup
   {

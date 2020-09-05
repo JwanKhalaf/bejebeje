@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Bejebeje.Models.Lyric;
-
-namespace Bejebeje.Services.Services.Interfaces
+﻿namespace Bejebeje.Services.Services.Interfaces
 {
+  using System.Collections.Generic;
+  using System.Threading.Tasks;
+  using Bejebeje.Models.Artist;
+  using Bejebeje.Models.Lyric;
+
   public interface ILyricsService
   {
-    Task<IList<LyricCardViewModel>> GetLyricsAsync(
+    Task<ArtistLyricsViewModel> GetLyricsAsync(
       string artistSlug);
 
     Task<PagedLyricSearchResponse> SearchLyricsAsync(
@@ -14,7 +15,7 @@ namespace Bejebeje.Services.Services.Interfaces
       int offset,
       int limit);
 
-    Task<LyricViewModel> GetSingleLyricAsync(
+    Task<LyricDetailsViewModel> GetSingleLyricAsync(
       string artistSlug,
       string lyricSlug);
 

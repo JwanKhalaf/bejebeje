@@ -8,7 +8,8 @@
 
   public class ArtistSlugsService : IArtistSlugsService
   {
-    public string GetArtistSlug(string name)
+    public string GetArtistSlug(
+      string name)
     {
       if (string.IsNullOrEmpty(name))
       {
@@ -20,7 +21,8 @@
       return artistFullNameLowercase.NormalizeStringForUrl();
     }
 
-    public ArtistSlug BuildArtistSlug(string artistFullName)
+    public ArtistSlug BuildArtistSlug(
+      string artistFullName)
     {
       if (string.IsNullOrEmpty(artistFullName))
       {

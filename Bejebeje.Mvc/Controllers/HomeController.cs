@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
-using Bejebeje.Models.Lyric;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Bejebeje.Mvc.Models;
-using Bejebeje.Services.Services.Interfaces;
-
-namespace Bejebeje.Mvc.Controllers
+﻿namespace Bejebeje.Mvc.Controllers
 {
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+    using Bejebeje.Models.Lyric;
+    using Bejebeje.Mvc.Models;
+    using Bejebeje.Services.Services.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
   public class HomeController : Controller
   {
     private readonly ILyricsService lyricsService;

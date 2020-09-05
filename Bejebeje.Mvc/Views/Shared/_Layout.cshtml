@@ -4,41 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@ViewData["Title"] | Bêjebêje</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="~/css/site.css" />
+  <meta name="description" content="@ViewData["Description"]">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-VhBcF/php0Z/P5ZxlxaEx1GwqTQVIBu4G4giRWxTKOCjTxsPFETUDdVL5B6vYvOt" crossorigin="anonymous">
+  <link rel="stylesheet" href="~/css/styles.css" />
 </head>
 
 <body>
   @RenderBody()
 
-  <nav>
-    <a asp-controller="Home" asp-action="Index" class="link">
-      <svg viewBox="0 0 20 20" fill="currentColor" className="home w-6 h-6">
-        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-      </svg>
+  <nav class="nav">
+    <a asp-controller="Home" asp-action="Index" class="link home icon">
       Home
     </a>
 
-    <a asp-controller="Search" asp-action="Index" class="link">
-      <svg viewBox="0 0 20 20" fill="currentColor" className="search w-6 h-6">
-        <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
-      </svg>
+    @*<a asp-controller="Search" asp-action="Index" class="link search icon">
       Search
     </a>
 
-    <a asp-controller="Artist" asp-action="Index" class="link">
-      <svg viewBox="0 0 20 20" fill="currentColor" className="archive w-6 h-6">
-        <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"/><path fillRule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clipRule="evenodd"/>
-      </svg>
+    <a asp-controller="Artist" asp-action="Index" class="link archive icon">
       Archive
     </a>
 
-    <a asp-controller="Account" asp-action="Index" class="link">
-      <svg viewBox="0 0 20 20" fill="currentColor" className="user w-6 h-6">
-        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/>
-      </svg>
+    <a asp-controller="Account" asp-action="Index" class="link account icon">
       Account
-    </a>
+    </a>*@
   </nav>
 
   <script src="~/js/site.js" asp-append-version="true"></script>

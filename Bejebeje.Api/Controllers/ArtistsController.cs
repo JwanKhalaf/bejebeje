@@ -39,42 +39,42 @@
       return Ok(artistsResponse);
     }
 
-    [Route("[controller]/{artistSlug}")]
-    [HttpGet]
-    public async Task<IActionResult> GetArtistDetails(string artistSlug)
-    {
-      try
-      {
-        GetArtistResponse response = await artistsService
-          .GetArtistDetailsAsync(artistSlug)
-          .ConfigureAwait(false);
+    //[Route("[controller]/{artistSlug}")]
+    //[HttpGet]
+    //public async Task<IActionResult> GetArtistDetails(string artistSlug)
+    //{
+    //  try
+    //  {
+    //    GetArtistResponse response = await artistsService
+    //      .GetArtistDetailsAsync(artistSlug)
+    //      .ConfigureAwait(false);
 
-        return Ok(response);
-      }
-      catch (ArtistNotFoundException exception)
-      {
-        logger.LogError($"The requested artist was not found. {exception.ToLogData()}");
+    //    return Ok(response);
+    //  }
+    //  catch (ArtistNotFoundException exception)
+    //  {
+    //    logger.LogError($"The requested artist was not found. {exception.ToLogData()}");
 
-        return NotFound();
-      }
-    }
+    //    return NotFound();
+    //  }
+    //}
 
-    [Route("[controller]")]
-    [HttpPost]
-    public async Task<IActionResult> AddNewArtist(CreateNewArtistRequest request)
-    {
-      try
-      {
-        CreateNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
+    //[Route("[controller]")]
+    //[HttpPost]
+    //public async Task<IActionResult> AddNewArtist(CreateNewArtistRequest request)
+    //{
+    //  try
+    //  {
+    //    CreateNewArtistResponse response = await artistsService.CreateNewArtistAsync(request);
 
-        return CreatedAtAction(nameof(GetArtistDetails), new { artistSlug = response.Slug }, response);
-      }
-      catch (ArtistExistsException exception)
-      {
-        logger.LogError(exception, $"The artist already exists.");
+    //    return CreatedAtAction(nameof(GetArtistDetails), new { artistSlug = response.Slug }, response);
+    //  }
+    //  catch (ArtistExistsException exception)
+    //  {
+    //    logger.LogError(exception, $"The artist already exists.");
 
-        return BadRequest();
-      }
-    }
+    //    return BadRequest();
+    //  }
+    //}
   }
 }

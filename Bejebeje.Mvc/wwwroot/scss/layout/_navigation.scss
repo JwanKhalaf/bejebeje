@@ -1,0 +1,53 @@
+﻿.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.25em;
+  border-top: 1px solid rgba($white, .25);
+  background-color: darken($color-dark, 20%);
+
+  .link {
+    color: rgba($white, 0.5);
+    font-family: $font-sans-serif;
+    font-size: 0.65rem;
+    text-align: center;
+  }
+
+  .home::before {
+    content: "\f015";
+    display: block;
+    font-size: 1.6rem;
+  }
+
+  .search::before {
+    content: "\f002";
+    display: block;
+    font-size: 1.6rem;
+  }
+
+  .archive::before {
+    content: "\f8a0";
+    display: block;
+    font-size: 1.6rem;
+  }
+
+  .account::before {
+    content: "\f007";
+    display: block;
+    font-size: 1.6rem;
+  }
+}
+
+.icon::before {
+  font-family: 'Font Awesome 5 Pro';
+  font-weight: 300;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  margin-bottom: 0.4em;
+  text-align: center;
+}

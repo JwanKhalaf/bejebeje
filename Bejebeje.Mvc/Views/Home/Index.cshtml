@@ -9,19 +9,40 @@
   <h1>Home</h1>
 </header>
 
-<div class="section">
-  <h2 class="section__title">New this week</h2>
+<section class="section">
+  <h2 class="section__title">Recent</h2>
 
-  <ul class="recent">
+  <ul class="section__content">
     @foreach (LyricItemViewModel item in Model.Lyrics)
     {
-      <li class="card">
-        <img class="card__image" src="@Url.Action("GetArtistImage", "ArtistImage", new { artistSlug = item.ArtistPrimarySlug })" width="80" height="80" alt="artist image" />
-        <div class="card__meta">
-          <h2 class="card__title">@item.Title</h2>
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug"><h3 class="card__artist-name">@item.ArtistName</h3></a>
+      <li class="section__content-item">
+        <div class="c-recent-lyric">
+          <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug" asp-route-lyricSlug="@item.LyricPrimarySlug">
+            <h2 class="c-recent-lyric__lyric">@item.Title</h2>
+
+            @if (item.ArtistHasImage)
+            {
+              <img class="c-recent-lyric__image"
+                   src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = item.ArtistPrimarySlug})"
+                   width="80"
+                   height="80"
+                   alt="artist image" />
+            }
+            else
+            {
+              <img class="c-recent-lyric__image"
+                   src="https://picsum.photos/80/80"
+                   width="80"
+                   height="80"
+                   alt="artist image" />
+            }
+          </a>
+
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug">
+            <h3 class="c-recent-lyric__artist">@item.ArtistName</h3>
+          </a>
         </div>
       </li>
     }
   </ul>
-</div>
+</section>

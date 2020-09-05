@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Bejebeje.Models.Lyric;
-using Bejebeje.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-
-namespace Bejebeje.Mvc.Controllers
+﻿namespace Bejebeje.Mvc.Controllers
 {
+  using System.Collections.Generic;
+  using System.Threading.Tasks;
+  using Bejebeje.Models.Artist;
+  using Bejebeje.Models.Lyric;
+  using Bejebeje.Services.Services.Interfaces;
+  using Microsoft.AspNetCore.Mvc;
+  using Microsoft.Extensions.Logging;
+
   public class LyricController : Controller
   {
     private readonly ILyricsService lyricsService;
@@ -25,7 +26,7 @@ namespace Bejebeje.Mvc.Controllers
     public async Task<IActionResult> ArtistLyrics(
       string artistSlug)
     {
-      IList<LyricCardViewModel> viewModel = await lyricsService
+      ArtistLyricsViewModel viewModel = await this.lyricsService
         .GetLyricsAsync(artistSlug);
 
       return View(viewModel);
@@ -36,10 +37,10 @@ namespace Bejebeje.Mvc.Controllers
       string artistSlug,
       string lyricSlug)
     {
-      LyricViewModel viewModel = await lyricsService
+      LyricDetailsViewModel viewModel = await this.lyricsService
         .GetSingleLyricAsync(artistSlug, lyricSlug);
 
-      return View(viewModel);
+      return this.View(viewModel);
     }
   }
 }
