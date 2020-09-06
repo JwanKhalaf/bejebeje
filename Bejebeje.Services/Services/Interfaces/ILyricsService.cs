@@ -2,14 +2,22 @@
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
+  using Bejebeje.Models.Artist;
   using Bejebeje.Models.Lyric;
+  using Models.Search;
 
   public interface ILyricsService
   {
-    Task<IList<LyricCardViewModel>> GetLyricsAsync(string artistSlug);
+    Task<ArtistLyricsViewModel> GetLyricsAsync(
+      string artistSlug);
 
-    Task<PagedLyricSearchResponse> SearchLyricsAsync(string lyricName, int offset, int limit);
+    Task<IEnumerable<SearchLyricResultViewModel>> SearchLyricsAsync(
+      string title);
 
-    Task<LyricResponse> GetSingleLyricAsync(string artistSlug, string lyricSlug);
+    Task<LyricDetailsViewModel> GetSingleLyricAsync(
+      string artistSlug,
+      string lyricSlug);
+
+    Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync();
   }
 }

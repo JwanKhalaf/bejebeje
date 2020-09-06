@@ -1,0 +1,20 @@
+﻿.section {
+  padding: 0 $padding-standard;
+
+  &__title {
+    font-family: $font-sans-serif;
+    font-size: 2rem;
+    color: $color-brand;
+    margin-bottom: 0.8em;
+  }
+
+  &__content {
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+
+  &__content-item {
+    margin-right: 1em;
+  }
+}

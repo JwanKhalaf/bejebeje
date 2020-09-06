@@ -10,11 +10,11 @@ WORKDIR /app
 COPY . ./
 
 # run unit tests within the solution.
-RUN dotnet test Bejebeje.Api.sln
+# RUN dotnet test Bejebeje.Api.sln
 
 # again, on the container (we are in /app folder)
 # we now publish the project into a folder called 'out'.
-RUN dotnet publish Bejebeje.Api/Bejebeje.Api.csproj -c Release -o out
+RUN dotnet publish Bejebeje.Mvc/Bejebeje.Mvc.csproj -c Release -o out
 
 # set base image as the dotnet 3.1 runtime.
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
@@ -31,4 +31,4 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # set the entry point into the application.
-ENTRYPOINT ["dotnet", "Bejebeje.Api.dll", "-seed"]
+ENTRYPOINT ["dotnet", "Bejebeje.Mvc.dll"]

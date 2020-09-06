@@ -1,20 +1,27 @@
 ﻿namespace Bejebeje.Services.Services
 {
+  using System;
   using System.Collections.Generic;
   using System.Globalization;
   using System.Linq;
   using System.Threading.Tasks;
-  using Bejebeje.Common.Exceptions;
   using Bejebeje.Common.Extensions;
   using Bejebeje.DataAccess.Context;
+  using Bejebeje.Models.Artist;
   using Bejebeje.Models.Lyric;
   using Bejebeje.Models.Paging;
+  using Bejebeje.Services.Config;
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
+  using Microsoft.Extensions.Options;
+  using Models.Search;
+  using Npgsql;
 
   public class LyricsService : ILyricsService
   {
+    private readonly DatabaseOptions databaseOptions;
+
     private readonly IArtistsService artistsService;
 
     private readonly BbContext context;
@@ -22,119 +29,162 @@
     private readonly TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public LyricsService(
+      IOptionsMonitor<DatabaseOptions> optionsAccessor,
       IArtistsService artistsService,
       BbContext context)
     {
+      databaseOptions = optionsAccessor.CurrentValue;
       this.artistsService = artistsService;
       this.context = context;
     }
 
-    public async Task<IList<LyricCardViewModel>> GetLyricsAsync(string artistSlug)
+    public async Task<ArtistLyricsViewModel> GetLyricsAsync(
+      string artistSlug)
     {
-      int artistId = await artistsService.GetArtistIdAsync(artistSlug);
+      ArtistLyricsViewModel viewModel = new ArtistLyricsViewModel();
 
-      List<LyricCardViewModel> lyrics = await context
-        .Lyrics
-        .AsNoTracking()
-        .Where(l => l.ArtistId == artistId && l.IsApproved && !l.IsDeleted)
-        .OrderBy(l => l.Title)
-        .Select(l => new LyricCardViewModel
-        {
-          Title = l.Title,
-          Slug = l.Slugs.Single(s => s.IsPrimary).Name,
-        })
-        .ToListAsync();
+      ArtistViewModel artistViewModel = await artistsService
+        .GetArtistDetailsAsync(artistSlug);
+
+      string sqlCommand = "select l.title as lyric_title, lslugs.name as lyric_slug from lyrics as l inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_id = @artist_id and l.is_deleted = false and l.is_approved = true and lslugs.is_primary = true order by l.title asc;";
+
+      List<LyricCardViewModel> lyricCardViewModels = new List<LyricCardViewModel>();
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+      command.Parameters.AddWithValue("@artist_id", artistViewModel.Id);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      string artistFullName = string.Empty;
+
+      while (await reader.ReadAsync())
+      {
+        LyricCardViewModel lyricCardViewModel = new LyricCardViewModel();
+
+        string lyricTitle = Convert.ToString(reader[0]);
+        string lyricSlug = Convert.ToString(reader[1]);
+
+        lyricCardViewModel.Title = lyricTitle;
+        lyricCardViewModel.Slug = lyricSlug;
+
+        lyricCardViewModels.Add(lyricCardViewModel);
+      }
+
+      viewModel.Artist = artistViewModel;
+      viewModel.Lyrics = lyricCardViewModels;
+
+      return viewModel;
+    }
+
+    public async Task<IEnumerable<SearchLyricResultViewModel>> SearchLyricsAsync(
+      string title)
+    {
+      List<SearchLyricResultViewModel> lyrics = new List<SearchLyricResultViewModel>();
+
+      string lyricTitleStandardized = title.NormalizeStringForUrl();
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title as lyric_title, ls.name as lyric_primary_slug, a.first_name artist_first_name, a.last_name artist_last_name, \"as\".name artist_primary_slug from lyrics l inner join lyric_slugs ls on ls.lyric_id = l.id inner join artists a on l.artist_id = a.id inner join artist_slugs \"as\" on a.id = \"as\".artist_id where l.is_deleted = false and l.is_approved = true and \"as\".is_primary = true and ls.name like @lyric_title;", connection);
+
+      command.Parameters.AddWithValue("@lyric_title", $"%{lyricTitleStandardized}%");
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        SearchLyricResultViewModel lyric = new SearchLyricResultViewModel();
+        string lyricTitle = Convert.ToString(reader[0]);
+        string lyricPrimarySlug = Convert.ToString(reader[1]);
+        string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[2]) + " " + Convert.ToString(reader[3]));
+        string artistPrimarySlug = Convert.ToString(reader[4]);
+
+        lyric.Title = lyricTitle;
+        lyric.LyricPrimarySlug = lyricPrimarySlug;
+        lyric.ArtistFullName = artistFullName;
+        lyric.ArtistSlug = artistPrimarySlug;
+
+        lyrics.Add(lyric);
+      }
 
       return lyrics;
     }
 
-    public async Task<PagedLyricSearchResponse> SearchLyricsAsync(string title, int offset, int limit)
+    public async Task<LyricDetailsViewModel> GetSingleLyricAsync(
+      string artistSlug,
+      string lyricSlug)
     {
-      PagedLyricSearchResponse response = new PagedLyricSearchResponse();
+      LyricDetailsViewModel viewModel = new LyricDetailsViewModel();
 
-      if (string.IsNullOrEmpty(title))
+      ArtistViewModel artistViewModel = await artistsService
+        .GetArtistDetailsAsync(artistSlug);
+
+      viewModel.Artist = artistViewModel;
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title, l.body, l.created_at, l.modified_at from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id where ls.name = @lyric_slug and artist_slugs.name = @artist_slug;", connection);
+
+      command.Parameters.AddWithValue("@artist_slug", artistSlug);
+      command.Parameters.AddWithValue("@lyric_slug", lyricSlug);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
       {
-        PagingResponse paging = new PagingResponse();
-        paging.Offset = offset;
-        paging.Limit = limit;
+        string lyricTitle = Convert.ToString(reader[0]).Trim();
+        string lyricBody = Convert.ToString(reader[1]).Trim();
+        DateTime lyricCreatedAt = Convert.ToDateTime(reader[2]);
+        DateTime? lyricModifiedAt = reader[3] == System.DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[3]);
 
-        response.Paging = paging;
-
-        return response;
+        viewModel.Title = lyricTitle;
+        viewModel.Body = lyricBody;
+        viewModel.CreatedAt = lyricCreatedAt;
+        viewModel.ModifiedAt = lyricModifiedAt;
       }
 
-      string titleStandardized = title.NormalizeStringForUrl();
-
-      int totalRecords = await context
-        .Lyrics
-        .AsNoTracking()
-        .Where(x =>
-          (EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%")
-          || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
-          && x.IsApproved
-          && !x.IsDeleted)
-        .CountAsync();
-
-      List<LyricSearchResponse> matchedLyrics = await context
-        .Lyrics
-        .Include(l => l.Artist)
-        .Include(l => l.Slugs)
-        .AsNoTracking()
-        .Where(x =>
-          (EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%")
-          || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
-          && x.IsApproved
-          && !x.IsDeleted)
-        .OrderBy(l => l.Title)
-        .Paging(offset, limit)
-        .Select(x => new LyricSearchResponse
-        {
-          Title = x.Title,
-          PrimarySlug = x.Slugs.Single(s => s.IsPrimary).Name,
-          Artist = new LyricSearchResponseArtist
-          {
-            FullName = textInfo.ToTitleCase(x.Artist.FullName),
-            PrimarySlug = x.Artist.Slugs.Single(s => s.IsPrimary).Name,
-            HasImage = x.Artist.Image != null,
-          },
-        })
-        .ToListAsync();
-
-      response.Lyrics = matchedLyrics;
-      response.Paging = new PagingResponse
-      {
-        Offset = offset,
-        Limit = limit,
-        Total = totalRecords,
-      };
-
-      return response;
+      return viewModel;
     }
 
-    public async Task<LyricResponse> GetSingleLyricAsync(string artistSlug, string lyricSlug)
+    public async Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync()
     {
-      int artistId = await artistsService.GetArtistIdAsync(artistSlug);
+      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = new LyricRecentSubmissionViewModel();
+      List<LyricItemViewModel> lyricItemViewModels = new List<LyricItemViewModel>();
 
-      LyricResponse lyric = await context
-        .Lyrics
-        .AsNoTracking()
-        .Where(l => l.ArtistId == artistId && l.Slugs.Any(s => s.Name == lyricSlug.Standardize()))
-        .Select(l => new LyricResponse
-        {
-          Title = l.Title,
-          Body = l.Body,
-          AuthorSlug = l.Author != null ? l.Author.Slugs.Where(s => s.IsPrimary).SingleOrDefault().Name : string.Empty,
-          CreatedAt = l.CreatedAt,
-          ModifiedAt = l.ModifiedAt,
-        })
-        .SingleOrDefaultAsync();
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
 
-      if (lyric == null)
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title as lyric_title, lslugs.name as primary_lyric_slug, a.first_name, a.last_name, artist_slugs.name as artist_slug, ai.id as artist_image_id from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id left join artist_images as ai on ai.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_slugs.is_primary = true and lslugs.is_primary = true order by l.created_at desc limit 10;", connection);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
       {
-        throw new LyricNotFoundException(artistSlug, lyricSlug);
+        LyricItemViewModel lyricItemViewModel = new LyricItemViewModel();
+        string lyricTitle = Convert.ToString(reader[0]).Truncate(10) + "…";
+        string lyricPrimarySlug = Convert.ToString(reader[1]);
+        string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[2]) + " " + Convert.ToString(reader[3]));
+        string artistPrimarySlug = Convert.ToString(reader[4]);
+        bool artistHasImage = reader[5] != System.DBNull.Value;
+
+        lyricItemViewModel.Title = lyricTitle;
+        lyricItemViewModel.LyricPrimarySlug = lyricPrimarySlug;
+        lyricItemViewModel.ArtistName = artistFullName;
+        lyricItemViewModel.ArtistPrimarySlug = artistPrimarySlug;
+        lyricItemViewModel.ArtistHasImage = artistHasImage;
+
+        lyricItemViewModels.Add(lyricItemViewModel);
       }
 
-      return lyric;
+      lyricRecentSubmissionViewModel.Lyrics = lyricItemViewModels;
+
+      return lyricRecentSubmissionViewModel;
     }
   }
 }

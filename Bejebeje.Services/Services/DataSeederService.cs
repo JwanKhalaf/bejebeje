@@ -16,7 +16,8 @@
 
     private BbContext context;
 
-    public DataSeederService(BbContext context)
+    public DataSeederService(
+      BbContext context)
     {
       this.context = context;
     }
@@ -767,7 +768,8 @@ All I can do is wish you well",
       }
     }
 
-    private ArtistImage GetArtistImage(string imageName)
+    private ArtistImage GetArtistImage(
+      string imageName)
     {
       string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
       string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
@@ -788,7 +790,8 @@ All I can do is wish you well",
       return null;
     }
 
-    private AuthorImage GetAuthorImage(string imageName)
+    private AuthorImage GetAuthorImage(
+      string imageName)
     {
       string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
       string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
