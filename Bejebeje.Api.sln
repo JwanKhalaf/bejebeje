@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28714.193
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Api", "Bejebeje.Api\Bejebeje.Api.csproj", "{119C3D0F-0652-4ED5-BD2F-1F1A4816C8BB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Domain", "Bejebeje.Domain\Bejebeje.Domain.csproj", "{E4836350-291C-4801-9CFA-A011A2985310}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Services", "Bejebeje.Services\Bejebeje.Services.csproj", "{B591ED41-877E-4320-B204-718E8A9B844A}"
@@ -17,11 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.DataAccess", "Beje
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{827542D6-C0E1-440C-8B6E-79D39B4C5AF9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Api.Tests", "Bejebeje.Api.Tests\Bejebeje.Api.Tests.csproj", "{93E83E4A-CB2F-4071-8E45-34D117B281C1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Services.Tests", "Bejebeje.Services.Tests\Bejebeje.Services.Tests.csproj", "{70E06816-AD45-46C2-BD21-86C957837E7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bejebeje.Mvc", "Bejebeje.Mvc\Bejebeje.Mvc.csproj", "{64B58334-24C1-4FB8-92F6-ED3E321656DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Mvc", "Bejebeje.Mvc\Bejebeje.Mvc.csproj", "{64B58334-24C1-4FB8-92F6-ED3E321656DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{119C3D0F-0652-4ED5-BD2F-1F1A4816C8BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{119C3D0F-0652-4ED5-BD2F-1F1A4816C8BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{119C3D0F-0652-4ED5-BD2F-1F1A4816C8BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{119C3D0F-0652-4ED5-BD2F-1F1A4816C8BB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E4836350-291C-4801-9CFA-A011A2985310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E4836350-291C-4801-9CFA-A011A2985310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4836350-291C-4801-9CFA-A011A2985310}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,10 +45,6 @@ Global
 		{0E7FB9A2-E739-4975-AAF3-BA33CC86EF52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E7FB9A2-E739-4975-AAF3-BA33CC86EF52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E7FB9A2-E739-4975-AAF3-BA33CC86EF52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93E83E4A-CB2F-4071-8E45-34D117B281C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93E83E4A-CB2F-4071-8E45-34D117B281C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93E83E4A-CB2F-4071-8E45-34D117B281C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93E83E4A-CB2F-4071-8E45-34D117B281C1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{70E06816-AD45-46C2-BD21-86C957837E7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70E06816-AD45-46C2-BD21-86C957837E7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70E06816-AD45-46C2-BD21-86C957837E7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,7 +58,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{93E83E4A-CB2F-4071-8E45-34D117B281C1} = {827542D6-C0E1-440C-8B6E-79D39B4C5AF9}
 		{70E06816-AD45-46C2-BD21-86C957837E7B} = {827542D6-C0E1-440C-8B6E-79D39B4C5AF9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
