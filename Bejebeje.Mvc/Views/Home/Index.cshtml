@@ -24,7 +24,7 @@
                    src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = item.ArtistPrimarySlug})"
                    width="80"
                    height="80"
-                   alt="artist image" />
+                   alt="@item.ArtistName image" />
             }
             else
             {
@@ -32,7 +32,7 @@
                    src="https://picsum.photos/80/80"
                    width="80"
                    height="80"
-                   alt="artist image" />
+                   alt="artist placeholder image" />
             }
 
             <h2 class="recent__lyric-title">@item.Title</h2>

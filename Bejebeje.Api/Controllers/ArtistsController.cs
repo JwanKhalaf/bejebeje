@@ -25,19 +25,19 @@
       this.logger = logger;
     }
 
-    [Route("[controller]")]
-    [HttpGet]
-    public async Task<IActionResult> SearchArtists(
-      [FromQuery] string name,
-      int offset = 0,
-      int limit = 10)
-    {
-      PagedArtistSearchResponse artistsResponse = await artistsService
-        .SearchArtistsAsync(name, offset, limit)
-        .ConfigureAwait(false);
+    //[Route("[controller]")]
+    //[HttpGet]
+    //public async Task<IActionResult> SearchArtists(
+    //  [FromQuery] string name,
+    //  int offset = 0,
+    //  int limit = 10)
+    //{
+    //  PagedArtistSearchResponse artistsResponse = await artistsService
+    //    .SearchArtistsAsync(name, offset, limit)
+    //    .ConfigureAwait(false);
 
-      return Ok(artistsResponse);
-    }
+    //  return Ok(artistsResponse);
+    //}
 
     //[Route("[controller]/{artistSlug}")]
     //[HttpGet]

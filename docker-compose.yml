@@ -1,13 +1,13 @@
 version: "3.7"
 
 services:
-  bejebeje-api:
+  bejebeje-mvc:
     build:
       context: .
-      dockerfile: ./Bejebeje.Api/Dockerfile
+      dockerfile: ./Bejebeje.Mvc/Dockerfile
       labels:
-        com.bejebeje.description: "Bejebeje's API"
-    image: bejebeje-api:latest
+        com.bejebeje.description: "Bejebeje MVC"
+    image: bejebeje-mvc:latest
     ports:
       - "5010:5005"
     env_file:

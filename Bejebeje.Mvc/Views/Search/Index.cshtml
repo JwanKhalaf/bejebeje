@@ -9,7 +9,7 @@
   <h1>Search</h1>
 </header>
 
-<div class="search">
+<div class="search margin-l">
   <form asp-controller="Search" asp-action="Index" method="post">
     <input asp-for="@Model.SearchTerm" class="search__input" placeholder="artist name or lyric title" />
     <input type="submit" value="Search" class="search__button" />
@@ -19,6 +19,40 @@
 <div class="results">
   @if (Model.Lyrics.Any())
   {
+    <div class="results__wrap">
+      <div class="results__heading">
+        <h2>Artists</h2>
+      </div>
+
+      <ul class="results__artists">
+        @foreach (var item in Model.Artists)
+        {
+          <li class="results__artist-item">
+            @if (item.HasImage)
+            {
+              <img class="results__artist-image"
+                   src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = item.PrimarySlug})"
+                   width="60"
+                   height="60"
+                   alt="@item.Name image" />
+            }
+            else
+            {
+              <img class="results__artist-image"
+                   src="https://picsum.photos/80/80"
+                   width="60"
+                   height="60"
+                   alt="artist placeholder image" />
+            }
+
+            <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug" class="results__artist-link">
+              @item.Name
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+
     <div class="results__wrap">
       <div class="results__heading">
         <h2>Lyrics</h2>

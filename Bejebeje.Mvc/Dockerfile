@@ -9,9 +9,6 @@ WORKDIR /app
 # we now copy all the files (from local machine) to /app (in the container).
 COPY . ./
 
-# run unit tests within the solution.
-# RUN dotnet test Bejebeje.Api.sln
-
 # again, on the container (we are in /app folder)
 # we now publish the project into a folder called 'out'.
 RUN dotnet publish Bejebeje.Mvc/Bejebeje.Mvc.csproj -c Release -o out

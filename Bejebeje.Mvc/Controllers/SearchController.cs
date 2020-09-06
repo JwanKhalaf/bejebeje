@@ -33,6 +33,9 @@
     {
       SearchViewModel viewModel = new SearchViewModel();
 
+      viewModel.Artists = await this.artistsService
+        .SearchArtistsAsync(searchTerm);
+
       viewModel.Lyrics = await this.lyricsService
         .SearchLyricsAsync(searchTerm);
 

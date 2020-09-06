@@ -5,9 +5,10 @@
   right: 0;
   display: flex;
   justify-content: space-between;
-  padding: 1.25em;
+  padding: 1rem 1.25rem;
   border-top: 1px solid rgba($white, .25);
-  background-color: darken($color-dark, 20%);
+  background-color: $color-dark;
+  /*filter: blur(10px);*/
 
   .link {
     color: rgba($white, 0.5);
@@ -16,25 +17,25 @@
     text-align: center;
   }
 
-  .home::before {
+  .home-icon::before {
     content: "\f015";
     display: block;
     font-size: 1.6rem;
   }
 
-  .search::before {
+  .search-icon::before {
     content: "\f002";
     display: block;
     font-size: 1.6rem;
   }
 
-  .archive::before {
+  .archive-icon::before {
     content: "\f8a0";
     display: block;
     font-size: 1.6rem;
   }
 
-  .account::before {
+  .account-icon::before {
     content: "\f007";
     display: block;
     font-size: 1.6rem;

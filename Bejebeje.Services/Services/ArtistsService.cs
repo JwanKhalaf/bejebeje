@@ -17,6 +17,7 @@
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Options;
+  using Models.Search;
   using NodaTime;
   using Npgsql;
 
@@ -150,76 +151,37 @@
       return response;
     }
 
-    public async Task<PagedArtistSearchResponse> SearchArtistsAsync(
-      string artistName,
-      int offset,
-      int limit)
+    public async Task<IEnumerable<SearchArtistResultViewModel>> SearchArtistsAsync(
+      string artistName)
     {
-      int totalRecords;
-      List<ArtistSearchResponse> artists;
+      string artistNameStandardized = artistName.NormalizeStringForUrl();
 
-      IOrderedQueryable<Artist> orderedArtists = context
-        .Artists
-        .AsNoTracking()
-        .OrderBy(x => x.FirstName);
+      List<SearchArtistResultViewModel> artists = new List<SearchArtistResultViewModel>();
 
-      if (!string.IsNullOrEmpty(artistName))
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand("select a.first_name, a.last_name, \"as\".name primary_slug, ai.id image_id from artists a inner join artist_slugs \"as\" on a.id = \"as\".artist_id left join artist_images ai on a.id = ai.artist_id where a.id in (select distinct artist_id from artist_slugs where name like @artist_name) and a.is_approved = true and a.is_deleted = false and \"as\".is_primary = true;", connection);
+
+      command.Parameters.AddWithValue("@artist_name", $"%{artistNameStandardized}%");
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
       {
-        string searchTermStandardized = artistName.NormalizeStringForUrl();
+        SearchArtistResultViewModel artist = new SearchArtistResultViewModel();
+        string name = textInfo.ToTitleCase(Convert.ToString(reader[0]) + " " + Convert.ToString(reader[1]));
+        string primarySlug = Convert.ToString(reader[2]);
+        bool hasImage = reader[3] != System.DBNull.Value;
 
-        totalRecords = await orderedArtists
-          .Where(x =>
-            (EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%")
-            || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
-            && x.IsApproved
-            && !x.IsDeleted)
-          .CountAsync();
+        artist.Name = name;
+        artist.PrimarySlug = primarySlug;
+        artist.HasImage = hasImage;
 
-        artists = await orderedArtists
-          .Where(x =>
-            (EF.Functions.Like(x.FullName.ToLower(), $"%{searchTermStandardized}%")
-            || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{searchTermStandardized}%")))
-            && x.IsApproved
-            && !x.IsDeleted)
-          .OrderBy(x => x.FirstName)
-          .Select(x => new ArtistSearchResponse
-          {
-            FullName = textInfo.ToTitleCase(x.FullName),
-            PrimarySlug = x.Slugs.Single(s => !s.IsDeleted && s.IsPrimary).Name,
-            HasImage = x.Image != null,
-          })
-          .ToListAsync();
-      }
-      else
-      {
-        totalRecords = await orderedArtists
-          .Where(x => x.IsApproved && !x.IsDeleted)
-          .CountAsync();
-
-        artists = await orderedArtists
-          .Where(x => x.IsApproved && !x.IsDeleted)
-          .Paging(offset, limit)
-          .Select(x => new ArtistSearchResponse
-          {
-            FullName = textInfo.ToTitleCase(x.FullName),
-            PrimarySlug = x.Slugs.Single(s => !s.IsDeleted && s.IsPrimary).Name,
-            HasImage = x.Image != null,
-          })
-          .ToListAsync();
+        artists.Add(artist);
       }
 
-      PagedArtistSearchResponse pagedArtistsResponse = new PagedArtistSearchResponse
-      {
-        Artists = artists,
-        Paging = new PagingResponse
-        {
-          Offset = offset,
-          Limit = limit,
-          Total = totalRecords,
-        },
-      };
-
-      return pagedArtistsResponse;
+      return artists;
     }
   }
 }

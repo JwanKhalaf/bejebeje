@@ -40,9 +40,8 @@
   font-family: $font-serif;
   font-size: 1.1rem;
   line-height: 1.65rem;
-  padding: 0 2.5rem;
+  padding: 0 2.5rem 6rem 2.5rem;
 }
-
 
 .search {
   padding: 0 $padding-standard;
@@ -77,8 +76,34 @@
 .results {
   padding: 0 $padding-standard;
 
+  &__wrap {
+    margin-bottom: 2rem;
+  }
+
   &__heading {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  &__artist-item {
+    display: flex;
+    margin-bottom: 0.7rem;
+    align-items: center;
+  }
+
+  &__artist-image {
+    border-radius: 5px;
+    margin-right: 1rem;
+  }
+
+  &__artist-link {
+    font-family: $font-sans-serif;
+    color: rgba($white, 0.75);
+    font-size: 1.3rem;
+    line-height: 1.95rem;
   }
 
   &__lyric-item {
