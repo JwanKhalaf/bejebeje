@@ -15,6 +15,7 @@
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Options;
+  using Models.Search;
   using Npgsql;
 
   public class LyricsService : ILyricsService
@@ -79,70 +80,39 @@
       return viewModel;
     }
 
-    public async Task<PagedLyricSearchResponse> SearchLyricsAsync(
-      string title,
-      int offset,
-      int limit)
+    public async Task<IEnumerable<SearchLyricResultViewModel>> SearchLyricsAsync(
+      string title)
     {
-      PagedLyricSearchResponse response = new PagedLyricSearchResponse();
+      List<SearchLyricResultViewModel> lyrics = new List<SearchLyricResultViewModel>();
 
-      if (string.IsNullOrEmpty(title))
+      string lyricTitleStandardized = title.NormalizeStringForUrl();
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.title as lyric_title, ls.name as lyric_primary_slug, a.first_name artist_first_name, a.last_name artist_last_name, \"as\".name artist_primary_slug from lyrics l inner join lyric_slugs ls on ls.lyric_id = l.id inner join artists a on l.artist_id = a.id inner join artist_slugs \"as\" on a.id = \"as\".artist_id where l.is_deleted = false and l.is_approved = true and \"as\".is_primary = true and ls.name like @lyric_title;", connection);
+
+      command.Parameters.AddWithValue("@lyric_title", $"%{lyricTitleStandardized}%");
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
       {
-        PagingResponse paging = new PagingResponse();
-        paging.Offset = offset;
-        paging.Limit = limit;
+        SearchLyricResultViewModel lyric = new SearchLyricResultViewModel();
+        string lyricTitle = Convert.ToString(reader[0]);
+        string lyricPrimarySlug = Convert.ToString(reader[1]);
+        string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[2]) + " " + Convert.ToString(reader[3]));
+        string artistPrimarySlug = Convert.ToString(reader[4]);
 
-        response.Paging = paging;
+        lyric.Title = lyricTitle;
+        lyric.LyricPrimarySlug = lyricPrimarySlug;
+        lyric.ArtistFullName = artistFullName;
+        lyric.ArtistSlug = artistPrimarySlug;
 
-        return response;
+        lyrics.Add(lyric);
       }
 
-      string titleStandardized = title.NormalizeStringForUrl();
-
-      int totalRecords = await context
-        .Lyrics
-        .AsNoTracking()
-        .Where(x =>
-          (EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%")
-          || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
-          && x.IsApproved
-          && !x.IsDeleted)
-        .CountAsync();
-
-      List<LyricSearchResponse> matchedLyrics = await context
-        .Lyrics
-        .Include(l => l.Artist)
-        .Include(l => l.Slugs)
-        .AsNoTracking()
-        .Where(x =>
-          (EF.Functions.Like(x.Title.ToLower(), $"%{titleStandardized}%")
-          || x.Slugs.Any(s => EF.Functions.Like(s.Name.ToLower(), $"%{titleStandardized}%")))
-          && x.IsApproved
-          && !x.IsDeleted)
-        .OrderBy(l => l.Title)
-        .Paging(offset, limit)
-        .Select(x => new LyricSearchResponse
-        {
-          Title = x.Title,
-          PrimarySlug = x.Slugs.Single(s => s.IsPrimary).Name,
-          Artist = new LyricSearchResponseArtist
-          {
-            FullName = textInfo.ToTitleCase(x.Artist.FullName),
-            PrimarySlug = x.Artist.Slugs.Single(s => s.IsPrimary).Name,
-            HasImage = x.Artist.Image != null,
-          },
-        })
-        .ToListAsync();
-
-      response.Lyrics = matchedLyrics;
-      response.Paging = new PagingResponse
-      {
-        Offset = offset,
-        Limit = limit,
-        Total = totalRecords,
-      };
-
-      return response;
+      return lyrics;
     }
 
     public async Task<LyricDetailsViewModel> GetSingleLyricAsync(

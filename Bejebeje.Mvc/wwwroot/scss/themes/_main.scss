@@ -42,3 +42,56 @@
   line-height: 1.65rem;
   padding: 0 2.5rem;
 }
+
+
+.search {
+  padding: 0 $padding-standard;
+  margin-bottom: 1.5rem;
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__input {
+    border-radius: 5px;
+    background-color: darken($color-dark, 10%);
+    color: rgba($white, 0.5);
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  &__button {
+    background-color: $color-brand;
+    color: $color-dark;
+    font-family: $font-sans-serif;
+    font-size: 1.3rem;
+    border-radius: 5px;
+    padding: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+}
+
+.results {
+  padding: 0 $padding-standard;
+
+  &__heading {
+    margin-bottom: 1rem;
+  }
+
+  &__lyric-item {
+    background-color: darken($color-dark, 20%);
+    margin-bottom: 1rem;
+    padding: $padding-standard;
+    border-radius: 5px;
+  }
+
+  &__lyric-link {
+    color: rgba($white, 0.75);
+    font-size: 1.1rem;
+    line-height: 1.65rem;
+    font-family: $font-serif;
+  }
+}

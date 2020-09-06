@@ -1,0 +1,39 @@
+﻿@model Bejebeje.Models.Search.SearchViewModel
+
+@{
+  ViewData["Title"] = "Search";
+  ViewData["Description"] = "Find lyrics for Kurdish artists";
+}
+
+<header>
+  <h1>Search</h1>
+</header>
+
+<div class="search">
+  <form asp-controller="Search" asp-action="Index" method="post">
+    <input asp-for="@Model.SearchTerm" class="search__input" placeholder="artist name or lyric title" />
+    <input type="submit" value="Search" class="search__button" />
+  </form>
+</div>
+
+<div class="results">
+  @if (Model.Lyrics.Any())
+  {
+    <div class="results__wrap">
+      <div class="results__heading">
+        <h2>Lyrics</h2>
+      </div>
+
+      <ul class="results__lyrics">
+        @foreach (var item in Model.Lyrics)
+        {
+          <li class="results__lyric-item">
+            <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistSlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="results__lyric-link">
+              @item.Title
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>

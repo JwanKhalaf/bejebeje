@@ -4,16 +4,15 @@
   using System.Threading.Tasks;
   using Bejebeje.Models.Artist;
   using Bejebeje.Models.Lyric;
+  using Models.Search;
 
   public interface ILyricsService
   {
     Task<ArtistLyricsViewModel> GetLyricsAsync(
       string artistSlug);
 
-    Task<PagedLyricSearchResponse> SearchLyricsAsync(
-      string lyricName,
-      int offset,
-      int limit);
+    Task<IEnumerable<SearchLyricResultViewModel>> SearchLyricsAsync(
+      string title);
 
     Task<LyricDetailsViewModel> GetSingleLyricAsync(
       string artistSlug,
