@@ -1,0 +1,16 @@
+﻿@model Bejebeje.Models.Artist.ArtistLyricsViewModel
+
+@{
+  ViewData["Title"] = $"{Model.Artist.FullName} lyrics";
+  ViewData["Description"] = $"{Model.Artist.FullName} lyrics. Gotinê stranê {Model.Artist.FullName}. {Model.Artist.FullName} sözleri";
+}
+
+
+<ul class="lcards">
+  @foreach (var lyricCardViewModel in Model.Lyrics)
+  {
+    <li class="lcard">
+      <h4>@lyricCardViewModel.Title</h4>
+    </li>
+  }
+</ul>

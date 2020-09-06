@@ -12,12 +12,14 @@
   {
     private readonly BbContext context;
 
-    public AuthorService(BbContext context)
+    public AuthorService(
+      BbContext context)
     {
       this.context = context;
     }
 
-    public async Task<AuthorDetailsResponse> GetAuthorDetailsAsync(string authorSlug)
+    public async Task<AuthorDetailsResponse> GetAuthorDetailsAsync(
+      string authorSlug)
     {
       var temp = context
         .Authors

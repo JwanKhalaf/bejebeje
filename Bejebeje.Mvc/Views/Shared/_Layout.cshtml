@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"] | Bêjebêje</title>
+  <meta name="description" content="@ViewData["Description"]">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-VhBcF/php0Z/P5ZxlxaEx1GwqTQVIBu4G4giRWxTKOCjTxsPFETUDdVL5B6vYvOt" crossorigin="anonymous">
+  <link rel="stylesheet" href="~/css/styles.css" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#41414d">
+  <meta name="msapplication-TileColor" content="#41414d">
+  <meta name="theme-color" content="#41414d">
+</head>
+
+<body>
+  @RenderBody()
+
+  <nav class="nav">
+    <a asp-controller="Home" asp-action="Index" class="link home-icon icon">
+      @*Home*@
+    </a>
+
+    <a asp-controller="Search" asp-action="Index" class="link search-icon icon">
+      @*Search*@
+    </a>
+
+    @*<a asp-controller="Artist" asp-action="Index" class="link archive-icon icon">
+        Archive
+      </a>
+
+      <a asp-controller="Account" asp-action="Index" class="link account-icon icon">
+        Account
+      </a>*@
+  </nav>
+
+  <script src="~/js/site.js" asp-append-version="true"></script>
+
+  @RenderSection("Scripts", required: false)
+</body>
+</html>

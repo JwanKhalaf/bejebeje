@@ -23,7 +23,8 @@
       this.context = context;
     }
 
-    public async Task<byte[]> GetArtistImageBytesAsync(string artistSlug)
+    public async Task<byte[]> GetArtistImageBytesAsync(
+      string artistSlug)
     {
       int artistId = await artistsService.GetArtistIdAsync(artistSlug);
 

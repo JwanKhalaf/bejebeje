@@ -3,7 +3,7 @@
 echo "Current working directory is:"
 pwd
 
-cd /var/www/html/api.bejebeje.com/
+cd /var/www/html/bejebeje.com/
 
 echo "Now the current working directory is:"
 pwd
