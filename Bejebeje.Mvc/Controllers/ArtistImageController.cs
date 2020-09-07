@@ -34,21 +34,21 @@
 
       try
       {
-        byte[] imageBytes = await imagesService.GetArtistImageBytesAsync(artistSlug);
+        byte[] imageBytes = await this.imagesService.GetArtistImageBytesAsync(artistSlug);
 
-        return File(imageBytes, "image/jpeg");
+        return this.File(imageBytes, "image/jpeg");
       }
       catch (ArtistNotFoundException exception)
       {
-        logger.LogError($"The artist with slug: {exception.ToLogData()} could not be found.");
+        this.logger.LogError($"The artist with slug: {exception.ToLogData()} could not be found.");
 
-        return NotFound();
+        return this.NotFound();
       }
       catch (MissingArtistImageException)
       {
-        logger.LogError($"The image for the requested artist could not be found.");
+        this.logger.LogError($"The image for the requested artist could not be found.");
 
-        return NotFound();
+        return this.NotFound();
       }
     }
   }

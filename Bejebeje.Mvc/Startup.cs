@@ -1,21 +1,21 @@
 namespace Bejebeje.Mvc
 {
-    using Bejebeje.DataAccess.Context;
-    using Bejebeje.Services.Config;
-    using Bejebeje.Services.Services;
-    using Bejebeje.Services.Services.Interfaces;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
+  using Bejebeje.DataAccess.Context;
+  using Bejebeje.Services.Config;
+  using Bejebeje.Services.Services;
+  using Bejebeje.Services.Services.Interfaces;
+  using Microsoft.AspNetCore.Builder;
+  using Microsoft.AspNetCore.Hosting;
+  using Microsoft.EntityFrameworkCore;
+  using Microsoft.Extensions.Configuration;
+  using Microsoft.Extensions.DependencyInjection;
+  using Microsoft.Extensions.Hosting;
 
   public class Startup
   {
     public Startup(IConfiguration configuration)
     {
-      Configuration = configuration;
+      this.Configuration = configuration;
     }
 
     public IConfiguration Configuration { get; }
@@ -24,10 +24,10 @@ namespace Bejebeje.Mvc
     // use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      string connectionString = Configuration["ConnectionString"];
+      string connectionString = this.Configuration["ConnectionString"];
 
       services
-        .Configure<DatabaseOptions>(Configuration);
+        .Configure<DatabaseOptions>(this.Configuration);
 
       services
         .AddDbContext<BbContext>(options => options
@@ -45,6 +45,9 @@ namespace Bejebeje.Mvc
 
       services
         .AddScoped<ILyricsService, LyricsService>();
+
+      services
+        .AddScoped<ISitemapService, SitemapService>();
 
       services
         .AddControllersWithViews();
