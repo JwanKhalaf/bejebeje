@@ -1,5 +1,10 @@
 ﻿@model Bejebeje.Models.Lyric.LyricDetailsViewModel
 
+@{
+  ViewData["Title"] = $"{Model.Title} lyrics by {Model.Artist.FullName}";
+  ViewData["Description"] = $"Lyrics for {Model.Title} by {Model.Artist.FullName}. Gotinê strana {Model.Title} ya {Model.Artist.FullName}. {Model.Title} sözleri - {Model.Artist.FullName}";
+}
+
 <header class="header">
   <div class="header__image-wrapper">
     @if (Model.Artist.HasImage)
