@@ -25,7 +25,7 @@
     {
       SearchViewModel viewModel = new SearchViewModel();
 
-      return View(viewModel);
+      return this.View(viewModel);
     }
 
     [HttpPost]
@@ -39,7 +39,7 @@
       viewModel.Lyrics = await this.lyricsService
         .SearchLyricsAsync(searchTerm);
 
-      return View(viewModel);
+      return this.View(viewModel);
     }
   }
 }
