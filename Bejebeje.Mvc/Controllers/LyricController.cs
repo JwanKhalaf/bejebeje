@@ -29,7 +29,7 @@
       ArtistLyricsViewModel viewModel = await this.lyricsService
         .GetLyricsAsync(artistSlug);
 
-      return View(viewModel);
+      return this.View(viewModel);
     }
 
     [Route("artists/{artistSlug}/lyrics/{lyricSlug}")]

@@ -24,15 +24,15 @@
 
     public async Task<IActionResult> Index()
     {
-      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = await lyricsService
+      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = await this.lyricsService
         .GetRecentLyricsAsync();
       
-      return View(lyricRecentSubmissionViewModel);
+      return this.View(lyricRecentSubmissionViewModel);
     }
 
     public IActionResult Privacy()
     {
-      return View();
+      return this.View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -40,10 +40,10 @@
     {
       ErrorViewModel viewModel = new ErrorViewModel
       {
-        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+        RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier
       };
 
-      return View(viewModel);
+      return this.View(viewModel);
     }
   }
 }
