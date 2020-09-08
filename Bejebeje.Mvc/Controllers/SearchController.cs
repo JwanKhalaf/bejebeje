@@ -33,6 +33,13 @@
     {
       SearchViewModel viewModel = new SearchViewModel();
 
+      if (string.IsNullOrEmpty(searchTerm))
+      {
+        return View(viewModel);
+      }
+
+      viewModel.SearchTerm = searchTerm;
+
       viewModel.Artists = await this.artistsService
         .SearchArtistsAsync(searchTerm);
 

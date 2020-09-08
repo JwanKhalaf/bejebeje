@@ -2,7 +2,7 @@
 
 @{
   ViewData["Title"] = "Search";
-  ViewData["Description"] = "Find lyrics for Kurdish artists";
+  ViewData["Description"] = "Search and find lyrics in the largest, community driven archive of Kurdish lyrics on the internet";
 }
 
 <header>
@@ -17,57 +17,83 @@
 </div>
 
 <div class="results">
-  @if (Model.Lyrics.Any())
+  @if (!Model.Lyrics.Any() && !Model.Artists.Any() && !string.IsNullOrEmpty(Model.SearchTerm))
   {
     <div class="results__wrap">
       <div class="results__heading">
-        <h2>Artists</h2>
+        <h2>There were no matching artists and lyrics!</h2>
+      </div>
+    </div>
+  }
+  else
+  {
+    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+    {
+      <div class="results__wrap">
+        <div class="results__heading">
+          <h2>Artists</h2>
+        </div>
+
+        @if (Model.Artists.Any())
+        {
+          <ul class="results__artists">
+            @foreach (var item in Model.Artists)
+            {
+              <li class="results__artist-item">
+                @if (item.HasImage)
+                {
+                  <img class="results__artist-image"
+                       src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = item.PrimarySlug})"
+                       width="60"
+                       height="60"
+                       alt="@item.Name image" />
+                }
+                else
+                {
+                  <img class="results__artist-image"
+                       src="~/images/artist-placeholder.jpg"
+                       width="60"
+                       height="60"
+                       alt="artist placeholder image" />
+                }
+
+                <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug" class="results__artist-link">
+                  @item.Name
+                </a>
+              </li>
+            }
+          </ul>
+        }
+        else
+        {
+          <h3>No matching artists!</h3>
+        }
       </div>
 
-      <ul class="results__artists">
-        @foreach (var item in Model.Artists)
+      <div class="results__wrap">
+        <div class="results__heading">
+          <h2>Lyrics</h2>
+        </div>
+        @if (Model.Lyrics.Any())
         {
-          <li class="results__artist-item">
-            @if (item.HasImage)
+          <ul class="results__lyrics">
+            @foreach (var item in Model.Lyrics)
             {
-              <img class="results__artist-image"
-                   src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = item.PrimarySlug})"
-                   width="60"
-                   height="60"
-                   alt="@item.Name image" />
-            }
-            else
-            {
-              <img class="results__artist-image"
-                   src="https://picsum.photos/80/80"
-                   width="60"
-                   height="60"
-                   alt="artist placeholder image" />
-            }
+              <li class="results__lyric-item">
+                <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistSlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="results__lyric-link">
+                  <strong>@item.Title</strong>
 
-            <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug" class="results__artist-link">
-              @item.Name
-            </a>
-          </li>
+                  @item.ArtistFullName
+                </a>
+              </li>
+            }
+          </ul>
         }
-      </ul>
-    </div>
-
-    <div class="results__wrap">
-      <div class="results__heading">
-        <h2>Lyrics</h2>
+        else
+        {
+          <h3>No matching lyrics!</h3>
+        }
       </div>
-
-      <ul class="results__lyrics">
-        @foreach (var item in Model.Lyrics)
-        {
-          <li class="results__lyric-item">
-            <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistSlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="results__lyric-link">
-              @item.Title
-            </a>
-          </li>
-        }
-      </ul>
-    </div>
+    }
   }
 </div>
