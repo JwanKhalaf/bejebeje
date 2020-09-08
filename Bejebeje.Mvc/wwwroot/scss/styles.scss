@@ -9,10 +9,9 @@
 @import 'layout/_header';
 @import 'layout/_navigation';
 
-// components
-@import 'components/_recent';
-@import 'components/_section';
+// pages
+@import 'pages/_shared';
+@import 'pages/_home';
+@import 'pages/_search';
+@import 'pages/_lyric';
 @import 'components/_c-lyric-card';
-
-// themes
-@import 'themes/_main';
