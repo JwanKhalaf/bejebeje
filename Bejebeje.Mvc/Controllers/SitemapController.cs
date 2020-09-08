@@ -18,10 +18,14 @@
 
     public async Task<ActionResult> Index()
     {
+      string homeUrl = this.ConvertToSsl(this.Url.Action("Index", "Home"));
+      string searchUrl = this.ConvertToSsl(this.Url.Action("Index", "Search"));
+
       List<SitemapNode> nodes = new List<SitemapNode>
       {
-        new SitemapNode(this.Url.Action("Index","Home")),
-        new SitemapNode(this.Url.Action("Index","Search")),
+
+        new SitemapNode(homeUrl),
+        new SitemapNode(searchUrl),
       };
 
       // build urls for artists
@@ -30,7 +34,7 @@
 
       foreach (ArtistUrlViewModel url in artistUrls)
       {
-        string artistUrl = this.Url.Action("ArtistLyrics", "Lyric", new { artistSlug = url.ArtistPrimarySlug });
+        string artistUrl = this.ConvertToSsl(this.Url.Action("ArtistLyrics", "Lyric", new { artistSlug = url.ArtistPrimarySlug }));
 
         SitemapNode sitemapNode = new SitemapNode(artistUrl);
 
@@ -43,7 +47,7 @@
 
       foreach (LyricUrlViewModel url in lyricUrls)
       {
-        string lyricUrl = this.Url.Action("Lyric", "Lyric", new { artistSlug = url.ArtistPrimarySlug, lyricSlug = url.LyricPrimarySlug });
+        string lyricUrl = this.ConvertToSsl(this.Url.Action("Lyric", "Lyric", new { artistSlug = url.ArtistPrimarySlug, lyricSlug = url.LyricPrimarySlug }));
 
         SitemapNode sitemapNode = new SitemapNode(lyricUrl);
 
@@ -54,6 +58,13 @@
         .CreateSitemap(new SitemapModel(nodes));
 
       return actionResult;
+    }
+
+    private string ConvertToSsl(string url)
+    {
+      string sslUrl = url.Replace("http://", "https://");
+
+      return sslUrl;
     }
   }
 }
