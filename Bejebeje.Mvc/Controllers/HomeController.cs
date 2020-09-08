@@ -26,13 +26,8 @@
     {
       LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = await this.lyricsService
         .GetRecentLyricsAsync();
-      
-      return this.View(lyricRecentSubmissionViewModel);
-    }
 
-    public IActionResult Privacy()
-    {
-      return this.View();
+      return this.View(lyricRecentSubmissionViewModel);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
