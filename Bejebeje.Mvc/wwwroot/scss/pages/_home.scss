@@ -1,4 +1,25 @@
-﻿.recent {
+﻿.section {
+  padding: 0 0 0 $padding-standard;
+
+  &__title {
+    font-family: $font-sans-serif;
+    font-size: 2rem;
+    color: $color-brand;
+    margin-bottom: 0.8em;
+  }
+
+  &__content {
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+
+  &__content-item {
+    margin-right: 1em;
+  }
+}
+
+.recent {
   display: flex;
   flex-direction: column;
 
@@ -22,10 +43,11 @@
     margin-bottom: 0.5em;
   }
 
-
   &__artist-name {
     font-family: $font-sans-serif;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     color: rgba($white, .25);
+    text-align: left;
+    font-weight: normal;
   }
 }
