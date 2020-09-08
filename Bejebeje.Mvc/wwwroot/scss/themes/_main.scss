@@ -74,7 +74,7 @@
 }
 
 .results {
-  padding: 0 $padding-standard;
+  padding: 0 $padding-standard 5rem $padding-standard;
 
   &__wrap {
     margin-bottom: 2rem;
@@ -117,6 +117,12 @@
     color: rgba($white, 0.75);
     font-size: 1.1rem;
     line-height: 1.65rem;
-    font-family: $font-serif;
+    display: flex;
+    flex-direction: column;
+    font-family: $font-sans-serif;
+
+    strong {
+      font-family: $font-serif;
+    }
   }
 }

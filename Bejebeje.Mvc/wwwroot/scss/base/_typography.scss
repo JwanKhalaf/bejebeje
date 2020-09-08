@@ -15,3 +15,16 @@ h2 {
   font-weight: 700;
   color: $color-text;
 }
+
+
+h3 {
+  font-family: $font-sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba($color-text, 0.5);
+  text-align: center;
+}
+
+strong {
+    font-weight: bold;
+}
