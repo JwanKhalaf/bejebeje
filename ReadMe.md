@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/JwanKhalaf/Bejebeje.Api.svg?branch=develop)](https://travis-ci.org/JwanKhalaf/Bejebeje.Api)
 
-# Bejebeje's API
+# Bejebeje
 
-This is the API the drives Bejebeje's ReactJS Frontend.
+This is code behind https://bejebeje.com
 
 ## Things to know:
 
