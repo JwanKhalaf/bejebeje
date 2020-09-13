@@ -10,9 +10,9 @@
 </header>
 
 <div class="search margin-l">
-  <form asp-controller="Search" asp-action="Index" method="post">
+  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
     <input asp-for="@Model.SearchTerm" class="search__input" placeholder="artist name or lyric title" />
-    <input type="submit" value="Search" class="search__button" />
+    @*<input type="submit" value="Search" class="search__button" />*@
   </form>
 </div>
 
