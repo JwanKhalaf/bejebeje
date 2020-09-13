@@ -183,5 +183,77 @@
 
       return artists;
     }
+
+    public async Task<IDictionary<char, List<LibraryArtistViewModel>>> GetAllArtistsAsync()
+    {
+      List<LibraryArtistViewModel> artists = new List<LibraryArtistViewModel>();
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand("select a.first_name, a.last_name, \"as\".name as primary_slug, ai.data as image_data, count(l.title) as number_of_lyrics from artists a left join artist_images ai on ai.artist_id = a.id inner join artist_slugs \"as\" on \"as\".artist_id = a.id left join lyrics l on l.artist_id = a.id where a.is_approved = true and a.is_deleted = false and \"as\".is_primary = true and l.is_approved = true and l.is_deleted = false group by a.id, \"as\".name, ai.data order by a.first_name asc;", connection);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        LibraryArtistViewModel artist = new LibraryArtistViewModel();
+        string firstName = Convert.ToString(reader[0]);
+        string lastName = Convert.ToString(reader[1]);
+        string fullName = textInfo.ToTitleCase($"{firstName} {lastName}");
+        string primarySlug = Convert.ToString(reader[2]);
+        bool hasImage = reader[3] != System.DBNull.Value;
+        int numberOfLyrics = Convert.ToInt32(reader[4]);
+
+        artist.FirstName = firstName;
+        artist.LastName = lastName;
+        artist.FullName = fullName;
+        artist.PrimarySlug = primarySlug;
+        artist.HasImage = hasImage;
+        artist.NumberOfLyrics = numberOfLyrics;
+
+        artists.Add(artist);
+      }
+
+      IDictionary<char, List<LibraryArtistViewModel>> dictionary = BuildDictionary(artists);
+
+      return dictionary;
+    }
+
+    private IDictionary<char, List<LibraryArtistViewModel>> BuildDictionary(List<LibraryArtistViewModel> artists)
+    {
+      List<char> letters = new List<char>();
+
+      IDictionary<char, List<LibraryArtistViewModel>> dictionary =
+        new Dictionary<char, List<LibraryArtistViewModel>>();
+
+      foreach (LibraryArtistViewModel artist in artists)
+      {
+        char firstLetter = char.ToUpper(artist.FirstName[0]);
+
+        if (!letters.Contains(firstLetter))
+        {
+          letters.Add(firstLetter);
+
+          dictionary.Add(firstLetter, new List<LibraryArtistViewModel>());
+        }
+      }
+
+      foreach (char letter in letters)
+      {
+        foreach (LibraryArtistViewModel artist in artists)
+        {
+          char firstLetter = char.ToUpper(artist.FirstName[0]);
+
+          if (letter == firstLetter)
+          {
+            List<LibraryArtistViewModel> artistsBeginningWithTheLetter = dictionary[letter];
+            artistsBeginningWithTheLetter.Add(artist);
+          }
+        }
+      }
+
+      return dictionary;
+    }
   }
 }

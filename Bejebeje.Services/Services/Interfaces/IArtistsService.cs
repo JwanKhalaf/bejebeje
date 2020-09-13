@@ -21,5 +21,7 @@
 
     Task<IEnumerable<SearchArtistResultViewModel>> SearchArtistsAsync(
       string artistName);
+
+    Task<IDictionary<char, List<LibraryArtistViewModel>>> GetAllArtistsAsync();
   }
 }
