@@ -24,8 +24,6 @@
 
     private readonly IArtistsService artistsService;
 
-    private readonly BbContext context;
-
     private readonly TextInfo textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public LyricsService(
@@ -35,7 +33,6 @@
     {
       databaseOptions = optionsAccessor.CurrentValue;
       this.artistsService = artistsService;
-      this.context = context;
     }
 
     public async Task<ArtistLyricsViewModel> GetLyricsAsync(
