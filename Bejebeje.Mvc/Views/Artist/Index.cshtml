@@ -13,40 +13,46 @@
   <h1>Artists</h1>
 </header>
 
-@foreach (char letter in dictionaryKeys)
-{
-  <section class="letter-section">
-    <h2 class="letter">@letter</h2>
+<div class="letters-wrapper">
+  @foreach (char letter in dictionaryKeys)
+  {
+    <section class="letter-section">
+      <h2 class="letter">@letter</h2>
 
-    <ul>
-      @foreach (var artist in Model[letter])
-      {
-        <li>
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug">
-            <div class="artist">
-              @if (artist.HasImage)
-              {
-                <img src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = artist.PrimarySlug})"
-                     width="80"
-                     height="80"
-                     alt="@artist.FullName image" />
-              }
-              else
-              {
-                <img src="~/images/artist-placeholder.jpg"
-                     width="80"
-                     height="80"
-                     alt="artist placeholder image" />
-              }
+      <ul>
+        @foreach (var artist in Model[letter])
+        {
+          <li>
+            <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug">
+              <div class="artist">
+                @if (artist.HasImage)
+                {
+                  <img src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = artist.PrimarySlug})"
+                       width="80"
+                       height="80"
+                       alt="@artist.FullName image" />
+                }
+                else
+                {
+                  <img src="~/images/artist-placeholder.jpg"
+                       width="80"
+                       height="80"
+                       alt="artist placeholder image" />
+                }
 
-              <div class="artist-info">
-                <h3>@artist.FullName</h3>
-                <h4>@artist.NumberOfLyrics Lyrics</h4>
+                <div class="artist-info">
+                  @{
+                    string text = artist.NumberOfLyrics > 1 ? "Lyrics" : "Lyric";
+                  }
+
+                  <h3>@artist.FullName</h3>
+                  <h4>@artist.NumberOfLyrics @text</h4>
+                </div>
               </div>
-            </div>
-          </a>
-        </li>
-      }
-    </ul>
-  </section>
-}
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</div>
