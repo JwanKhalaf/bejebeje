@@ -1,16 +1,52 @@
-﻿@model Bejebeje.Models.Artist.ArtistLyricsViewModel
+﻿@model IDictionary<char, List<Bejebeje.Models.Artist.LibraryArtistViewModel>>
 
 @{
-  ViewData["Title"] = $"{Model.Artist.FullName} lyrics";
-  ViewData["Description"] = $"{Model.Artist.FullName} lyrics. Gotinê stranê {Model.Artist.FullName}. {Model.Artist.FullName} sözleri";
+  ViewData["Title"] = "Artists";
+  ViewData["Description"] = "Kurdish lyrics for all artists in the Bejebeje archives.";
 }
 
+@{
+  var dictionaryKeys = Model.Keys;
+}
 
-<ul class="lcards">
-  @foreach (var lyricCardViewModel in Model.Lyrics)
-  {
-    <li class="lcard">
-      <h4>@lyricCardViewModel.Title</h4>
-    </li>
-  }
-</ul>
+<header>
+  <h1>Artists</h1>
+</header>
+
+@foreach (char letter in dictionaryKeys)
+{
+  <section class="letter-section">
+    <h2 class="letter">@letter</h2>
+
+    <ul>
+      @foreach (var artist in Model[letter])
+      {
+        <li>
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug">
+            <div class="artist">
+              @if (artist.HasImage)
+              {
+                <img src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = artist.PrimarySlug})"
+                     width="80"
+                     height="80"
+                     alt="@artist.FullName image" />
+              }
+              else
+              {
+                <img src="~/images/artist-placeholder.jpg"
+                     width="80"
+                     height="80"
+                     alt="artist placeholder image" />
+              }
+
+              <div class="artist-info">
+                <h3>@artist.FullName</h3>
+                <h4>@artist.NumberOfLyrics Lyrics</h4>
+              </div>
+            </div>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+}
