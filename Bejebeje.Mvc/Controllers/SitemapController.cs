@@ -20,12 +20,13 @@
     {
       string homeUrl = this.ConvertToSsl(this.Url.Action("Index", "Home"));
       string searchUrl = this.ConvertToSsl(this.Url.Action("Index", "Search"));
+      string artistsUrl = this.ConvertToSsl(this.Url.Action("Index", "Artist"));
 
       List<SitemapNode> nodes = new List<SitemapNode>
       {
-
         new SitemapNode(homeUrl),
         new SitemapNode(searchUrl),
+        new SitemapNode(artistsUrl),
       };
 
       // build urls for artists
