@@ -6,6 +6,7 @@ dotnet: 2.2
 branches:
   only:
     - master
+    - feature/improve-loading-fontawesome-icons
 before_script:
   - chmod -R a+x scripts
 script:
