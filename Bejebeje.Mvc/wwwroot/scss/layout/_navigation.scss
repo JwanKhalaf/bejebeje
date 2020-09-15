@@ -8,46 +8,41 @@
   padding: 1rem 1.25rem;
   border-top: 1px solid rgba($white, .25);
   background-color: $color-dark;
-  /*filter: blur(10px);*/
 
   .link {
     color: rgba($white, 0.5);
     font-family: $font-sans-serif;
     font-size: 0.65rem;
     text-align: center;
+    display: block;
+    width: 35px;
+    height: 35px;
+    position: relative;
+
+    &::before {
+      content: '';
+      width: 35px;
+      height: 35px;
+      position: absolute;
+      left: 0;
+      background-repeat: no-repeat;
+      background-position: center;
+      fill: rgba($white, 0.5);
+      opacity: 0.5;
+    }
   }
 
   .home-icon::before {
-    content: "\f015";
-    display: block;
-    font-size: 1.6rem;
+    background-image: url('../images/icons/home.svg');
+    width: 40px;
+    height: 36px;
+  }
+
+  .library-icon::before {
+    background-image: url('../images/icons/album-collection.svg');
   }
 
   .search-icon::before {
-    content: "\f002";
-    display: block;
-    font-size: 1.6rem;
+    background-image: url('../images/icons/search.svg');
   }
-
-  .archive-icon::before {
-    content: "\f8a0";
-    display: block;
-    font-size: 1.6rem;
-  }
-
-  .account-icon::before {
-    content: "\f007";
-    display: block;
-    font-size: 1.6rem;
-  }
-}
-
-.icon::before {
-  font-family: 'Font Awesome 5 Pro';
-  font-weight: 300;
-  font-style: normal;
-  font-variant: normal;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  text-align: center;
 }
