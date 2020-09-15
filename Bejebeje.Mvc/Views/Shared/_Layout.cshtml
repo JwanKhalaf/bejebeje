@@ -15,8 +15,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@ViewData["Title"] | Bêjebêje</title>
   <meta name="description" content="@ViewData["Description"]">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.14.0/css/light.css" integrity="sha384-LmKkPHDqucxgmrtLKWrMGZc5nnHQYAdFkSzMtl1OcvTZn4pebmVziSZPtp27MA6u" crossorigin="anonymous" media="screen">
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.14.0/css/fontawesome.css" integrity="sha384-CAxg0L30Vie2vI3AniQ4UA+pSswoJmr/MK5Dl5DP9YlE1nzJn4z5updw5S3i/Nsn" crossorigin="anonymous" media="screen">
   <link rel="stylesheet" href="~/css/styles.css" media="screen" />
 
   <link media="screen" rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -32,18 +30,17 @@
   @RenderBody()
 
   <nav class="nav">
-    <a asp-controller="Home" asp-action="Index" class="link home-icon icon">
+    <a asp-controller="Home" asp-action="Index" class="link home-icon">
+      
     </a>
 
-    <a asp-controller="Artist" asp-action="Index" class="link archive-icon icon">
+    <a asp-controller="Artist" asp-action="Index" class="link library-icon">
+      
     </a>
 
-    <a asp-controller="Search" asp-action="Index" class="link search-icon icon">
+    <a asp-controller="Search" asp-action="Index" class="link search-icon">
+      
     </a>
-
-    @*<a asp-controller="Account" asp-action="Index" class="link account-icon icon">
-        Account
-      </a>*@
   </nav>
 
   @RenderSection("Scripts", required: false)
