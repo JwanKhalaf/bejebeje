@@ -7,10 +7,14 @@
 
 <header class="header">
   <div class="header__image-wrapper">
-    <img class="header__image"
-         src=@( $"{Model.Artist.ImageUrl}.jpg" )
-         srcset=@( $"{Model.Artist.ImageUrl}.webp" )
-         alt="@Model.Artist.ImageAlternateText" />
+    <picture>
+      <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
+      <source type="image/jpeg" srcset=@($"{Model.Artist.ImageUrl}.jpg")>
+
+      <img class="header__image"
+           src=@($"{Model.Artist.ImageUrl}.jpg")
+           alt="@Model.Artist.ImageAlternateText" />
+    </picture>
   </div>
 
   <h1 class="header__title">@Model.Title Lyrics</h1>

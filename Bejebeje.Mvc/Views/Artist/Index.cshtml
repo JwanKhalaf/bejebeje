@@ -25,12 +25,17 @@
           <li>
             <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug">
               <div class="artist">
-                <img src=@( $"{artist.ImageUrl}.jpg" )
-                     srcset=@( $"{artist.ImageUrl}.webp" )
-                     width="80"
-                     height="80"
-                     loading="lazy"
-                     alt="@artist.ImageAlternateText" />
+                <picture>
+                  <source type="image/webp" srcset=@($"{artist.ImageUrl}.webp")>
+                  <source type="image/jpeg" srcset=@($"{artist.ImageUrl}.jpg")>
+
+                  <img src=@($"{artist.ImageUrl}.jpg")
+                       width="80"
+                       height="80"
+                       loading="lazy"
+                       alt="@artist.ImageAlternateText" />
+                </picture>
+
 
                 <div class="artist-info">
                   @{
