@@ -13,6 +13,8 @@
   using Bejebeje.Services.Config;
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
+  using Common.Enums;
+  using Common.Helpers;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Options;
   using Models.Search;
@@ -157,24 +159,33 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select l.title as lyric_title, lslugs.name as primary_lyric_slug, a.first_name, a.last_name, artist_slugs.name as artist_slug, ai.id as artist_image_id from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id left join artist_images as ai on ai.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_slugs.is_primary = true and l.is_approved = true and l.is_deleted = false and lslugs.is_primary = true order by l.created_at desc limit 10;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select a.id, l.title as lyric_title, lslugs.name as primary_lyric_slug, a.first_name, a.last_name, artist_slugs.name as artist_slug, a.has_image from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_slugs.is_primary = true and l.is_approved = true and l.is_deleted = false and lslugs.is_primary = true order by l.created_at desc limit 10;", connection);
 
       await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
       while (await reader.ReadAsync())
       {
         LyricItemViewModel lyricItemViewModel = new LyricItemViewModel();
-        string lyricTitle = Convert.ToString(reader[0]).Truncate(10) + "…";
-        string lyricPrimarySlug = Convert.ToString(reader[1]);
-        string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[2]) + " " + Convert.ToString(reader[3]));
-        string artistPrimarySlug = Convert.ToString(reader[4]);
-        bool artistHasImage = reader[5] != System.DBNull.Value;
+        int artistId = Convert.ToInt32(reader[0]);
+        string lyricTitle = Convert.ToString(reader[1]).Truncate(10) + "…";
+        string lyricPrimarySlug = Convert.ToString(reader[2]);
+        string artistFullName = textInfo.ToTitleCase(Convert.ToString(reader[3]) + " " + Convert.ToString(reader[4])).Trim();
+        string artistPrimarySlug = Convert.ToString(reader[5]);
+        bool artistHasImage = Convert.ToBoolean(reader[6]);
 
+        string artistImageUrl = ImageUrlBuilder
+          .BuildImageUrl(artistHasImage, artistPrimarySlug, artistId, ImageSize.Small);
+
+        string artistImageAlternateText = ImageUrlBuilder
+          .GetImageAlternateText(artistHasImage, artistFullName);
+
+        lyricItemViewModel.ArtistId = artistId;
         lyricItemViewModel.Title = lyricTitle;
         lyricItemViewModel.LyricPrimarySlug = lyricPrimarySlug;
         lyricItemViewModel.ArtistName = artistFullName;
         lyricItemViewModel.ArtistPrimarySlug = artistPrimarySlug;
-        lyricItemViewModel.ArtistHasImage = artistHasImage;
+        lyricItemViewModel.ArtistImageUrl = artistImageUrl;
+        lyricItemViewModel.ArtistImageAlternateText = artistImageAlternateText;
 
         lyricItemViewModels.Add(lyricItemViewModel);
       }

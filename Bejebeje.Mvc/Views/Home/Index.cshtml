@@ -19,22 +19,17 @@
       <li class="section__content-item">
         <div class="recent">
           <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
-            @if (item.ArtistHasImage)
-            {
+            <picture>
+              <source />
+
               <img class="recent__artist-image"
-                   src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = item.ArtistPrimarySlug})"
+                   src=@( $"{item.ArtistImageUrl}.jpg" )
+                   srcset=@( $"{item.ArtistImageUrl}.webp" )
                    width="80"
                    height="80"
-                   alt="@item.ArtistName image" />
-            }
-            else
-            {
-              <img class="recent__artist-image"
-                   src="~/images/artist-placeholder.jpg"
-                   width="80"
-                   height="80"
-                   alt="artist placeholder image" />
-            }
+                   loading="lazy"
+                   alt="@item.ArtistImageAlternateText" />
+            </picture>
 
             <h2 class="recent__lyric-title">@item.Title</h2>
           </a>

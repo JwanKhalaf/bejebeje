@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bejebeje.Common\Bejebeje.Common.csproj" />
     <ProjectReference Include="..\Bejebeje.Domain\Bejebeje.Domain.csproj" />
     <ProjectReference Include="..\Bejebeje.Models\Bejebeje.Models.csproj" />
     <ProjectReference Include="..\Bejebeje.DataAccess\Bejebeje.DataAccess.csproj" />

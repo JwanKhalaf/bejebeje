@@ -15,6 +15,8 @@
   using Bejebeje.Services.Config;
   using Bejebeje.Services.Extensions;
   using Bejebeje.Services.Services.Interfaces;
+  using Common.Enums;
+  using Common.Helpers;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Options;
   using Models.Search;
@@ -85,7 +87,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, images.data as image_data, a.created_at, a.modified_at from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id left join artist_images as images on images.artist_id = a.id where aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true order by a.first_name asc;";
+      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true order by a.first_name asc;";
 
       await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
@@ -99,16 +101,25 @@
         string firstName = textInfo.ToTitleCase(Convert.ToString(reader[1]));
         string lastName = textInfo.ToTitleCase(Convert.ToString(reader[2]));
         string artistPrimarySlug = Convert.ToString(reader[3]);
-        bool artistHasImage = reader[4] != System.DBNull.Value;
+        bool artistHasImage = Convert.ToBoolean(reader[4]);
         DateTime createdAt = Convert.ToDateTime(reader[5]);
         DateTime? modifiedAt = reader[6] == System.DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
+
+        string artistFullName = (Convert.ToString(reader[3]) + " " + Convert.ToString(reader[4])).Trim();
+
+        string artistImageUrl = ImageUrlBuilder
+          .BuildImageUrl(artistHasImage, artistPrimarySlug, artistId, ImageSize.Standard);
+
+        string artistImageAlternateText = ImageUrlBuilder
+          .GetImageAlternateText(artistHasImage, artistFullName);
 
         artistViewModel.Id = artistId;
         artistViewModel.FirstName = firstName;
         artistViewModel.LastName = lastName;
         artistViewModel.FullName = $"{firstName} {lastName}";
         artistViewModel.PrimarySlug = artistPrimarySlug;
-        artistViewModel.HasImage = artistHasImage;
+        artistViewModel.ImageUrl = artistImageUrl;
+        artistViewModel.ImageAlternateText = artistImageAlternateText;
         artistViewModel.CreatedAt = createdAt;
         artistViewModel.ModifiedAt = modifiedAt;
       }
@@ -161,7 +172,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select a.first_name, a.last_name, \"as\".name primary_slug, ai.id image_id from artists a inner join artist_slugs \"as\" on a.id = \"as\".artist_id left join artist_images ai on a.id = ai.artist_id where a.id in (select distinct artist_id from artist_slugs where name like @artist_name) and a.is_approved = true and a.is_deleted = false and \"as\".is_primary = true;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select a.id, a.first_name, a.last_name, \"as\".name primary_slug, a.has_image from artists a inner join artist_slugs \"as\" on a.id = \"as\".artist_id where a.id in (select distinct artist_id from artist_slugs where name like @artist_name) and a.is_approved = true and a.is_deleted = false and \"as\".is_primary = true;", connection);
 
       command.Parameters.AddWithValue("@artist_name", $"%{artistNameStandardized}%");
 
@@ -170,13 +181,21 @@
       while (await reader.ReadAsync())
       {
         SearchArtistResultViewModel artist = new SearchArtistResultViewModel();
-        string name = textInfo.ToTitleCase(Convert.ToString(reader[0]) + " " + Convert.ToString(reader[1]));
-        string primarySlug = Convert.ToString(reader[2]);
-        bool hasImage = reader[3] != System.DBNull.Value;
+        int artistId = Convert.ToInt32(reader[0]);
+        string name = textInfo.ToTitleCase(Convert.ToString(reader[1]) + " " + Convert.ToString(reader[2]));
+        string primarySlug = Convert.ToString(reader[3]);
+        bool hasImage = Convert.ToBoolean(reader[4]);
+
+        string imageUrl = ImageUrlBuilder
+          .BuildImageUrl(hasImage, primarySlug, artistId, ImageSize.ExtraSmall);
+
+        string imageAlternateText = ImageUrlBuilder
+          .GetImageAlternateText(hasImage, name);
 
         artist.Name = name;
         artist.PrimarySlug = primarySlug;
-        artist.HasImage = hasImage;
+        artist.ImageUrl = imageUrl;
+        artist.ImageAlternateText = imageAlternateText;
 
         artists.Add(artist);
       }
@@ -191,25 +210,33 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select a.first_name, a.last_name, \"as\".name as primary_slug, ai.data as image_data, count(l.title) as number_of_lyrics from artists a left join artist_images ai on ai.artist_id = a.id inner join artist_slugs \"as\" on \"as\".artist_id = a.id left join lyrics l on l.artist_id = a.id where a.is_approved = true and a.is_deleted = false and \"as\".is_primary = true and l.is_approved = true and l.is_deleted = false group by a.id, \"as\".name, ai.data order by a.first_name asc;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select a.id, a.first_name, a.last_name, \"as\".name as primary_slug, a.has_image, count(l.title) as number_of_lyrics from artists a inner join artist_slugs \"as\" on \"as\".artist_id = a.id left join lyrics l on l.artist_id = a.id where a.is_approved = true and a.is_deleted = false and \"as\".is_primary = true and l.is_approved = true and l.is_deleted = false group by a.id, \"as\".name order by a.first_name asc;", connection);
 
       await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
       while (await reader.ReadAsync())
       {
         LibraryArtistViewModel artist = new LibraryArtistViewModel();
-        string firstName = Convert.ToString(reader[0]);
-        string lastName = Convert.ToString(reader[1]);
-        string fullName = textInfo.ToTitleCase($"{firstName} {lastName}");
-        string primarySlug = Convert.ToString(reader[2]);
-        bool hasImage = reader[3] != System.DBNull.Value;
-        int numberOfLyrics = Convert.ToInt32(reader[4]);
+        int artistId = Convert.ToInt32(reader[0]);
+        string firstName = Convert.ToString(reader[1]);
+        string lastName = Convert.ToString(reader[2]);
+        string fullName = textInfo.ToTitleCase($"{firstName} {lastName}").Trim();
+        string primarySlug = Convert.ToString(reader[3]);
+        bool hasImage = Convert.ToBoolean(reader[4]);
+        int numberOfLyrics = Convert.ToInt32(reader[5]);
+
+        string imageUrl = ImageUrlBuilder
+          .BuildImageUrl(hasImage, primarySlug, artistId, ImageSize.Small);
+
+        string imageAlternateText = ImageUrlBuilder
+          .GetImageAlternateText(hasImage, primarySlug);
 
         artist.FirstName = firstName;
         artist.LastName = lastName;
         artist.FullName = fullName;
         artist.PrimarySlug = primarySlug;
-        artist.HasImage = hasImage;
+        artist.ImageUrl = imageUrl;
+        artist.ImageAlternateText = imageAlternateText;
         artist.NumberOfLyrics = numberOfLyrics;
 
         artists.Add(artist);

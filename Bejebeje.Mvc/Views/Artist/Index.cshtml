@@ -25,20 +25,12 @@
           <li>
             <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug">
               <div class="artist">
-                @if (artist.HasImage)
-                {
-                  <img src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = artist.PrimarySlug})"
-                       width="80"
-                       height="80"
-                       alt="@artist.FullName image" />
-                }
-                else
-                {
-                  <img src="~/images/artist-placeholder.jpg"
-                       width="80"
-                       height="80"
-                       alt="artist placeholder image" />
-                }
+                <img src=@( $"{artist.ImageUrl}.jpg" )
+                     srcset=@( $"{artist.ImageUrl}.webp" )
+                     width="80"
+                     height="80"
+                     loading="lazy"
+                     alt="@artist.ImageAlternateText" />
 
                 <div class="artist-info">
                   @{
