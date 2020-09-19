@@ -1,33 +1,28 @@
 ﻿namespace Bejebeje.Mvc.Controllers
 {
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using Bejebeje.Models.Lyric;
-    using Bejebeje.Mvc.Models;
-    using Bejebeje.Services.Services.Interfaces;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
+  using System.Diagnostics;
+  using System.Threading.Tasks;
+  using Bejebeje.Models.Lyric;
+  using Bejebeje.Services.Services.Interfaces;
+  using Microsoft.AspNetCore.Mvc;
+  using Models;
 
   public class HomeController : Controller
   {
-    private readonly ILyricsService lyricsService;
-
-    private readonly ILogger<HomeController> logger;
+    private readonly ILyricsService _lyricsService;
 
     public HomeController(
-      ILyricsService lyricsService,
-      ILogger<HomeController> logger)
+      ILyricsService lyricsService)
     {
-      this.lyricsService = lyricsService;
-      this.logger = logger;
+      _lyricsService = lyricsService;
     }
 
     public async Task<IActionResult> Index()
     {
-      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = await this.lyricsService
+      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = await _lyricsService
         .GetRecentLyricsAsync();
 
-      return this.View(lyricRecentSubmissionViewModel);
+      return View(lyricRecentSubmissionViewModel);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -35,10 +30,10 @@
     {
       ErrorViewModel viewModel = new ErrorViewModel
       {
-        RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier
+        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
       };
 
-      return this.View(viewModel);
+      return View(viewModel);
     }
   }
 }

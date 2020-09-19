@@ -9,18 +9,18 @@
 
   public class SitemapController : Controller
   {
-    private readonly ISitemapService sitemapService;
+    private readonly ISitemapService _sitemapService;
 
     public SitemapController(ISitemapService sitemapService)
     {
-      this.sitemapService = sitemapService;
+      _sitemapService = sitemapService;
     }
 
     public async Task<ActionResult> Index()
     {
-      string homeUrl = this.ConvertToSsl(this.Url.Action("Index", "Home"));
-      string searchUrl = this.ConvertToSsl(this.Url.Action("Index", "Search"));
-      string artistsUrl = this.ConvertToSsl(this.Url.Action("Index", "Artist"));
+      string homeUrl = ConvertToSsl(Url.Action("Index", "Home"));
+      string searchUrl = ConvertToSsl(Url.Action("Index", "Search"));
+      string artistsUrl = ConvertToSsl(Url.Action("Index", "Artist"));
 
       List<SitemapNode> nodes = new List<SitemapNode>
       {
@@ -30,12 +30,12 @@
       };
 
       // build urls for artists
-      IEnumerable<ArtistUrlViewModel> artistUrls = await this.sitemapService
+      IEnumerable<ArtistUrlViewModel> artistUrls = await _sitemapService
         .GetAllArtistsAsync();
 
       foreach (ArtistUrlViewModel url in artistUrls)
       {
-        string artistUrl = this.ConvertToSsl(this.Url.Action("ArtistLyrics", "Lyric", new { artistSlug = url.ArtistPrimarySlug }));
+        string artistUrl = ConvertToSsl(Url.Action("ArtistLyrics", "Lyric", new { artistSlug = url.ArtistPrimarySlug }));
 
         SitemapNode sitemapNode = new SitemapNode(artistUrl);
 
@@ -43,12 +43,12 @@
       }
 
       // build urls for lyrics
-      IEnumerable<LyricUrlViewModel> lyricUrls = await this.sitemapService
+      IEnumerable<LyricUrlViewModel> lyricUrls = await _sitemapService
         .GetAllLyricsAsync();
 
       foreach (LyricUrlViewModel url in lyricUrls)
       {
-        string lyricUrl = this.ConvertToSsl(this.Url.Action("Lyric", "Lyric", new { artistSlug = url.ArtistPrimarySlug, lyricSlug = url.LyricPrimarySlug }));
+        string lyricUrl = ConvertToSsl(Url.Action("Lyric", "Lyric", new { artistSlug = url.ArtistPrimarySlug, lyricSlug = url.LyricPrimarySlug }));
 
         SitemapNode sitemapNode = new SitemapNode(lyricUrl);
 

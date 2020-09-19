@@ -2,8 +2,8 @@
 {
   using System;
   using Bejebeje.Common.Extensions;
-  using Bejebeje.Domain;
-  using Bejebeje.Services.Services.Interfaces;
+  using Domain;
+  using Interfaces;
   using NodaTime;
 
   public class ArtistSlugsService : IArtistSlugsService
