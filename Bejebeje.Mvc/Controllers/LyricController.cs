@@ -1,35 +1,29 @@
 ﻿namespace Bejebeje.Mvc.Controllers
 {
-  using System.Collections.Generic;
   using System.Threading.Tasks;
   using Bejebeje.Models.Artist;
   using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Mvc;
-  using Microsoft.Extensions.Logging;
 
   public class LyricController : Controller
   {
-    private readonly ILyricsService lyricsService;
-
-    private readonly ILogger<HomeController> logger;
+    private readonly ILyricsService _lyricsService;
 
     public LyricController(
-      ILyricsService lyricsService,
-      ILogger<HomeController> logger)
+      ILyricsService lyricsService)
     {
-      this.lyricsService = lyricsService;
-      this.logger = logger;
+      _lyricsService = lyricsService;
     }
 
     [Route("artists/{artistSlug}/lyrics")]
     public async Task<IActionResult> ArtistLyrics(
       string artistSlug)
     {
-      ArtistLyricsViewModel viewModel = await this.lyricsService
+      ArtistLyricsViewModel viewModel = await _lyricsService
         .GetLyricsAsync(artistSlug);
 
-      return this.View(viewModel);
+      return View(viewModel);
     }
 
     [Route("artists/{artistSlug}/lyrics/{lyricSlug}")]
@@ -37,10 +31,10 @@
       string artistSlug,
       string lyricSlug)
     {
-      LyricDetailsViewModel viewModel = await this.lyricsService
+      LyricDetailsViewModel viewModel = await _lyricsService
         .GetSingleLyricAsync(artistSlug, lyricSlug);
 
-      return this.View(viewModel);
+      return View(viewModel);
     }
   }
 }

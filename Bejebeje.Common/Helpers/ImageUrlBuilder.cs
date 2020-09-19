@@ -12,11 +12,13 @@
       ImageSize imageSize)
     {
       return hasImage
-        ? ImageUrlBuilder.BuildS3ImageUrl(artistPrimarySlug, artistId, imageSize)
-        : ImageUrlBuilder.GetPlaceholderImageUrl(imageSize);
+        ? BuildS3ImageUrl(artistPrimarySlug, artistId, imageSize)
+        : GetPlaceholderImageUrl(imageSize);
     }
 
-    public static string GetImageAlternateText(bool hasImage, string artistFullName)
+    public static string GetImageAlternateText(
+      bool hasImage,
+      string artistFullName)
     {
       return hasImage
         ? $"a photo of {artistFullName}"
