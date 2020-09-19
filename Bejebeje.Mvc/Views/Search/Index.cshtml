@@ -40,13 +40,17 @@
             @foreach (SearchArtistResultViewModel artist in Model.Artists)
             {
               <li class="results__artist-item">
-                <img class="results__artist-image"
-                     src=@( $"{artist.ImageUrl}.jpg" )
-                     srcset=@( $"{artist.ImageUrl}.webp" )
-                     width="60"
-                     height="60"
-                     loading="lazy"
-                     alt="@artist.ImageAlternateText" />
+                <picture>
+                  <source type="image/webp" srcset=@($"{artist.ImageUrl}.webp")>
+                  <source type="image/jpeg" srcset=@($"{artist.ImageUrl}.jpg")>
+
+                  <img class="results__artist-image"
+                       src=@($"{artist.ImageUrl}.jpg")
+                       width="60"
+                       height="60"
+                       loading="lazy"
+                       alt="@artist.ImageAlternateText" />
+                </picture>
 
                 <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug" class="results__artist-link">
                   @artist.Name

@@ -20,11 +20,11 @@
         <div class="recent">
           <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
             <picture>
-              <source />
+              <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
+              <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
 
               <img class="recent__artist-image"
                    src=@( $"{item.ArtistImageUrl}.jpg" )
-                   srcset=@( $"{item.ArtistImageUrl}.webp" )
                    width="80"
                    height="80"
                    loading="lazy"
