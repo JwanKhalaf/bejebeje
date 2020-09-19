@@ -1,7 +1,9 @@
 namespace Bejebeje.Mvc
 {
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Hosting;
+  using System;
+  using System.Net;
+  using Microsoft.AspNetCore.Hosting;
+  using Microsoft.Extensions.Hosting;
 
   public class Program
   {
@@ -17,7 +19,16 @@ namespace Bejebeje.Mvc
             .ConfigureWebHostDefaults(webBuilder =>
             {
               webBuilder
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSentry(options =>
+                {
+                  options.Release = "1";
+                  options.MaxBreadcrumbs = 200;
+                  options.HttpProxy = null;
+                  options.DecompressionMethods = DecompressionMethods.None;
+                  options.MaxQueueItems = 100;
+                  options.ShutdownTimeout = TimeSpan.FromSeconds(5);
+                });
             });
   }
 }
