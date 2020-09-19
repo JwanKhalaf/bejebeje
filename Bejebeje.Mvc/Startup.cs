@@ -1,21 +1,21 @@
 namespace Bejebeje.Mvc
 {
-  using Bejebeje.DataAccess.Context;
-  using Bejebeje.Services.Config;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
+  using DataAccess.Context;
   using Microsoft.AspNetCore.Builder;
   using Microsoft.AspNetCore.Hosting;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
   using Microsoft.Extensions.Hosting;
+  using Services.Config;
 
   public class Startup
   {
     public Startup(IConfiguration configuration)
     {
-      this.Configuration = configuration;
+      Configuration = configuration;
     }
 
     public IConfiguration Configuration { get; }
@@ -24,10 +24,10 @@ namespace Bejebeje.Mvc
     // use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      string connectionString = this.Configuration["ConnectionString"];
+      string connectionString = Configuration["ConnectionString"];
 
       services
-        .Configure<DatabaseOptions>(this.Configuration);
+        .Configure<DatabaseOptions>(Configuration);
 
       services
         .AddDbContext<BbContext>(options => options
