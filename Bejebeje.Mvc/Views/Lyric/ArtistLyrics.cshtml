@@ -7,18 +7,10 @@
 
 <div class="header">
   <div class="header__image-wrapper">
-    @if (Model.Artist.HasImage)
-    {
-      <img class="header__image"
-           src="@Url.Action("GetArtistImage", "ArtistImage", new {artistSlug = Model.Artist.PrimarySlug})"
-           alt="@Model.Artist.FullName image" />
-    }
-    else
-    {
-      <img class="header__image"
-           src="~/images/artist-placeholder.jpg"
-           alt="artist placeholder image" />
-    }
+    <img class="header__image"
+         src=@( $"{Model.Artist.ImageUrl}.jpg" )
+         srcset=@( $"{Model.Artist.ImageUrl}.webp" )
+         alt="@Model.Artist.ImageAlternateText" />
   </div>
 
   <h1 class="header__title">@Model.Artist.FullName Lyrics</h1>

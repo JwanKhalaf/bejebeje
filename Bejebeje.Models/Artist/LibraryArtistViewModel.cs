@@ -10,7 +10,9 @@
 
     public string PrimarySlug { get; set; }
 
-    public bool HasImage { get; set; }
+    public string ImageUrl { get; set; }
+
+    public string ImageAlternateText { get; set; }
 
     public int NumberOfLyrics { get; set; }
   }

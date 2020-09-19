@@ -22,6 +22,8 @@
 
     public IEnumerable<Lyric> Lyrics { get; set; }
 
+    public bool HasImage { get; set; }
+
     public ArtistImage Image { get; set; }
 
     public DateTime CreatedAt { get; set; }
