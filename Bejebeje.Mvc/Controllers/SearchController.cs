@@ -4,20 +4,19 @@
   using Bejebeje.Models.Search;
   using Microsoft.AspNetCore.Mvc;
   using Services.Services.Interfaces;
-  using System.Linq;
 
   public class SearchController : Controller
   {
-    private readonly ILyricsService lyricsService;
+    private readonly ILyricsService _lyricsService;
 
-    private readonly IArtistsService artistsService;
+    private readonly IArtistsService _artistsService;
 
     public SearchController(
       ILyricsService lyricsService,
       IArtistsService artistsService)
     {
-      this.lyricsService = lyricsService;
-      this.artistsService = artistsService;
+      _lyricsService = lyricsService;
+      _artistsService = artistsService;
     }
 
     [HttpGet]
@@ -25,7 +24,7 @@
     {
       SearchViewModel viewModel = new SearchViewModel();
 
-      return this.View(viewModel);
+      return View(viewModel);
     }
 
     [HttpPost]
@@ -40,13 +39,13 @@
 
       viewModel.SearchTerm = searchTerm;
 
-      viewModel.Artists = await this.artistsService
+      viewModel.Artists = await _artistsService
         .SearchArtistsAsync(searchTerm);
 
-      viewModel.Lyrics = await this.lyricsService
+      viewModel.Lyrics = await _lyricsService
         .SearchLyricsAsync(searchTerm);
 
-      return this.View(viewModel);
+      return View(viewModel);
     }
   }
 }

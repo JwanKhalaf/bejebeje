@@ -5,28 +5,28 @@
   using System.IO;
   using System.Linq;
   using System.Threading.Tasks;
-  using Bejebeje.DataAccess.Context;
-  using Bejebeje.Domain;
-  using Bejebeje.Services.Services.Interfaces;
+  using DataAccess.Context;
+  using Domain;
+  using Interfaces;
   using Microsoft.EntityFrameworkCore;
 
   public class DataSeederService : IDataSeederService
   {
-    private readonly string userId = "eb600251-1fdd-4c2e-bee0-a9dca87a271a";
+    private const string UserId = "eb600251-1fdd-4c2e-bee0-a9dca87a271a";
 
-    private BbContext context;
+    private readonly BbContext _context;
 
     public DataSeederService(
       BbContext context)
     {
-      this.context = context;
+      _context = context;
     }
 
     public async Task SeedDataAsync()
     {
-      await context.Database.MigrateAsync();
+      await _context.Database.MigrateAsync();
 
-      if (!context.Artists.Any())
+      if (!_context.Artists.Any())
       {
         Author acdcAuthor = new Author
         {
@@ -73,9 +73,9 @@ Producer Sam Phillips recalled, 'When I heard Howlin' Wolf, I said, 'This is for
           ModifiedAt = DateTime.UtcNow.AddMinutes(1),
         };
 
-        context.Authors.Add(acdcAuthor);
-        context.Authors.Add(hWolfAuthor);
-        context.SaveChanges();
+        _context.Authors.Add(acdcAuthor);
+        _context.Authors.Add(hWolfAuthor);
+        _context.SaveChanges();
 
         Lyric tnt = new Lyric
         {
@@ -111,7 +111,7 @@ Lock up your back door
 And run for your life
 The man is back in town
 Don't you mess me 'round",
-          UserId = userId,
+          UserId = UserId,
           Slugs = new List<LyricSlug>
               {
                 new LyricSlug
@@ -157,7 +157,7 @@ Could I come again please
 Yeah them ladies were too kind
 You've been
 Thunderstruck",
-          UserId = userId,
+          UserId = UserId,
           Slugs = new List<LyricSlug>
               {
                 new LyricSlug
@@ -202,7 +202,7 @@ Oh I'm free, free, free now
 I'm free from your spell
 And now that it's all over
 All I can do is wish you well",
-          UserId = userId,
+          UserId = UserId,
           Slugs = new List<LyricSlug>
               {
                 new LyricSlug
@@ -231,7 +231,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Lyrics = new List<Lyric> { tnt, thunderstruck },
           Image = GetArtistImage("acdc.jpg"),
@@ -252,7 +252,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Lyrics = new List<Lyric> { theThrillIsGone },
           Image = GetArtistImage("bbking.jpg"),
@@ -273,7 +273,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("csmith.jpg"),
         };
@@ -293,7 +293,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("damian-marley.jpg"),
         };
@@ -313,7 +313,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("dbowie.jpg"),
         };
@@ -333,7 +333,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("esheeran.jpg"),
         };
@@ -353,7 +353,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("fmac.jpg"),
         };
@@ -373,7 +373,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("gmichael.jpg"),
         };
@@ -393,7 +393,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("hwolf.jpg"),
         };
@@ -413,7 +413,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("itea.jpg"),
         };
@@ -433,7 +433,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("jlopez.jpg"),
         };
@@ -453,7 +453,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("krogers.jpg"),
         };
@@ -473,7 +473,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("lgaga.jpg"),
         };
@@ -493,7 +493,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("mwaters.jpg"),
         };
@@ -513,7 +513,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("nyoung.jpg"),
         };
@@ -533,7 +533,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("oosbourne.jpg"),
         };
@@ -553,7 +553,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("psmith.jpg"),
         };
@@ -573,7 +573,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("queen.jpg"),
         };
@@ -593,7 +593,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("rcharles.jpg"),
         };
@@ -613,7 +613,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("sboywilliamson.jpg"),
         };
@@ -633,7 +633,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("tbonewalker.jpg"),
         };
@@ -653,7 +653,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("u2.jpg"),
         };
@@ -673,7 +673,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("vhalen.jpg"),
         };
@@ -693,7 +693,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
         };
 
@@ -712,7 +712,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("xtc.jpg"),
         };
@@ -732,7 +732,7 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("yolanda-be-cool.jpg"),
         };
@@ -752,15 +752,15 @@ All I can do is wish you well",
                 },
               },
           IsApproved = true,
-          UserId = userId,
+          UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Image = GetArtistImage("zbrown.jpg"),
         };
 
         List<Artist> artists = new List<Artist> { acdc, bbKing, canaanSmith, damianMarley, davidBowie, edSheeran, fleetwoodMac, georgeMichael, howlingWolf, iceT, jenniferLopez, kennyRogers, ladyGaga, muddyWaters, neilYoung, ozzyOsbourne, pattiSmith, queen, rayCharles, sonnyBoyWilliamson, tBoneWalker, u2, vanHalen, wheatus, xtc, yolandaBeCool, zacBrown };
 
-        context.Artists.AddRange(artists);
-        context.SaveChanges();
+        _context.Artists.AddRange(artists);
+        _context.SaveChanges();
       }
       else
       {
