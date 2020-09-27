@@ -160,7 +160,9 @@
       {
         LyricItemViewModel lyricItemViewModel = new LyricItemViewModel();
         int artistId = Convert.ToInt32(reader[0]);
-        string lyricTitle = Convert.ToString(reader[1]).Truncate(10) + "…";
+        string lyricTitle = Convert.ToString(reader[1]).Length > 10
+          ? Convert.ToString(reader[1]).Truncate(10) + "…"
+          : Convert.ToString(reader[1]);
         string lyricPrimarySlug = Convert.ToString(reader[2]);
         string artistFullName = _textInfo.ToTitleCase(Convert.ToString(reader[3]) + " " + Convert.ToString(reader[4])).Trim();
         string artistPrimarySlug = Convert.ToString(reader[5]);
