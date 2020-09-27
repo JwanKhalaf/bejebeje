@@ -12,7 +12,7 @@
 
     public string Slug { get; set; }
 
-    public int ImageId { get; set; }
+    public bool HasImage { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

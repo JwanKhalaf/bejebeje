@@ -2,7 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
-  using Bejebeje.Domain.Interfaces;
+  using Interfaces;
 
   public class Author : IBaseEntity, IApprovable
   {
@@ -24,12 +24,14 @@
 
     public string UserId { get; set; }
 
-    public AuthorImage Image { get; set; }
-
     public DateTime CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public bool HasImage { get; set; }
+
+    public Sex Sex { get; set; }
   }
 }
