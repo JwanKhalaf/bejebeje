@@ -30,7 +30,7 @@
           LastName = a.LastName,
           Biography = a.Biography,
           Slug = a.Slugs.Single(s => s.IsPrimary).Name,
-          ImageId = a.Image.Id,
+          HasImage = false,
           CreatedAt = a.CreatedAt,
           ModifiedAt = a.ModifiedAt,
         })

@@ -2,7 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
-  using Bejebeje.Domain.Interfaces;
+  using Interfaces;
 
   public class Artist : IBaseEntity, IApprovable
   {
@@ -22,14 +22,14 @@
 
     public IEnumerable<Lyric> Lyrics { get; set; }
 
-    public bool HasImage { get; set; }
-
-    public ArtistImage Image { get; set; }
-
     public DateTime CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }
 
     public bool IsDeleted { get; set; }
+
+    public bool HasImage { get; set; }
+
+    public Sex Sex { get; set; }
   }
 }

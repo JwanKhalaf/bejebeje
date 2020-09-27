@@ -2,7 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
-  using Bejebeje.Domain.Interfaces;
+  using Interfaces;
 
   public class Lyric : IBaseEntity, IApprovable
   {

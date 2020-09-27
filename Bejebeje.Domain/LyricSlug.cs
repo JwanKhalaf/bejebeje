@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Domain
 {
   using System;
-  using Bejebeje.Domain.Interfaces;
+  using Interfaces;
 
   public class LyricSlug : IBaseEntity
   {
