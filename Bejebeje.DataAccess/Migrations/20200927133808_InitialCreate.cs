@@ -21,11 +21,13 @@
             user_id = table.Column<string>(nullable: true),
             created_at = table.Column<DateTime>(nullable: false),
             modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false)
+            is_deleted = table.Column<bool>(nullable: false),
+            has_image = table.Column<bool>(nullable: false),
+            sex = table.Column<int>(nullable: false)
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_artists", x => x.id);
+            table.PrimaryKey("pk_artists", x => x.id);
           });
 
       migrationBuilder.CreateTable(
@@ -42,33 +44,13 @@
             user_id = table.Column<string>(nullable: true),
             created_at = table.Column<DateTime>(nullable: false),
             modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false)
+            is_deleted = table.Column<bool>(nullable: false),
+            has_image = table.Column<bool>(nullable: false),
+            sex = table.Column<int>(nullable: false)
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_authors", x => x.id);
-          });
-
-      migrationBuilder.CreateTable(
-          name: "artist_images",
-          columns: table => new
-          {
-            id = table.Column<int>(nullable: false)
-                  .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            data = table.Column<byte[]>(nullable: true),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            artist_id = table.Column<int>(nullable: false)
-          },
-          constraints: table =>
-          {
-            table.PrimaryKey("PK_artist_images", x => x.id);
-            table.ForeignKey(
-                      name: "FK_artist_images_artists_artist_id",
-                      column: x => x.artist_id,
-                      principalTable: "artists",
-                      principalColumn: "id",
-                      onDelete: ReferentialAction.Cascade);
+            table.PrimaryKey("pk_authors", x => x.id);
           });
 
       migrationBuilder.CreateTable(
@@ -86,33 +68,11 @@
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_artist_slugs", x => x.id);
+            table.PrimaryKey("pk_artist_slugs", x => x.id);
             table.ForeignKey(
-                      name: "FK_artist_slugs_artists_artist_id",
+                      name: "fk_artist_slugs_artists_artist_id",
                       column: x => x.artist_id,
                       principalTable: "artists",
-                      principalColumn: "id",
-                      onDelete: ReferentialAction.Cascade);
-          });
-
-      migrationBuilder.CreateTable(
-          name: "author_images",
-          columns: table => new
-          {
-            id = table.Column<int>(nullable: false)
-                  .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            data = table.Column<byte[]>(nullable: true),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            author_id = table.Column<int>(nullable: false)
-          },
-          constraints: table =>
-          {
-            table.PrimaryKey("PK_author_images", x => x.id);
-            table.ForeignKey(
-                      name: "FK_author_images_authors_author_id",
-                      column: x => x.author_id,
-                      principalTable: "authors",
                       principalColumn: "id",
                       onDelete: ReferentialAction.Cascade);
           });
@@ -132,9 +92,9 @@
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_author_slugs", x => x.id);
+            table.PrimaryKey("pk_author_slugs", x => x.id);
             table.ForeignKey(
-                      name: "FK_author_slugs_authors_author_id",
+                      name: "fk_author_slugs_authors_author_id",
                       column: x => x.author_id,
                       principalTable: "authors",
                       principalColumn: "id",
@@ -159,15 +119,15 @@
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_lyrics", x => x.id);
+            table.PrimaryKey("pk_lyrics", x => x.id);
             table.ForeignKey(
-                      name: "FK_lyrics_artists_artist_id",
+                      name: "fk_lyrics_artists_artist_id",
                       column: x => x.artist_id,
                       principalTable: "artists",
                       principalColumn: "id",
                       onDelete: ReferentialAction.Cascade);
             table.ForeignKey(
-                      name: "FK_lyrics_authors_author_id",
+                      name: "fk_lyrics_authors_author_id",
                       column: x => x.author_id,
                       principalTable: "authors",
                       principalColumn: "id",
@@ -189,9 +149,9 @@
           },
           constraints: table =>
           {
-            table.PrimaryKey("PK_lyric_slugs", x => x.id);
+            table.PrimaryKey("pk_lyric_slugs", x => x.id);
             table.ForeignKey(
-                      name: "FK_lyric_slugs_lyrics_lyric_id",
+                      name: "fk_lyric_slugs_lyrics_lyric_id",
                       column: x => x.lyric_id,
                       principalTable: "lyrics",
                       principalColumn: "id",
@@ -199,39 +159,27 @@
           });
 
       migrationBuilder.CreateIndex(
-          name: "IX_artist_images_artist_id",
-          table: "artist_images",
-          column: "artist_id",
-          unique: true);
-
-      migrationBuilder.CreateIndex(
-          name: "IX_artist_slugs_artist_id",
+          name: "ix_artist_slugs_artist_id",
           table: "artist_slugs",
           column: "artist_id");
 
       migrationBuilder.CreateIndex(
-          name: "IX_author_images_author_id",
-          table: "author_images",
-          column: "author_id",
-          unique: true);
-
-      migrationBuilder.CreateIndex(
-          name: "IX_author_slugs_author_id",
+          name: "ix_author_slugs_author_id",
           table: "author_slugs",
           column: "author_id");
 
       migrationBuilder.CreateIndex(
-          name: "IX_lyric_slugs_lyric_id",
+          name: "ix_lyric_slugs_lyric_id",
           table: "lyric_slugs",
           column: "lyric_id");
 
       migrationBuilder.CreateIndex(
-          name: "IX_lyrics_artist_id",
+          name: "ix_lyrics_artist_id",
           table: "lyrics",
           column: "artist_id");
 
       migrationBuilder.CreateIndex(
-          name: "IX_lyrics_author_id",
+          name: "ix_lyrics_author_id",
           table: "lyrics",
           column: "author_id");
     }
@@ -239,13 +187,7 @@
     protected override void Down(MigrationBuilder migrationBuilder)
     {
       migrationBuilder.DropTable(
-          name: "artist_images");
-
-      migrationBuilder.DropTable(
           name: "artist_slugs");
-
-      migrationBuilder.DropTable(
-          name: "author_images");
 
       migrationBuilder.DropTable(
           name: "author_slugs");

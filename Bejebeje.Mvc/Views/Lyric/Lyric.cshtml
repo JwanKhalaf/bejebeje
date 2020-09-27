@@ -1,7 +1,7 @@
 ﻿@model Bejebeje.Models.Lyric.LyricDetailsViewModel
 
 @{
-  ViewData["Title"] = $"{Model.Title} lyrics by {Model.Artist.FullName}";
+  ViewData["Title"] = $"{Model.Artist.FullName} - {Model.Title} lyrics";
   ViewData["Description"] = $"Lyrics for {Model.Title} by {Model.Artist.FullName}. Gotinê strana {Model.Title} ya {Model.Artist.FullName}. {Model.Title} sözleri - {Model.Artist.FullName}";
 }
 
@@ -17,7 +17,7 @@
     </picture>
   </div>
 
-  <h1 class="header__title">@Model.Title Lyrics</h1>
+  <h1 class="header__title">@Model.Artist.FullName - @Model.Title Lyrics</h1>
 </header>
 
 <div class="lyric-body">

@@ -95,14 +95,14 @@
       while (await reader.ReadAsync())
       {
         int artistId = Convert.ToInt32(reader[0]);
-        string firstName = _textInfo.ToTitleCase(Convert.ToString(reader[1]));
-        string lastName = _textInfo.ToTitleCase(Convert.ToString(reader[2]));
+        string firstName = _textInfo.ToTitleCase(Convert.ToString(reader[1])).Trim();
+        string lastName = _textInfo.ToTitleCase(Convert.ToString(reader[2])).Trim();
         string artistPrimarySlug = Convert.ToString(reader[3]);
         bool artistHasImage = Convert.ToBoolean(reader[4]);
         DateTime createdAt = Convert.ToDateTime(reader[5]);
         DateTime? modifiedAt = reader[6] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
 
-        string artistFullName = (Convert.ToString(reader[3]) + " " + Convert.ToString(reader[4])).Trim();
+        string artistFullName = $"{firstName} {lastName}".Trim();
 
         string artistImageUrl = ImageUrlBuilder
           .BuildImageUrl(artistHasImage, artistPrimarySlug, artistId, ImageSize.Standard);

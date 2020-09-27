@@ -2,7 +2,6 @@
 {
   using System;
   using System.Collections.Generic;
-  using System.IO;
   using System.Linq;
   using System.Threading.Tasks;
   using DataAccess.Context;
@@ -68,7 +67,7 @@ Producer Sam Phillips recalled, 'When I heard Howlin' Wolf, I said, 'This is for
                   CreatedAt = DateTime.UtcNow,
                 },
               },
-          Image = GetAuthorImage("hwolf.jpg"),
+          HasImage = false,
           CreatedAt = DateTime.UtcNow,
           ModifiedAt = DateTime.UtcNow.AddMinutes(1),
         };
@@ -234,7 +233,7 @@ All I can do is wish you well",
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Lyrics = new List<Lyric> { tnt, thunderstruck },
-          Image = GetArtistImage("acdc.jpg"),
+          HasImage = false,
         };
 
         Artist bbKing = new Artist
@@ -255,7 +254,7 @@ All I can do is wish you well",
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
           Lyrics = new List<Lyric> { theThrillIsGone },
-          Image = GetArtistImage("bbking.jpg"),
+          HasImage = false,
         };
 
         Artist canaanSmith = new Artist
@@ -275,7 +274,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("csmith.jpg"),
+          HasImage = false,
         };
 
         Artist damianMarley = new Artist
@@ -295,7 +294,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("damian-marley.jpg"),
+          HasImage = false,
         };
 
         Artist davidBowie = new Artist
@@ -315,7 +314,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("dbowie.jpg"),
+          HasImage = false,
         };
 
         Artist edSheeran = new Artist
@@ -335,7 +334,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("esheeran.jpg"),
+          HasImage = false,
         };
 
         Artist fleetwoodMac = new Artist
@@ -355,7 +354,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("fmac.jpg"),
+          HasImage = false,
         };
 
         Artist georgeMichael = new Artist
@@ -375,7 +374,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("gmichael.jpg"),
+          HasImage = false,
         };
 
         Artist howlingWolf = new Artist
@@ -395,7 +394,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("hwolf.jpg"),
+          HasImage = false,
         };
 
         Artist iceT = new Artist
@@ -415,7 +414,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("itea.jpg"),
+          HasImage = false,
         };
 
         Artist jenniferLopez = new Artist
@@ -435,7 +434,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("jlopez.jpg"),
+          HasImage = false,
         };
 
         Artist kennyRogers = new Artist
@@ -455,7 +454,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("krogers.jpg"),
+          HasImage = false,
         };
 
         Artist ladyGaga = new Artist
@@ -475,7 +474,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("lgaga.jpg"),
+          HasImage = false,
         };
 
         Artist muddyWaters = new Artist
@@ -495,7 +494,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("mwaters.jpg"),
+          HasImage = false,
         };
 
         Artist neilYoung = new Artist
@@ -515,7 +514,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("nyoung.jpg"),
+          HasImage = false,
         };
 
         Artist ozzyOsbourne = new Artist
@@ -535,7 +534,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("oosbourne.jpg"),
+          HasImage = false,
         };
 
         Artist pattiSmith = new Artist
@@ -555,7 +554,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("psmith.jpg"),
+          HasImage = false,
         };
 
         Artist queen = new Artist
@@ -575,7 +574,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("queen.jpg"),
+          HasImage = false,
         };
 
         Artist rayCharles = new Artist
@@ -595,7 +594,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("rcharles.jpg"),
+          HasImage = false,
         };
 
         Artist sonnyBoyWilliamson = new Artist
@@ -615,7 +614,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("sboywilliamson.jpg"),
+          HasImage = false,
         };
 
         Artist tBoneWalker = new Artist
@@ -635,7 +634,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("tbonewalker.jpg"),
+          HasImage = false,
         };
 
         Artist u2 = new Artist
@@ -655,7 +654,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("u2.jpg"),
+          HasImage = false,
         };
 
         Artist vanHalen = new Artist
@@ -675,7 +674,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("vhalen.jpg"),
+          HasImage = false,
         };
 
         Artist wheatus = new Artist
@@ -714,7 +713,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("xtc.jpg"),
+          HasImage = false,
         };
 
         Artist yolandaBeCool = new Artist
@@ -734,7 +733,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("yolanda-be-cool.jpg"),
+          HasImage = false,
         };
 
         Artist zacBrown = new Artist
@@ -754,7 +753,7 @@ All I can do is wish you well",
           IsApproved = true,
           UserId = UserId,
           CreatedAt = DateTime.UtcNow,
-          Image = GetArtistImage("zbrown.jpg"),
+          HasImage = false,
         };
 
         List<Artist> artists = new List<Artist> { acdc, bbKing, canaanSmith, damianMarley, davidBowie, edSheeran, fleetwoodMac, georgeMichael, howlingWolf, iceT, jenniferLopez, kennyRogers, ladyGaga, muddyWaters, neilYoung, ozzyOsbourne, pattiSmith, queen, rayCharles, sonnyBoyWilliamson, tBoneWalker, u2, vanHalen, wheatus, xtc, yolandaBeCool, zacBrown };
@@ -766,50 +765,6 @@ All I can do is wish you well",
       {
         Console.WriteLine("Database already has sample data.");
       }
-    }
-
-    private ArtistImage GetArtistImage(
-      string imageName)
-    {
-      string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-      string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
-
-      if (File.Exists(imageFilePath))
-      {
-        byte[] imagesBytes = File.ReadAllBytes(imageFilePath);
-
-        ArtistImage artistImage = new ArtistImage
-        {
-          Data = imagesBytes,
-          CreatedAt = DateTime.UtcNow,
-        };
-
-        return artistImage;
-      }
-
-      return null;
-    }
-
-    private AuthorImage GetAuthorImage(
-      string imageName)
-    {
-      string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-      string imageFilePath = $"{baseDirectory}/Data/SeedImages/" + imageName;
-
-      if (File.Exists(imageFilePath))
-      {
-        byte[] imagesBytes = File.ReadAllBytes(imageFilePath);
-
-        AuthorImage authorImage = new AuthorImage
-        {
-          Data = imagesBytes,
-          CreatedAt = DateTime.UtcNow,
-        };
-
-        return authorImage;
-      }
-
-      return null;
     }
   }
 }
