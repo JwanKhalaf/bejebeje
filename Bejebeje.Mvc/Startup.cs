@@ -1,14 +1,19 @@
 namespace Bejebeje.Mvc
 {
+  using System.IdentityModel.Tokens.Jwt;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
   using DataAccess.Context;
+  using Microsoft.AspNetCore.Authentication;
   using Microsoft.AspNetCore.Builder;
   using Microsoft.AspNetCore.Hosting;
+  using Microsoft.AspNetCore.HttpOverrides;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
   using Microsoft.Extensions.Hosting;
+  using Microsoft.IdentityModel.Logging;
+  using Microsoft.IdentityModel.Tokens;
   using Services.Config;
 
   public class Startup
@@ -24,6 +29,10 @@ namespace Bejebeje.Mvc
     // use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      IdentityModelEventSource.ShowPII = true;
+      string authority = Configuration["IdentityServerConfiguration:Authority"];
+      string clientId = Configuration["IdentityServerConfiguration:ClientId"];
+      string clientSecret = Configuration["IdentityServerConfiguration:ClientSecret"];
       string connectionString = Configuration["ConnectionString"];
 
       services
@@ -49,6 +58,31 @@ namespace Bejebeje.Mvc
       services
         .AddScoped<ISitemapService, SitemapService>();
 
+      JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
+      JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+      services.AddAuthentication(options =>
+        {
+          options.DefaultScheme = "Cookies";
+          options.DefaultChallengeScheme = "oidc";
+        })
+        .AddCookie("Cookies")
+        .AddOpenIdConnect("oidc", options =>
+        {
+          options.Authority = authority;
+          options.RequireHttpsMetadata = false;
+          options.ClientId = clientId;
+          options.ClientSecret = clientSecret;
+          options.ResponseType = "code";
+          options.SaveTokens = true;
+          options.GetClaimsFromUserInfoEndpoint = true;
+          options.Scope.Clear();
+          options.Scope.Add("openid");
+          options.ClaimActions.MapUniqueJsonKey("role", "role");
+          options.TokenValidationParameters = new TokenValidationParameters { RoleClaimType = "role" };
+        });
+
       services
         .AddControllersWithViews();
     }
@@ -57,6 +91,16 @@ namespace Bejebeje.Mvc
     // yse this method to configure the http request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+      ForwardedHeadersOptions forwardedHeadersOptions = new ForwardedHeadersOptions
+      {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+      };
+
+      forwardedHeadersOptions.KnownNetworks.Clear();
+      forwardedHeadersOptions.KnownProxies.Clear();
+
+      app.UseForwardedHeaders(forwardedHeadersOptions);
+
       if (env.IsDevelopment())
       {
         app
@@ -81,6 +125,9 @@ namespace Bejebeje.Mvc
 
       app
         .UseRouting();
+
+      app
+        .UseAuthentication();
 
       app
         .UseAuthorization();
