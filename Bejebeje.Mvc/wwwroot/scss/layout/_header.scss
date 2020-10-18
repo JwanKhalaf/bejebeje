@@ -1,3 +1,16 @@
-﻿header {
-  padding: $padding-standard;
+﻿.breadcrumb-nav {
+  margin: $padding-standard $padding-standard $padding-standard 0;
+
+  nav {
+    background-color: transparent;
+    color: #9194a8;
+    text-transform: uppercase;
+    font-family: $sans-serif;
+
+    a {
+      text-transform: uppercase;
+      color: #72758f;
+      font-family: $sans-serif;
+    }
+  }
 }

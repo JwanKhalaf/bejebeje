@@ -6,11 +6,13 @@
   ViewData["Description"] = "Search and find lyrics in the largest, community driven archive of Kurdish lyrics on the internet";
 }
 
-<header>
-  <h1>Search</h1>
-</header>
+<div class="breadcrumb-nav">
+  <nav>
+    <a asp-controller="Search" asp-action="Index">/ Search</a> / @Model.SearchTerm
+  </nav>
+</div>
 
-<div class="search margin-l">
+<div class="search">
   <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
     <input asp-for="@Model.SearchTerm" class="search__input" placeholder="artist name or lyric title" />
   </form>
@@ -30,9 +32,7 @@
     @if (!string.IsNullOrEmpty(Model.SearchTerm))
     {
       <div class="results__wrap">
-        <div class="results__heading">
-          <h2>Artists</h2>
-        </div>
+        <h2 class="results__heading">Artists</h2>
 
         @if (Model.Artists.Any())
         {
@@ -66,9 +66,8 @@
       </div>
 
       <div class="results__wrap">
-        <div class="results__heading">
-          <h2>Lyrics</h2>
-        </div>
+        <h2 class="results__heading">Lyrics</h2>
+
         @if (Model.Lyrics.Any())
         {
           <ul class="results__lyrics">

@@ -6,17 +6,25 @@
   ViewData["Description"] = "The largest community driven archive of Kurdish lyrics on the web. Erşîva herî mezin ya gotinê stranê Kurdî.";
 }
 
-<header>
-  <h1>Home</h1>
-</header>
+<div class="breadcrumb-nav">
+  <nav>
+    <a asp-controller="Home" asp-action="Index">/ Home</a>
+  </nav>
+</div>
 
-<section class="section">
-  <h2 class="section__title">Recent Submissions</h2>
+<div class="search">
+  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
+    <input class="search__input" placeholder="search for artist or lyric" name="searchTerm" />
+  </form>
+</div>
 
-  <ul class="section__content">
+<section class="featured_list">
+  <h2 class="featured_list__title">Recent Submissions</h2>
+
+  <ul class="featured_list__content">
     @foreach (LyricItemViewModel item in Model.Lyrics)
     {
-      <li class="section__content-item">
+      <li class="featured_list__content-item">
         <div class="recent">
           <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
             <picture>

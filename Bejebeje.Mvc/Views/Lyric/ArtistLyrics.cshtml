@@ -5,26 +5,44 @@
   ViewData["Description"] = $"{Model.Artist.FullName} lyrics. Gotinê stranê {Model.Artist.FullName}. {Model.Artist.FullName} sözleri";
 }
 
-<div class="header">
-  <div class="header__image-wrapper">
+<div class="breadcrumb-nav">
+  <nav>
+    <a asp-controller="Home" asp-action="Index">/ Artists</a> / @Model.Artist.FullName
+  </nav>
+</div>
+
+<div class="search">
+  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
+    <input class="search__input" placeholder="search for artist or lyric" name="searchTerm" />
+  </form>
+</div>
+
+
+<div class="artist-info-wrap">
+  <div class="artist-info">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
       <source type="image/jpeg" srcset=@($"{Model.Artist.ImageUrl}.jpg")>
 
-      <img class="header__image"
+      <img class="artist-info__image"
            src=@($"{Model.Artist.ImageUrl}.jpg")
-           alt="@Model.Artist.ImageAlternateText" />
+           alt="@Model.Artist.ImageAlternateText"
+           width="100"
+           height="100" />
     </picture>
-  </div>
 
-  <h1 class="header__title">@Model.Artist.FullName Lyrics</h1>
+    <div>
+      <h1 class="artist-info__name">@Model.Artist.FullName</h1>
+      <span class="artist-info__lyric-count">@Model.LyricCount</span>
+    </div>
+  </div>
 </div>
 
 <ul class="lyrics">
   @foreach (var lyric in Model.Lyrics)
   {
     <li class="lyric">
-      <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
+      <a class="lyric__link" asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
         <h4 class="lyric__title">@lyric.Title</h4>
       </a>
     </li>

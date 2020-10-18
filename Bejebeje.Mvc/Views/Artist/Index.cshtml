@@ -9,9 +9,17 @@
   var dictionaryKeys = Model.Keys;
 }
 
-<header>
-  <h1>Artists</h1>
-</header>
+<div class="breadcrumb-nav">
+  <nav>
+    <a asp-controller="Artist" asp-action="Index">/ Artists</a>
+  </nav>
+</div>
+
+<div class="search">
+  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
+    <input class="search__input" placeholder="search for artist or lyric" name="searchTerm" />
+  </form>
+</div>
 
 <div class="letters-wrapper">
   @foreach (char letter in dictionaryKeys)
@@ -37,7 +45,7 @@
                 </picture>
 
 
-                <div class="artist-info">
+                <div class="artist-details">
                   @{
                     string text = artist.NumberOfLyrics > 1 ? "Lyrics" : "Lyric";
                   }
