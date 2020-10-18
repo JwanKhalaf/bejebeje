@@ -5,20 +5,37 @@
   ViewData["Description"] = $"Lyrics for {Model.Title} by {Model.Artist.FullName}. Gotinê strana {Model.Title} ya {Model.Artist.FullName}. {Model.Title} sözleri - {Model.Artist.FullName}";
 }
 
-<header class="header">
-  <div class="header__image-wrapper">
+<div class="breadcrumb-nav">
+  <nav>
+    <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / @Model.Title
+  </nav>
+</div>
+
+<div class="search">
+  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
+    <input class="search__input" placeholder="search for artist or lyric" name="searchTerm" />
+  </form>
+</div>
+
+
+<div class="artist-info-wrap">
+  <div class="artist-info">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
       <source type="image/jpeg" srcset=@($"{Model.Artist.ImageUrl}.jpg")>
 
-      <img class="header__image"
+      <img class="artist-info__image"
            src=@($"{Model.Artist.ImageUrl}.jpg")
-           alt="@Model.Artist.ImageAlternateText" />
+           alt="@Model.Artist.ImageAlternateText"
+           width="100"
+           height="100" />
     </picture>
-  </div>
 
-  <h1 class="header__title">@Model.Artist.FullName - @Model.Title Lyrics</h1>
-</header>
+    <div>
+      <h1 class="artist-info__name">@Model.Artist.FullName</h1>
+    </div>
+  </div>
+</div>
 
 <div class="lyric-body">
   @Model.Body

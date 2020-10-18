@@ -27,20 +27,36 @@
 </head>
 
 <body>
-  @RenderBody()
+  <main>
+    <div class="main_content">
+      @RenderBody()
+    </div>
+
+    <div class="secondary_content">
+      <div class="secondary_content__social">
+        <a href="https://www.facebook.com/bejebejefermi" class="secondary_content__link facebook-icon"></a>
+
+        <a href="https://twitter.com/bejebejefermi" class="secondary_content__link twitter-icon"></a>
+
+        <a href="https://www.youtube.com/channel/UCo7WnWABL3QiA1tErvs1w2w" class="secondary_content__link youtube-icon"></a>
+
+        <a href="https://www.instagram.com/bejebejefermi/" class="secondary_content__link instagram-icon"></a>
+
+        <a href="https://www.instagram.com/bejebejefermi/" class="secondary_content__link tiktok-icon"></a>
+      </div>
+
+      <div class="secondary_content__site-meta">
+        <p>Bêjebêje &copy; 2015-@(DateTime.UtcNow.Year)</p>
+      </div>
+    </div>
+  </main>
 
   <nav class="nav">
-    <a asp-controller="Home" asp-action="Index" class="link home-icon">
+    <a asp-controller="Home" asp-action="Index" class="link home-icon"></a>
 
-    </a>
+    <a asp-controller="Artist" asp-action="Index" class="link artists-icon"></a>
 
-    <a asp-controller="Artist" asp-action="Index" class="link library-icon">
-
-    </a>
-
-    <a asp-controller="Search" asp-action="Index" class="link search-icon">
-
-    </a>
+    <a asp-controller="Profile" asp-action="Index" class="link profile-icon"></a>
   </nav>
 
   @RenderSection("Scripts", required: false)

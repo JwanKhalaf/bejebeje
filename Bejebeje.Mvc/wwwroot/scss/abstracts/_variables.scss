@@ -1,19 +1,26 @@
 ﻿// colors
 $crimson: #EC6164;
 $cyan: #61ECE9;
-$moonless-night: #41414d;
-$white: #ffffff;
+$moonless-night: #272831;
 
-$color-brand: $crimson;
+$clr-white: #ffffff;
+$clr-background: #e0e0e6;
+$clr-dark: $moonless-night;
+$clr-dark-x2: #1f2027;
+$clr-brand: $crimson;
+
 $color-accenting: $cyan;
-$color-dark: $moonless-night;
 
-$color-text: $white;
+$color-text: $clr-white;
 
 
 // spacing
 $padding-standard: 1.25rem;
+$padding-standard-x2: 2.5rem;
 
 // fonts
-$font-serif: 'Lora', serif;
-$font-sans-serif: 'Open Sans', sans-serif;
+$serif: 'Lora', serif;
+$sans-serif: 'Open Sans', sans-serif;
+
+// other
+$border-radius: 5px;

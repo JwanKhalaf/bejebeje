@@ -1,0 +1,20 @@
+﻿@{
+  ViewData["Title"] = "Your Profile";
+  ViewData["Description"] = "The user profile page.";
+}
+
+<div class="breadcrumb-nav">
+  <nav>
+    <a asp-controller="Profile" asp-action="Index">/ Profile</a>
+  </nav>
+</div>
+
+<div class="search">
+  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
+    <input class="search__input" placeholder="search for artist or lyric" name="searchTerm" />
+  </form>
+</div>
+
+<div class="coming-soon-wrapper">
+  <p>COMING SOON</p>
+</div>
