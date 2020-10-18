@@ -1,48 +1,75 @@
 ﻿.nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem 1.25rem;
-  border-top: 1px solid rgba($white, .25);
-  background-color: $color-dark;
+
+  .logo {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url('../images/logo.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 
   .link {
-    color: rgba($white, 0.5);
-    font-family: $font-sans-serif;
+    color: rgba($clr-white, 0.5);
+    font-family: $sans-serif;
     font-size: 0.65rem;
     text-align: center;
     display: block;
-    width: 35px;
-    height: 35px;
+    width: 24px;
+    height: 24px;
     position: relative;
 
     &::before {
       content: '';
-      width: 35px;
-      height: 35px;
+      width: 24px;
+      height: 24px;
       position: absolute;
       left: 0;
       background-repeat: no-repeat;
       background-position: center;
-      fill: rgba($white, 0.5);
-      opacity: 0.5;
+      background-size: cover;
     }
   }
 
   .home-icon::before {
     background-image: url('../images/icons/home.svg');
-    width: 40px;
-    height: 36px;
   }
 
-  .library-icon::before {
-    background-image: url('../images/icons/album-collection.svg');
+  .artists-icon::before {
+    background-image: url('../images/icons/artists.svg');
   }
 
-  .search-icon::before {
-    background-image: url('../images/icons/search.svg');
+  .profile-icon::before {
+    background-image: url('../images/icons/user.svg');
+  }
+}
+
+
+@media (min-width: 1024px) {
+
+  .nav {
+    .link {
+      width: 34px;
+      height: 34px;
+
+      &::before {
+        width: 34px;
+        height: 34px;
+      }
+    }
+  }
+
+  .logo {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url('../images/logo.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: $padding-standard;
+  }
+
+  .link {
+    margin-bottom: 2.5rem;
   }
 }

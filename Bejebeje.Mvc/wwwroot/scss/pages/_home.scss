@@ -1,17 +1,20 @@
-﻿.section {
-  padding: 0 0 0 $padding-standard;
+﻿.featured_list {
+  padding: 0;
+  margin: 0 0 2.5rem 0;
 
   &__title {
-    font-family: $font-sans-serif;
-    font-size: 2rem;
-    color: $color-brand;
+    font-family: $sans-serif;
+    font-size: 1.125rem;
+    color: $clr-brand;
     margin-bottom: 0.8em;
     line-height: 2.5rem;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 0.1rem;
   }
 
   &__content {
     display: flex;
-    overflow-x: scroll;
     overflow-y: hidden;
   }
 
@@ -38,17 +41,17 @@
   }
 
   &__lyric-title {
-    font-family: $font-serif;
+    font-family: $serif;
     font-size: 0.8rem;
-    color: rgba($white, .50);
+    color: rgba($clr-white, .50);
     margin-bottom: 0.5em;
     line-height: 1.2rem;
   }
 
   &__artist-name {
-    font-family: $font-sans-serif;
+    font-family: $sans-serif;
     font-size: 0.75rem;
-    color: rgba($white, .25);
+    color: rgba($clr-white, .25);
     text-align: left;
     font-weight: normal;
   }

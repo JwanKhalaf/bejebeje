@@ -1,7 +1,7 @@
 ﻿
 .search {
-  padding: 0 $padding-standard;
-  margin-bottom: 1.5rem;
+  padding: 1.5rem $padding-standard 0 0;
+  margin-bottom: $padding-standard;
 
   &__form {
     display: flex;
@@ -27,8 +27,8 @@
 
   &__input {
     border-radius: 5px;
-    background-color: darken($color-dark, 10%);
-    color: rgba($white, 0.5);
+    background-color: #1d1d24;
+    color: rgba($clr-white, 0.5);
     padding: 0.8rem;
     font-size: 1rem;
     position: relative;
@@ -36,14 +36,24 @@
 }
 
 .results {
-  padding: 0 $padding-standard 5rem $padding-standard;
+  padding: 0 $padding-standard 2rem 0;
 
   &__wrap {
     margin-bottom: 2rem;
   }
 
   &__heading {
-    margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    padding: 1.5rem 0;
+    background-color: $clr-dark;
+    font-family: $sans-serif;
+    font-size: 1.125rem;
+    color: $clr-brand;
+    line-height: 2.5rem;
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 0.1rem;
 
     h2 {
       font-size: 2rem;
@@ -52,39 +62,40 @@
 
   &__artist-item {
     display: flex;
-    margin-bottom: 0.7rem;
+    margin-bottom: $padding-standard;
     align-items: center;
   }
 
   &__artist-image {
     border-radius: 5px;
     margin-right: 1rem;
+    display: block;
   }
 
   &__artist-link {
-    font-family: $font-sans-serif;
-    color: rgba($white, 0.75);
+    font-family: $sans-serif;
+    color: rgba($clr-white, 0.75);
     font-size: 1.3rem;
     line-height: 1.95rem;
   }
 
   &__lyric-item {
-    background-color: darken($color-dark, 20%);
-    margin-bottom: 1rem;
+    background-color: $clr-dark-x2;
+    margin-bottom: $padding-standard;
     padding: $padding-standard;
     border-radius: 5px;
   }
 
   &__lyric-link {
-    color: rgba($white, 0.75);
+    color: rgba($clr-white, 0.75);
     font-size: 1.1rem;
     line-height: 1.65rem;
     display: flex;
     flex-direction: column;
-    font-family: $font-sans-serif;
+    font-family: $sans-serif;
 
     strong {
-      font-family: $font-serif;
+      font-family: $serif;
     }
   }
 }

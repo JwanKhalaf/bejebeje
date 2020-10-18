@@ -1,0 +1,13 @@
+﻿.coming-soon-wrapper {
+  margin: 0 $padding-standard $padding-standard 0;
+  padding: $padding-standard;
+  text-align: center;
+
+  p {
+    font-family: $sans-serif;
+    color: rgba($clr-white, .7);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+}

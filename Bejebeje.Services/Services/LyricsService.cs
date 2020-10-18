@@ -67,6 +67,7 @@
       }
 
       viewModel.Artist = artistViewModel;
+      viewModel.LyricCount = lyricCardViewModels.Count == 1 ? "1 Lyric" : $"{lyricCardViewModels.Count} Lyrics";
       viewModel.Lyrics = lyricCardViewModels;
 
       return viewModel;

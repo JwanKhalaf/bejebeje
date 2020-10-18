@@ -1,11 +1,13 @@
 ﻿namespace Bejebeje.Models.Artist
 {
   using System.Collections.Generic;
-  using Bejebeje.Models.Lyric;
+  using Lyric;
 
   public class ArtistLyricsViewModel
   {
     public ArtistViewModel Artist { get; set; }
+
+    public string LyricCount { get; set; }
 
     public IEnumerable<LyricCardViewModel> Lyrics { get; set; }
   }
