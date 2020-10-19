@@ -106,7 +106,7 @@ nav.nav {
     display: grid;
     grid-template-rows: auto 120px;
     background-color: transparent;
-    overflow-y: visible;
+    overflow-y: scroll;
     padding: 0;
     box-shadow: none;
   }
@@ -164,5 +164,8 @@ nav.nav {
     flex-direction: column;
     justify-content: start;
     padding: $padding-standard 2.5rem 0 2.5rem;
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 }
