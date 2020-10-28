@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/JwanKhalaf/Bejebeje.Api.svg?branch=develop)](https://travis-ci.org/JwanKhalaf/Bejebeje.Api)
-
 # Bejebeje
 
 This is code behind https://bejebeje.com
