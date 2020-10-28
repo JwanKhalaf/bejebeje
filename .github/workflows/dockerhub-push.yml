@@ -6,7 +6,7 @@ name: dockerhub-push
 # events but only for the develop branch
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 # a workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
