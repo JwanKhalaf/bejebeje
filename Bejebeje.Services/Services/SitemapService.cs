@@ -51,7 +51,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select artist_slugs.name as artist_slug, lslugs.name as primary_lyric_slug from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id left join artist_images as ai on ai.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where l.is_approved = true and l.is_deleted = false and a.is_deleted = false and a.is_approved = true;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select artist_slugs.name as artist_slug, lslugs.name as primary_lyric_slug from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where l.is_approved = true and l.is_deleted = false and a.is_deleted = false and a.is_approved = true;", connection);
 
       await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
