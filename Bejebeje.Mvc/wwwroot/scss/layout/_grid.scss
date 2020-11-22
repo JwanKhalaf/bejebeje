@@ -17,20 +17,20 @@ main {
   overflow-y: scroll;
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
-  padding: 0 0 0 $padding-standard;
+  padding: 0 0 0 $spacing-s;
   box-shadow: 0 6px #15151a;
 }
 
 .secondary_content {
-  margin: 0 $padding-standard $padding-standard-x2 0;
+  margin: 0 $spacing-s $spacing-s 0;
 
   &__social {
     background-color: $clr-dark-x2;
     display: flex;
     justify-content: space-between;
-    padding: $padding-standard;
+    padding: $spacing-s;
     border-radius: 5px;
-    margin: 0 0 $padding-standard-x2 0;
+    margin: 0 0 $spacing-d 0;
   }
 
   &__link {
@@ -129,6 +129,7 @@ nav.nav {
       display: flex;
       margin: 0;
       background-color: transparent;
+      padding: $spacing-s 0;
     }
 
     &__link {
@@ -136,7 +137,7 @@ nav.nav {
       display: block;
       width: 24px;
       height: 24px;
-      margin: 0 $padding-standard 0 0;
+      margin: 0 $spacing-s 0 0;
 
       &::before {
         content: '';
@@ -163,7 +164,7 @@ nav.nav {
   .nav.nav {
     flex-direction: column;
     justify-content: start;
-    padding: $padding-standard 2.5rem 0 2.5rem;
+    padding: $spacing-s 2.5rem 0 2.5rem;
     position: absolute;
     left: 0;
     top: 0;

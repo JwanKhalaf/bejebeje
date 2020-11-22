@@ -1,7 +1,7 @@
 ﻿.artist-info-wrap {
   background-color: #1D1D24;
-  margin: 0 $padding-standard $padding-standard 0;
-  padding: $padding-standard;
+  margin: 0 $spacing-s $spacing-s 0;
+  padding: $spacing-s;
   border-radius: 5px;
 
   .artist-info {
@@ -12,7 +12,7 @@
     &__image {
       border: 1px solid #65687F;
       border-radius: 50%;
-      margin-right: $padding-standard;
+      margin-right: $spacing-s;
       display: block;
     }
 
@@ -36,17 +36,17 @@
 }
 
 ul.lyrics {
-  padding: 0 $padding-standard 0 0;
-  margin: 0 0 $padding-standard-x2 0;
+  padding: 0 $spacing-s 0 0;
+  margin: 0 0 $spacing-d 0;
 
   .lyric {
     background-color: $clr-dark-x2;
-    margin: 0 0 $padding-standard 0;
+    margin: 0 0 $spacing-s 0;
     border-radius: $border-radius;
 
     .lyric__link {
       display: block;
-      padding: $padding-standard;
+      padding: $spacing-s;
     }
 
     .lyric__title {

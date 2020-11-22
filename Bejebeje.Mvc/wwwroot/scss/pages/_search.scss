@@ -1,7 +1,7 @@
 ﻿
 .search {
-  padding: 1.5rem $padding-standard 0 0;
-  margin-bottom: $padding-standard;
+  padding: 1.5rem $spacing-s 0 0;
+  margin-bottom: $spacing-s;
 
   &__form {
     display: flex;
@@ -36,7 +36,7 @@
 }
 
 .results {
-  padding: 0 $padding-standard 2rem 0;
+  padding: 0 $spacing-s 2rem 0;
 
   &__wrap {
     margin-bottom: 2rem;
@@ -62,7 +62,7 @@
 
   &__artist-item {
     display: flex;
-    margin-bottom: $padding-standard;
+    margin-bottom: $spacing-s;
     align-items: center;
   }
 
@@ -81,8 +81,8 @@
 
   &__lyric-item {
     background-color: $clr-dark-x2;
-    margin-bottom: $padding-standard;
-    padding: $padding-standard;
+    margin-bottom: $spacing-s;
+    padding: $spacing-s;
     border-radius: 5px;
   }
 
