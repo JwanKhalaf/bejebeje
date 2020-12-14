@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Common.Exceptions
 {
   using System;
-  using Bejebeje.Common.Extensions;
+  using Extensions;
 
   public class LyricNotFoundException : Exception
   {
@@ -12,12 +12,10 @@
       LyricSlug = lyricSlug;
     }
 
-    private LyricNotFoundException(string message) : base(message)
+    public LyricNotFoundException(int lyricId)
+      : base($"No lyric exists with Id: {lyricId}")
     {
-    }
-
-    private LyricNotFoundException(string message, Exception innerException) : base(message, innerException)
-    {
+      LyricId = lyricId;
     }
 
     public string ArtistSlug { get; }

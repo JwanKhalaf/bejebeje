@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Models.Artist
 {
   using System.Collections.Generic;
-  using Bejebeje.Models.Paging;
+  using Paging;
 
   public class PagedArtistSearchResponse
   {

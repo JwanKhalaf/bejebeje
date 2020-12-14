@@ -1,6 +1,6 @@
 ﻿namespace Bejebeje.Services.Services.Interfaces
 {
-  using Bejebeje.Domain;
+  using Domain;
 
   public interface IArtistSlugsService
   {

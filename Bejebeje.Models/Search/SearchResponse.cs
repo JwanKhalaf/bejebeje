@@ -1,6 +1,6 @@
 ﻿namespace Bejebeje.Models.Search
 {
-  using Bejebeje.Common.Enums;
+  using Common.Enums;
 
   public class SearchResponse
   {

@@ -23,7 +23,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\css\" />
-    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\js\site.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="wwwroot\images\icons\artists.svg">

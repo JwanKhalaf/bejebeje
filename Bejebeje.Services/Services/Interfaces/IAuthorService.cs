@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Services.Services.Interfaces
 {
   using System.Threading.Tasks;
-  using Bejebeje.Models.Author;
+  using Models.Author;
 
   public interface IAuthorService
   {

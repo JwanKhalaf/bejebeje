@@ -4,6 +4,8 @@
   using Bejebeje.Models.Artist;
   using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services.Interfaces;
+  using Extensions;
+  using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Mvc;
 
   public class LyricController : Controller
@@ -31,10 +33,31 @@
       string artistSlug,
       string lyricSlug)
     {
+      string userId = User.Identity.IsAuthenticated ? User.GetUserId().ToString() : string.Empty;
+
       LyricDetailsViewModel viewModel = await _lyricsService
-        .GetSingleLyricAsync(artistSlug, lyricSlug);
+        .GetSingleLyricAsync(artistSlug, lyricSlug, userId);
 
       return View(viewModel);
+    }
+
+    [Authorize]
+    [Route("lyrics/like/{lyricId}")]
+    public async Task<IActionResult> Like(
+      int lyricId)
+    {
+      try
+      {
+        string userId = User.GetUserId().ToString();
+
+        await _lyricsService.LikeLyricAsync(userId, lyricId);
+
+        return RedirectToAction("Index", "Home");
+      }
+      catch
+      {
+        return RedirectToAction("Index", "Home");
+      }
     }
   }
 }

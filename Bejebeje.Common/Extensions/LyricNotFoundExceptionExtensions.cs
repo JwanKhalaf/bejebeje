@@ -1,6 +1,6 @@
 ﻿namespace Bejebeje.Common.Extensions
 {
-  using Bejebeje.Common.Exceptions;
+  using Exceptions;
 
   public static class LyricNotFoundExceptionExtensions
   {

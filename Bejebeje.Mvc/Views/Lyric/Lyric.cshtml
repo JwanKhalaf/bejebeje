@@ -37,10 +37,67 @@
   </div>
 </div>
 
-<div class="lyric__title-wrap">
-  <h1 class="lyric__title">@Model.Title</h1>
+<div class="lyric__wrap">
+  <div class="lyric__title-wrap">
+    <h1 class="lyric__title">@Model.Title</h1>
+  </div>
+
+  <div class="likes__wrap">
+    <div class="like__button">
+      <a asp-route-lyricId="@Model.Id" class="@(Model.AlreadyLiked ? "like__link-clicked" : "like__link")" id="like-btn"></a>
+
+      <p class="like__count">@Model.NumberOfLikes</p>
+    </div>
+  </div>
+
+  <div class="lyric__body">
+    @Model.Body
+  </div>
 </div>
 
-<div class="lyric__body">
-  @Model.Body
-</div>
+@section Scripts {
+  <script>
+    docReady(function () {
+      let likeBtn = document.getElementById('like-btn');
+
+      let likeLyric = (event) => {
+        event.preventDefault();
+        console.log('attemping to like a lyric!');
+
+        // 1. create a new XMLHttpRequest object
+        let request = new XMLHttpRequest();
+
+        // 2. configure the request
+        request.open('GET', 'https://localhost:5001/lyrics/like/@Model.Id');
+
+        // 3. send the request over the network
+        request.send();
+
+        // 4. this will be called after the response is received
+        request.onload = function () {
+          if (request.status != 200) {
+            // analyse http status of the response
+            alert(`Error ${request.status}: ${request.statusText}`);
+          } else {
+            // show the result
+            alert(`Done, got ${request.response.length} bytes`); // response is the server response
+          }
+        };
+
+        request.onprogress = function (event) {
+          if (event.lengthComputable) {
+            alert(`Received ${event.loaded} of ${event.total} bytes`);
+          } else {
+            alert(`Received ${event.loaded} bytes`); // no Content-Length
+          }
+        };
+
+        request.onerror = function () {
+          alert("Request failed");
+        };
+      }
+
+      likeBtn.addEventListener('click', likeLyric);
+    });
+  </script>
+}

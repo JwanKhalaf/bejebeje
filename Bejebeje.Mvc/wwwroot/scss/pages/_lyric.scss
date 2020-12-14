@@ -2,6 +2,10 @@
   margin-bottom: $spacing-d;
 }
 
+.lyric__wrap {
+  position: relative;
+}
+
 .lyric__title-wrap {
   margin: 0 $spacing-s $spacing-d 0;
 }
@@ -20,6 +24,64 @@
   line-height: 1.65rem;
   padding: 0 $spacing-s $spacing-s 0;
   margin-top: -1.65rem;
+}
+
+.likes__wrap {
+  position: sticky;
+  top: $spacing-d;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.like__button {
+  position: absolute;
+  right: 2.5rem;
+  text-align: center;
+}
+
+.like__link {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 0 0 0.4rem 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    left: 0;
+    background-image: url('../images/icons/heart.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+}
+
+.like__link-clicked {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin: 0 0 0.4rem 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    left: 0;
+    background-image: url('../images/icons/heart_liked.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+}
+
+.like__count {
+  color: $clr-white;
 }
 
 @media (min-width: 1024px) {
