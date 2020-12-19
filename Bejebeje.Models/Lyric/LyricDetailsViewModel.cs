@@ -15,6 +15,8 @@
 
     public bool AlreadyLiked { get; set; }
 
+    public string PrimarySlug { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }

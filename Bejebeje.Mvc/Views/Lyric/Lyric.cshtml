@@ -44,7 +44,21 @@
 
   <div class="likes__wrap">
     <div class="like__button">
-      <a asp-route-lyricId="@Model.Id" class="@(Model.AlreadyLiked ? "like__link-clicked" : "like__link")" id="like-btn"></a>
+      @if (Model.AlreadyLiked)
+      {
+        // text
+        <span class="like__link-clicked"></span>
+      }
+      else
+      {
+        <a
+          asp-controller="Lyric"
+          asp-action="Like"
+          asp-route-artistSlug="@Model.Artist.PrimarySlug"
+          asp-route-lyricSlug="@Model.PrimarySlug"
+          asp-route-lyricId="@Model.Id"
+          class="like__link"></a>
+      }
 
       <p class="like__count">@Model.NumberOfLikes</p>
     </div>
@@ -54,36 +68,3 @@
     @Model.Body
   </div>
 </div>
-
-@section Scripts {
-  <script>
-    docReady(function () {
-      let likeBtn = document.getElementById('like-btn');
-
-      let likeLyric = (event) => {
-        event.preventDefault();
-        console.log('attemping to like a lyric!');
-
-        // create a new XMLHttpRequest object
-        let request = new XMLHttpRequest();
-
-        // configure the request
-        request.open('GET', 'https://localhost:5001/lyrics/like/@Model.Id');
-
-        // send the request over the network
-        request.send();
-
-        // this will be called after the response is received
-        request.onload = function () {
-          console.log(request.response);
-        };
-
-        request.onerror = function () {
-          alert("Request failed");
-        };
-      }
-
-      likeBtn.addEventListener('click', likeLyric);
-    });
-  </script>
-}

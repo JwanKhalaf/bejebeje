@@ -38,12 +38,16 @@
       LyricDetailsViewModel viewModel = await _lyricsService
         .GetSingleLyricAsync(artistSlug, lyricSlug, userId);
 
+      viewModel.PrimarySlug = lyricSlug;
+
       return View(viewModel);
     }
 
     [Authorize]
     [Route("lyrics/like/{lyricId}")]
     public async Task<IActionResult> Like(
+      string artistSlug,
+      string lyricSlug,
       int lyricId)
     {
       try
@@ -52,7 +56,7 @@
 
         await _lyricsService.LikeLyricAsync(userId, lyricId);
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Lyric", new { artistSlug = artistSlug, lyricSlug = lyricSlug });
       }
       catch
       {
