@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Models.Lyric
 {
   using System.Collections.Generic;
-  using Bejebeje.Models.Paging;
+  using Paging;
 
   public class PagedLyricSearchResponse
   {

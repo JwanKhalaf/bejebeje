@@ -37,10 +37,33 @@
   </div>
 </div>
 
-<div class="lyric__title-wrap">
-  <h1 class="lyric__title">@Model.Title</h1>
-</div>
+<div class="lyric__wrap">
+  <div class="lyric__title-wrap">
+    <h1 class="lyric__title">@Model.Title</h1>
+  </div>
 
-<div class="lyric__body">
-  @Model.Body
+  <div class="likes__wrap">
+    <div class="like__button">
+      @if (Model.AlreadyLiked)
+      {
+        <span class="like__link-clicked"></span>
+      }
+      else
+      {
+        <a
+          asp-controller="Lyric"
+          asp-action="Like"
+          asp-route-artistSlug="@Model.Artist.PrimarySlug"
+          asp-route-lyricSlug="@Model.PrimarySlug"
+          asp-route-lyricId="@Model.Id"
+          class="like__link"></a>
+      }
+
+      <p class="like__count">@Model.NumberOfLikes</p>
+    </div>
+  </div>
+
+  <div class="lyric__body">
+    @Model.Body
+  </div>
 </div>

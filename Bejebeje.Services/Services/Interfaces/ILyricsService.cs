@@ -2,8 +2,8 @@
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
-  using Bejebeje.Models.Artist;
-  using Bejebeje.Models.Lyric;
+  using Models.Artist;
+  using Models.Lyric;
   using Models.Search;
 
   public interface ILyricsService
@@ -16,8 +16,20 @@
 
     Task<LyricDetailsViewModel> GetSingleLyricAsync(
       string artistSlug,
-      string lyricSlug);
+      string lyricSlug,
+      string userId);
 
     Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync();
+
+    Task<bool> LyricExistsAsync(
+      int lyricId);
+
+    Task LikeLyricAsync(
+      string userId,
+      int lyricId);
+
+    Task<bool> LyricAlreadyLikedAsync(
+      string userId,
+      int lyricId);
   }
 }

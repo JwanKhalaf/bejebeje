@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Services.Tests.Services
 {
   using System;
-  using Bejebeje.Domain;
+  using Domain;
   using Bejebeje.Services.Services;
   using FluentAssertions;
   using NodaTime;

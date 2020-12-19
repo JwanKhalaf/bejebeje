@@ -2,7 +2,7 @@
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
-  using Bejebeje.Models.Artist;
+  using Models.Artist;
   using Models.Search;
 
   public interface IArtistsService

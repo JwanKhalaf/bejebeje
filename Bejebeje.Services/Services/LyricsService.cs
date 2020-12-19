@@ -6,6 +6,7 @@
   using System.Threading.Tasks;
   using Bejebeje.Common.Extensions;
   using Common.Enums;
+  using Common.Exceptions;
   using Common.Helpers;
   using Config;
   using Extensions;
@@ -110,7 +111,8 @@
 
     public async Task<LyricDetailsViewModel> GetSingleLyricAsync(
       string artistSlug,
-      string lyricSlug)
+      string lyricSlug,
+      string userId)
     {
       LyricDetailsViewModel viewModel = new LyricDetailsViewModel();
 
@@ -122,7 +124,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select l.title, l.body, l.created_at, l.modified_at from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id where ls.name = @lyric_slug and artist_slugs.name = @artist_slug;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.created_at, l.modified_at from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where ls.name = @lyric_slug and artist_slugs.name = @artist_slug group by l.id order by number_of_likes;", connection);
 
       command.Parameters.AddWithValue("@artist_slug", artistSlug);
       command.Parameters.AddWithValue("@lyric_slug", lyricSlug);
@@ -131,16 +133,22 @@
 
       while (await reader.ReadAsync())
       {
-        string lyricTitle = Convert.ToString(reader[0]).Trim();
-        string lyricBody = Convert.ToString(reader[1]).Trim();
-        DateTime lyricCreatedAt = Convert.ToDateTime(reader[2]);
-        DateTime? lyricModifiedAt = reader[3] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[3]);
+        int lyricId = Convert.ToInt32(reader[0]);
+        string lyricTitle = Convert.ToString(reader[1]).Trim();
+        string lyricBody = Convert.ToString(reader[2]).Trim();
+        int numberOfLikes = Convert.ToInt32(reader[3]);
+        DateTime lyricCreatedAt = Convert.ToDateTime(reader[4]);
+        DateTime? lyricModifiedAt = reader[5] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[5]);
 
+        viewModel.Id = lyricId;
         viewModel.Title = lyricTitle;
         viewModel.Body = lyricBody;
+        viewModel.NumberOfLikes = numberOfLikes;
         viewModel.CreatedAt = lyricCreatedAt;
         viewModel.ModifiedAt = lyricModifiedAt;
       }
+
+      viewModel.AlreadyLiked = await LyricAlreadyLikedAsync(userId, viewModel.Id);
 
       return viewModel;
     }
@@ -189,6 +197,90 @@
       lyricRecentSubmissionViewModel.Lyrics = lyricItemViewModels;
 
       return lyricRecentSubmissionViewModel;
+    }
+
+    public async Task<bool> LyricExistsAsync(
+      int lyricId)
+    {
+      bool lyricExists = false;
+
+      string sqlCommand = "select exists(select 1 from lyrics where is_deleted = false and is_approved = true and id = @lyric_id);";
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+      command.Parameters.AddWithValue("@lyric_id", lyricId);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        lyricExists = Convert.ToBoolean(reader[0]);
+      }
+
+      return lyricExists;
+    }
+
+    public async Task LikeLyricAsync(
+      string userId,
+      int lyricId)
+    {
+      bool lyricExists = await LyricExistsAsync(lyricId);
+
+      if (lyricExists)
+      {
+        string sqlCommand = "insert into likes (user_id, lyric_id) values (@user_id, @lyric_id);";
+
+        await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+
+        await connection.OpenAsync();
+
+        await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+        command.Parameters.AddWithValue("@user_id", userId);
+        command.Parameters.AddWithValue("@lyric_id", lyricId);
+
+        await command.ExecuteNonQueryAsync();
+      }
+      else
+      {
+        throw new LyricNotFoundException(lyricId);
+      }
+    }
+
+    public async Task<bool> LyricAlreadyLikedAsync(
+      string userId,
+      int lyricId)
+    {
+      bool lyricAlreadyLiked = false;
+
+      if (string.IsNullOrEmpty(userId))
+      {
+        return false;
+      }
+
+      string sqlCommand = "select exists(select 1 from likes where lyric_id = @lyric_id and user_id = @user_id) as already_liked;";
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+
+      await connection.OpenAsync();
+
+      await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+      command.Parameters.AddWithValue("@user_id", userId);
+      command.Parameters.AddWithValue("@lyric_id", lyricId);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        lyricAlreadyLiked = Convert.ToBoolean(reader[0]);
+      }
+
+      return lyricAlreadyLiked;
     }
   }
 }
