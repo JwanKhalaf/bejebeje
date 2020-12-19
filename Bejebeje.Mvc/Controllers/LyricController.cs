@@ -33,7 +33,9 @@
       string artistSlug,
       string lyricSlug)
     {
-      string userId = User.Identity.IsAuthenticated ? User.GetUserId().ToString() : string.Empty;
+      string userId = User.Identity.IsAuthenticated
+        ? User.GetUserId().ToString()
+        : string.Empty;
 
       LyricDetailsViewModel viewModel = await _lyricsService
         .GetSingleLyricAsync(artistSlug, lyricSlug, userId);
@@ -60,7 +62,7 @@
       }
       catch
       {
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Lyric", new { artistSlug = artistSlug, lyricSlug = lyricSlug });
       }
     }
   }

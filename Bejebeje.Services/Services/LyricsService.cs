@@ -150,9 +150,6 @@
 
       viewModel.AlreadyLiked = await LyricAlreadyLikedAsync(userId, viewModel.Id);
 
-      command.Parameters.AddWithValue("@artist_slug", artistSlug);
-      command.Parameters.AddWithValue("@lyric_slug", lyricSlug);
-
       return viewModel;
     }
 
