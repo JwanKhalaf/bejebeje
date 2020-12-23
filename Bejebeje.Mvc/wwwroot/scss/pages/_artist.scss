@@ -35,24 +35,24 @@
   }
 }
 
-ul.lyrics {
+ul.artist-lyrics {
   padding: 0 $spacing-s 0 0;
   margin: 0 0 $spacing-d 0;
+}
 
-  .lyric {
-    background-color: $clr-dark-x2;
-    margin: 0 0 $spacing-s 0;
-    border-radius: $border-radius;
+.artist-lyric {
+  background-color: $clr-dark-x2;
+  margin: 0 0 $spacing-s 0;
+  border-radius: $border-radius;
+}
 
-    .lyric__link {
-      display: block;
-      padding: $spacing-s;
-    }
+.artist-lyric__link {
+  display: block;
+  padding: $spacing-s;
+}
 
-    .lyric__title {
-      font-size: 1rem;
-      color: rgba($clr-white, .7);
-      font-family: $serif;
-    }
-  }
+.artist-lyric__title {
+  font-size: 1.25rem;
+  color: rgba($clr-white, .7);
+  font-family: $serif;
 }

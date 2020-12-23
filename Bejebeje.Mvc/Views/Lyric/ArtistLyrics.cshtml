@@ -38,12 +38,12 @@
   </div>
 </div>
 
-<ul class="lyrics">
+<ul class="artist-lyrics">
   @foreach (var lyric in Model.Lyrics)
   {
-    <li class="lyric">
-      <a class="lyric__link" asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
-        <h4 class="lyric__title">@lyric.Title</h4>
+    <li class="artist-lyric">
+      <a class="artist-lyric__link" asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
+        <h4 class="artist-lyric__title">@lyric.Title</h4>
       </a>
     </li>
   }

@@ -18,7 +18,7 @@
 </div>
 
 
-<div class="artist-info-wrap">
+<a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug" class="artist-info-wrap">
   <div class="artist-info">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
@@ -35,7 +35,7 @@
       <h1 class="artist-info__name">@Model.Artist.FullName</h1>
     </div>
   </div>
-</div>
+</a>
 
 <div class="lyric__wrap">
   <div class="lyric__title-wrap">
