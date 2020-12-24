@@ -47,12 +47,32 @@ ul.artist-lyrics {
 }
 
 .artist-lyric__link {
-  display: block;
+  display: flex;
   padding: $spacing-s;
+  justify-content: space-between;
 }
 
 .artist-lyric__title {
   font-size: 1.25rem;
   color: rgba($clr-white, .7);
   font-family: $serif;
+}
+
+.artist-lyric__verification-badge {
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 0;
+    background-image: url('../images/icons/badge.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
 }

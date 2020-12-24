@@ -41,7 +41,7 @@
       ArtistViewModel artistViewModel = await _artistsService
         .GetArtistDetailsAsync(artistSlug);
 
-      string sqlCommand = "select l.title as lyric_title, lslugs.name as lyric_slug from lyrics as l inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_id = @artist_id and l.is_deleted = false and l.is_approved = true and lslugs.is_primary = true order by l.title asc;";
+      string sqlCommand = "select l.title as lyric_title, lslugs.name as lyric_slug, l.is_verified from lyrics as l inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_id = @artist_id and l.is_deleted = false and l.is_approved = true and lslugs.is_primary = true order by l.title asc;";
 
       List<LyricCardViewModel> lyricCardViewModels = new List<LyricCardViewModel>();
 
@@ -58,11 +58,13 @@
       {
         LyricCardViewModel lyricCardViewModel = new LyricCardViewModel();
 
-        string lyricTitle = Convert.ToString(reader[0]);
-        string lyricSlug = Convert.ToString(reader[1]);
+        string title = Convert.ToString(reader[0]);
+        string primarySlug = Convert.ToString(reader[1]);
+        bool isVerified = Convert.ToBoolean(reader[2]);
 
-        lyricCardViewModel.Title = lyricTitle;
-        lyricCardViewModel.Slug = lyricSlug;
+        lyricCardViewModel.Title = title;
+        lyricCardViewModel.Slug = primarySlug;
+        lyricCardViewModel.IsVerified = isVerified;
 
         lyricCardViewModels.Add(lyricCardViewModel);
       }
@@ -124,7 +126,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.created_at, l.modified_at from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where ls.name = @lyric_slug and artist_slugs.name = @artist_slug group by l.id order by number_of_likes;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where ls.name = @lyric_slug and artist_slugs.name = @artist_slug group by l.id order by number_of_likes;", connection);
 
       command.Parameters.AddWithValue("@artist_slug", artistSlug);
       command.Parameters.AddWithValue("@lyric_slug", lyricSlug);
@@ -137,13 +139,15 @@
         string lyricTitle = Convert.ToString(reader[1]).Trim();
         string lyricBody = Convert.ToString(reader[2]).Trim();
         int numberOfLikes = Convert.ToInt32(reader[3]);
-        DateTime lyricCreatedAt = Convert.ToDateTime(reader[4]);
-        DateTime? lyricModifiedAt = reader[5] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[5]);
+        bool isVerified = Convert.ToBoolean(reader[4]);
+        DateTime lyricCreatedAt = Convert.ToDateTime(reader[5]);
+        DateTime? lyricModifiedAt = reader[6] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
 
         viewModel.Id = lyricId;
         viewModel.Title = lyricTitle;
         viewModel.Body = lyricBody;
         viewModel.NumberOfLikes = numberOfLikes;
+        viewModel.IsVerified = isVerified;
         viewModel.CreatedAt = lyricCreatedAt;
         viewModel.ModifiedAt = lyricModifiedAt;
       }

@@ -17,7 +17,6 @@
   </form>
 </div>
 
-
 <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug" class="artist-info-wrap">
   <div class="artist-info">
     <picture>
@@ -42,28 +41,34 @@
     <h1 class="lyric__title">@Model.Title</h1>
   </div>
 
-  <div class="likes__wrap">
-    <div class="like__button">
-      @if (Model.AlreadyLiked)
-      {
-        <span class="like__link-clicked"></span>
-      }
-      else
-      {
-        <a
-          asp-controller="Lyric"
-          asp-action="Like"
-          asp-route-artistSlug="@Model.Artist.PrimarySlug"
-          asp-route-lyricSlug="@Model.PrimarySlug"
-          asp-route-lyricId="@Model.Id"
-          class="like__link"></a>
-      }
-
-      <p class="like__count">@Model.NumberOfLikes</p>
+  <div class="lyric__body-wrap">
+    <div class="lyric__body">
+      @Model.Body
     </div>
-  </div>
 
-  <div class="lyric__body">
-    @Model.Body
+    <div class="actions__wrap">
+      @if (Model.IsVerified)
+      {
+        <span class="verification-badge" title="Verified for accuracy"></span>
+      }
+
+      <div class="like__button">
+        @if (Model.AlreadyLiked)
+        {
+          <span class="like__link-clicked"></span>
+        }
+        else
+        {
+          <a asp-controller="Lyric"
+             asp-action="Like"
+             asp-route-artistSlug="@Model.Artist.PrimarySlug"
+             asp-route-lyricSlug="@Model.PrimarySlug"
+             asp-route-lyricId="@Model.Id"
+             class="like__link"></a>
+        }
+
+        <p class="like__count">@Model.NumberOfLikes</p>
+      </div>
+    </div>
   </div>
 </div>
