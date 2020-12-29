@@ -1,5 +1,6 @@
-﻿@using Bejebeje.Models.Lyric
-@model Bejebeje.Models.Lyric.LyricRecentSubmissionViewModel
+﻿@using Bejebeje.Models.Artist
+@using Bejebeje.Models.Lyric
+@model Bejebeje.Models.Lyric.IndexViewModel
 
 @{
   ViewData["Title"] = "Home";
@@ -44,6 +45,35 @@
 
           <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug" class="recent__artist-link">
             <h3 class="recent__artist-name">@item.ArtistName</h3>
+          </a>
+        </div>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="featured_list">
+  <h2 class="featured_list__title">Popular Female Artists</h2>
+
+  <ul class="featured_list__content">
+    @foreach (ArtistItemViewModel item in Model.FemaleArtists)
+    {
+      <li class="featured_list__content-item">
+        <div class="recent">
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug" class="recent__lyric-link">
+            <picture>
+              <source type="image/webp" srcset=@($"{item.ImageUrl}.webp")>
+              <source type="image/jpeg" srcset=@($"{item.ImageUrl}.jpg")>
+
+              <img class="recent__artist-image"
+                   src=@( $"{item.ImageUrl}.jpg" )
+                   width="80"
+                   height="80"
+                   loading="lazy"
+                   alt="@item.ImageAlternateText" />
+            </picture>
+
+            <h2 class="recent__lyric-title">@item.FirstName @item.LastName</h2>
           </a>
         </div>
       </li>

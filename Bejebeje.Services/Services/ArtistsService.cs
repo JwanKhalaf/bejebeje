@@ -76,6 +76,49 @@
       return true;
     }
 
+    public async Task<IEnumerable<ArtistItemViewModel>> GetRandomFemaleArtistsAsync()
+    {
+      List<ArtistItemViewModel> femaleArtists = new List<ArtistItemViewModel>();
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      string sqlCommand = @"select a.id, a.first_name, a.last_name, s.""name"", a.has_image from artists a inner join artist_slugs s on s.artist_id = a.id where sex = 'f' and s.is_primary = true order by random() limit 10;";
+
+      await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      while (await reader.ReadAsync())
+      {
+        int id = Convert.ToInt32(reader[0]);
+        string firstName = _textInfo.ToTitleCase(Convert.ToString(reader[1])).Trim();
+        string lastName = _textInfo.ToTitleCase(Convert.ToString(reader[2])).Trim();
+        string primarySlug = Convert.ToString(reader[3]);
+        bool hasImage = Convert.ToBoolean(reader[4]);
+
+        string artistFullName = $"{firstName} {lastName}".Trim();
+
+        string artistImageUrl = ImageUrlBuilder
+          .BuildImageUrl(hasImage, primarySlug, id, ImageSize.Standard);
+
+        string artistImageAlternateText = ImageUrlBuilder
+          .GetImageAlternateText(hasImage, artistFullName);
+
+        ArtistItemViewModel artist = new ArtistItemViewModel();
+
+        artist.FirstName = firstName;
+        artist.LastName = lastName;
+        artist.PrimarySlug = primarySlug;
+        artist.ImageUrl = artistImageUrl;
+        artist.ImageAlternateText = artistImageAlternateText;
+
+        femaleArtists.Add(artist);
+      }
+
+      return femaleArtists;
+    }
+
     public async Task<ArtistViewModel> GetArtistDetailsAsync(
       string artistSlug)
     {

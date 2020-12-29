@@ -157,9 +157,8 @@
       return viewModel;
     }
 
-    public async Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync()
+    public async Task<IEnumerable<LyricItemViewModel>> GetRecentLyricsAsync()
     {
-      LyricRecentSubmissionViewModel lyricRecentSubmissionViewModel = new LyricRecentSubmissionViewModel();
       List<LyricItemViewModel> lyricItemViewModels = new List<LyricItemViewModel>();
 
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
@@ -198,9 +197,7 @@
         lyricItemViewModels.Add(lyricItemViewModel);
       }
 
-      lyricRecentSubmissionViewModel.Lyrics = lyricItemViewModels;
-
-      return lyricRecentSubmissionViewModel;
+      return lyricItemViewModels;
     }
 
     public async Task<bool> LyricExistsAsync(
