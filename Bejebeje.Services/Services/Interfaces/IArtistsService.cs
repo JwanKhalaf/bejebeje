@@ -13,6 +13,8 @@
     Task<bool> ArtistExistsAsync(
       string artistSlug);
 
+    Task<IEnumerable<ArtistItemViewModel>> GetRandomFemaleArtistsAsync();
+
     Task<ArtistViewModel> GetArtistDetailsAsync(
       string artistSlug);
 

@@ -19,7 +19,7 @@
       string lyricSlug,
       string userId);
 
-    Task<LyricRecentSubmissionViewModel> GetRecentLyricsAsync();
+    Task<IEnumerable<LyricItemViewModel>> GetRecentLyricsAsync();
 
     Task<bool> LyricExistsAsync(
       int lyricId);
