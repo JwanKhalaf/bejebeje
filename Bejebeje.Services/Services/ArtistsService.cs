@@ -83,7 +83,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      string sqlCommand = @"select a.id, a.first_name, a.last_name, s.""name"", a.has_image, count(l.id) as number_of_lyrics from artists a left join lyrics l on a.id = l.artist_id inner join artist_slugs s on s.artist_id = a.id where a.sex = 'f' group by a.id, s.""name"" order by number_of_lyrics desc limit 10;";
+      string sqlCommand = @"select a.id, a.first_name, a.last_name, s.""name"", a.has_image, count(l.id) as number_of_lyrics from artists a left join lyrics l on a.id = l.artist_id inner join artist_slugs s on s.artist_id = a.id where a.sex = 'f' and s.is_primary = true group by a.id, s.""name"" order by number_of_lyrics desc limit 10;";
 
       await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
