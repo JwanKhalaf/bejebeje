@@ -29,7 +29,7 @@
         .GetRecentLyricsAsync();
 
       viewModel.FemaleArtists = await _artistsService
-        .GetRandomFemaleArtistsAsync();
+        .GetTopTenFemaleArtistsByLyricsCountAsync();
 
       return View(viewModel);
     }
