@@ -19,6 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Services.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bejebeje.Mvc", "Bejebeje.Mvc\Bejebeje.Mvc.csproj", "{64B58334-24C1-4FB8-92F6-ED3E321656DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bejebeje.Mvc.Tests", "Bejebeje.Mvc.Tests\Bejebeje.Mvc.Tests.csproj", "{96A451FE-8A22-4324-819E-756B2116BFFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B848D104-5082-43E0-9163-E56180E565D8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,12 +60,17 @@ Global
 		{64B58334-24C1-4FB8-92F6-ED3E321656DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64B58334-24C1-4FB8-92F6-ED3E321656DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64B58334-24C1-4FB8-92F6-ED3E321656DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96A451FE-8A22-4324-819E-756B2116BFFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96A451FE-8A22-4324-819E-756B2116BFFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96A451FE-8A22-4324-819E-756B2116BFFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96A451FE-8A22-4324-819E-756B2116BFFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{70E06816-AD45-46C2-BD21-86C957837E7B} = {827542D6-C0E1-440C-8B6E-79D39B4C5AF9}
+		{96A451FE-8A22-4324-819E-756B2116BFFC} = {827542D6-C0E1-440C-8B6E-79D39B4C5AF9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {072F206A-915A-4089-AF1F-D8205382CD77}
