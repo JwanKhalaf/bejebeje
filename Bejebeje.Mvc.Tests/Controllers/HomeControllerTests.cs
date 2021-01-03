@@ -15,7 +15,7 @@
   public class HomeControllerTests
   {
     [Test]
-    public async Task Index_ReturnsView()
+    public async Task Index_ReturnsAViewResult_WithAnIndexViewModel()
     {
       // arrange
       IEnumerable<ArtistItemViewModel> tenFemaleArtists = new List<ArtistItemViewModel>
@@ -102,9 +102,9 @@
         }
       };
 
-      Mock<IArtistsService> artistsServiceMock = new Mock<IArtistsService>();
+      Mock<IArtistsService> mockArtistsService = new Mock<IArtistsService>();
 
-      artistsServiceMock
+      mockArtistsService
         .Setup(x => x.GetTopTenFemaleArtistsByLyricsCountAsync())
         .ReturnsAsync(tenFemaleArtists);
 
@@ -212,17 +212,22 @@
         },
       };
 
-      Mock<ILyricsService> lyricsServiceMock = new Mock<ILyricsService>();
+      Mock<ILyricsService> mockLyricsService = new Mock<ILyricsService>();
 
-      lyricsServiceMock.Setup(x => x.GetRecentLyricsAsync()).ReturnsAsync(tenRecentLyrics);
+      mockLyricsService
+        .Setup(x => x.GetRecentLyricsAsync())
+        .ReturnsAsync(tenRecentLyrics);
 
-      HomeController homeController = new HomeController(artistsServiceMock.Object, lyricsServiceMock.Object);
+      HomeController homeController = new HomeController(mockArtistsService.Object, mockLyricsService.Object);
 
       // act
       IActionResult actionResult = await homeController.Index();
 
       // assert
-      actionResult.Should().NotBeNull();
+      ViewResult view = actionResult.Should().BeOfType<ViewResult>().Subject;
+      IndexViewModel viewModel = view.Model.Should().BeOfType<IndexViewModel>().Subject;
+      viewModel.FemaleArtists.Should().HaveCount(10);
+      viewModel.Lyrics.Should().HaveCount(10);
     }
   }
 }
