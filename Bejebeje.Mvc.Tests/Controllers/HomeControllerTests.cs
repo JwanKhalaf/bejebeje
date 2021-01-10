@@ -18,89 +18,7 @@
     public async Task Index_ReturnsAViewResult_WithAnIndexViewModel()
     {
       // arrange
-      IEnumerable<ArtistItemViewModel> tenFemaleArtists = new List<ArtistItemViewModel>
-      {
-        new ArtistItemViewModel
-        {
-          FirstName = "A1",
-          LastName = "A1",
-          ImageAlternateText = "A1",
-          ImageUrl = "A1",
-          PrimarySlug = "A1",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A2",
-          LastName = "A2",
-          ImageAlternateText = "A2",
-          ImageUrl = "A2",
-          PrimarySlug = "A2",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A3",
-          LastName = "A3",
-          ImageAlternateText = "A3",
-          ImageUrl = "A3",
-          PrimarySlug = "A3",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A4",
-          LastName = "A4",
-          ImageAlternateText = "A4",
-          ImageUrl = "A4",
-          PrimarySlug = "A4",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A5",
-          LastName = "A5",
-          ImageAlternateText = "A5",
-          ImageUrl = "A5",
-          PrimarySlug = "A5",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A6",
-          LastName = "A6",
-          ImageAlternateText = "A6",
-          ImageUrl = "A6",
-          PrimarySlug = "A6",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A7",
-          LastName = "A7",
-          ImageAlternateText = "A7",
-          ImageUrl = "A7",
-          PrimarySlug = "A7",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A8",
-          LastName = "A8",
-          ImageAlternateText = "A8",
-          ImageUrl = "A8",
-          PrimarySlug = "A8",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A9",
-          LastName = "A9",
-          ImageAlternateText = "A9",
-          ImageUrl = "A9",
-          PrimarySlug = "A9",
-        },
-        new ArtistItemViewModel
-        {
-          FirstName = "A10",
-          LastName = "A10",
-          ImageAlternateText = "A10",
-          ImageUrl = "A10",
-          PrimarySlug = "A10",
-        }
-      };
+      IEnumerable<ArtistItemViewModel> tenFemaleArtists = GetListOfFemaleArtists();
 
       Mock<IArtistsService> mockArtistsService = new Mock<IArtistsService>();
 
@@ -108,7 +26,29 @@
         .Setup(x => x.GetTopTenFemaleArtistsByLyricsCountAsync())
         .ReturnsAsync(tenFemaleArtists);
 
-      IEnumerable<LyricItemViewModel> tenRecentLyrics = new List<LyricItemViewModel>
+      IEnumerable<LyricItemViewModel> tenRecentLyrics = GetListOfRecentLyrics();
+
+      Mock<ILyricsService> mockLyricsService = new Mock<ILyricsService>();
+
+      mockLyricsService
+        .Setup(x => x.GetRecentLyricsAsync())
+        .ReturnsAsync(tenRecentLyrics);
+
+      HomeController homeController = new HomeController(mockArtistsService.Object, mockLyricsService.Object);
+
+      // act
+      IActionResult actionResult = await homeController.Index();
+
+      // assert
+      ViewResult view = actionResult.Should().BeOfType<ViewResult>().Subject;
+      IndexViewModel viewModel = view.Model.Should().BeOfType<IndexViewModel>().Subject;
+      viewModel.FemaleArtists.Should().HaveCount(10);
+      viewModel.Lyrics.Should().HaveCount(10);
+    }
+
+    private static IEnumerable<LyricItemViewModel> GetListOfRecentLyrics()
+    {
+      return new List<LyricItemViewModel>
       {
         new LyricItemViewModel
         {
@@ -211,23 +151,93 @@
           ArtistImageAlternateText = "L10",
         },
       };
+    }
 
-      Mock<ILyricsService> mockLyricsService = new Mock<ILyricsService>();
-
-      mockLyricsService
-        .Setup(x => x.GetRecentLyricsAsync())
-        .ReturnsAsync(tenRecentLyrics);
-
-      HomeController homeController = new HomeController(mockArtistsService.Object, mockLyricsService.Object);
-
-      // act
-      IActionResult actionResult = await homeController.Index();
-
-      // assert
-      ViewResult view = actionResult.Should().BeOfType<ViewResult>().Subject;
-      IndexViewModel viewModel = view.Model.Should().BeOfType<IndexViewModel>().Subject;
-      viewModel.FemaleArtists.Should().HaveCount(10);
-      viewModel.Lyrics.Should().HaveCount(10);
+    private static IEnumerable<ArtistItemViewModel> GetListOfFemaleArtists()
+    {
+      return new List<ArtistItemViewModel>
+      {
+        new ArtistItemViewModel
+        {
+          FirstName = "A1",
+          LastName = "A1",
+          ImageAlternateText = "A1",
+          ImageUrl = "A1",
+          PrimarySlug = "A1",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A2",
+          LastName = "A2",
+          ImageAlternateText = "A2",
+          ImageUrl = "A2",
+          PrimarySlug = "A2",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A3",
+          LastName = "A3",
+          ImageAlternateText = "A3",
+          ImageUrl = "A3",
+          PrimarySlug = "A3",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A4",
+          LastName = "A4",
+          ImageAlternateText = "A4",
+          ImageUrl = "A4",
+          PrimarySlug = "A4",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A5",
+          LastName = "A5",
+          ImageAlternateText = "A5",
+          ImageUrl = "A5",
+          PrimarySlug = "A5",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A6",
+          LastName = "A6",
+          ImageAlternateText = "A6",
+          ImageUrl = "A6",
+          PrimarySlug = "A6",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A7",
+          LastName = "A7",
+          ImageAlternateText = "A7",
+          ImageUrl = "A7",
+          PrimarySlug = "A7",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A8",
+          LastName = "A8",
+          ImageAlternateText = "A8",
+          ImageUrl = "A8",
+          PrimarySlug = "A8",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A9",
+          LastName = "A9",
+          ImageAlternateText = "A9",
+          ImageUrl = "A9",
+          PrimarySlug = "A9",
+        },
+        new ArtistItemViewModel
+        {
+          FirstName = "A10",
+          LastName = "A10",
+          ImageAlternateText = "A10",
+          ImageUrl = "A10",
+          PrimarySlug = "A10",
+        }
+      };
     }
   }
 }
