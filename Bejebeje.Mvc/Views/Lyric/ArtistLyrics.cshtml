@@ -17,6 +17,12 @@
   </form>
 </div>
 
+@if (!Model.Artist.IsApproved)
+{
+  <div class="warning">
+    <p>Your submission is awaiting approval.</p>
+  </div>
+}
 
 <div class="artist-info-wrap">
   <div class="artist-info">
@@ -44,7 +50,7 @@
     <li class="artist-lyric">
       <a class="artist-lyric__link" asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
         <h4 class="artist-lyric__title">@lyric.Title</h4>
-        
+
         @if (lyric.IsVerified)
         {
           <span class="artist-lyric__verification-badge" title="Verified for accuracy"></span>

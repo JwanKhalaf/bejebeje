@@ -16,7 +16,7 @@
     Task<IEnumerable<ArtistItemViewModel>> GetTopTenFemaleArtistsByLyricsCountAsync();
 
     Task<ArtistViewModel> GetArtistDetailsAsync(
-      string artistSlug);
+      string artistSlug, string userId);
 
     Task<CreateNewArtistResponse> CreateNewArtistAsync(
       CreateNewArtistRequest request);
@@ -25,5 +25,8 @@
       string artistName);
 
     Task<IDictionary<char, List<LibraryArtistViewModel>>> GetAllArtistsAsync();
+
+    Task<ArtistCreationResult> AddArtistAsync(
+      CreateArtistViewModel viewModel);
   }
 }

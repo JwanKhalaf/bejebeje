@@ -5,6 +5,28 @@
   ViewData["Description"] = "Contribute to Kurdish Music and the archiving project by submitting a new artist and their lyrics.";
 }
 
-<header>
-  <h1>Add a new artist</h1>
-</header>
+<div class="breadcrumb-nav">
+  <nav>
+    <a asp-controller="Home" asp-action="Index">/ New artist</a>
+  </nav>
+</div>
+
+<div class="form__new-artist">
+  <form asp-controller="Artist" asp-action="Create" method="post">
+    <div class="form-group">
+      <label class="label">First name</label>
+      <input asp-for="FirstName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label class="label">Last name</label>
+      <input asp-for="LastName" class="form-control" />
+    </div>
+
+    <div class="warning">
+      <p>Before adding the new artist, please make sure the artist does not already exist.</p>
+    </div>
+
+    <input type="submit" class="form-control" value="Create artist" />
+  </form>
+</div>

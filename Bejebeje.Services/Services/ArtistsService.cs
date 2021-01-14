@@ -16,6 +16,7 @@
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Options;
   using Models.Artist;
+  using Models.ArtistSlug;
   using Models.Search;
   using NodaTime;
   using Npgsql;
@@ -120,48 +121,59 @@
     }
 
     public async Task<ArtistViewModel> GetArtistDetailsAsync(
-      string artistSlug)
+      string artistSlug,
+      string userId)
     {
       ArtistViewModel artistViewModel = new ArtistViewModel();
 
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true order by a.first_name asc;";
+      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at, a.is_approved from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where case when @user_id <> '' then (a.is_approved = true or a.user_id = @user_id) else a.is_approved = true end and aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true order by a.first_name asc;";
 
       await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
+      command.Parameters.AddWithValue("@user_id", userId);
       command.Parameters.AddWithValue("@artist_slug", artistSlug);
 
       await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
-      while (await reader.ReadAsync())
+      if (reader.HasRows)
       {
-        int artistId = Convert.ToInt32(reader[0]);
-        string firstName = _textInfo.ToTitleCase(Convert.ToString(reader[1])).Trim();
-        string lastName = _textInfo.ToTitleCase(Convert.ToString(reader[2])).Trim();
-        string artistPrimarySlug = Convert.ToString(reader[3]);
-        bool artistHasImage = Convert.ToBoolean(reader[4]);
-        DateTime createdAt = Convert.ToDateTime(reader[5]);
-        DateTime? modifiedAt = reader[6] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
+        while (await reader.ReadAsync())
+        {
+          int artistId = Convert.ToInt32(reader[0]);
+          string firstName = _textInfo.ToTitleCase(Convert.ToString(reader[1])).Trim();
+          string lastName = _textInfo.ToTitleCase(Convert.ToString(reader[2])).Trim();
+          string artistPrimarySlug = Convert.ToString(reader[3]);
+          bool artistHasImage = Convert.ToBoolean(reader[4]);
+          DateTime createdAt = Convert.ToDateTime(reader[5]);
+          DateTime? modifiedAt = reader[6] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
+          bool isApproved = Convert.ToBoolean(reader[7]);
 
-        string artistFullName = $"{firstName} {lastName}".Trim();
+          string artistFullName = $"{firstName} {lastName}".Trim();
 
-        string artistImageUrl = ImageUrlBuilder
-          .BuildImageUrl(artistHasImage, artistPrimarySlug, artistId, ImageSize.Standard);
+          string artistImageUrl = ImageUrlBuilder
+            .BuildImageUrl(artistHasImage, artistPrimarySlug, artistId, ImageSize.Standard);
 
-        string artistImageAlternateText = ImageUrlBuilder
-          .GetImageAlternateText(artistHasImage, artistFullName);
+          string artistImageAlternateText = ImageUrlBuilder
+            .GetImageAlternateText(artistHasImage, artistFullName);
 
-        artistViewModel.Id = artistId;
-        artistViewModel.FirstName = firstName;
-        artistViewModel.LastName = lastName;
-        artistViewModel.FullName = $"{firstName} {lastName}";
-        artistViewModel.PrimarySlug = artistPrimarySlug;
-        artistViewModel.ImageUrl = artistImageUrl;
-        artistViewModel.ImageAlternateText = artistImageAlternateText;
-        artistViewModel.CreatedAt = createdAt;
-        artistViewModel.ModifiedAt = modifiedAt;
+          artistViewModel.Id = artistId;
+          artistViewModel.FirstName = firstName;
+          artistViewModel.LastName = lastName;
+          artistViewModel.FullName = $"{firstName} {lastName}";
+          artistViewModel.PrimarySlug = artistPrimarySlug;
+          artistViewModel.IsApproved = isApproved;
+          artistViewModel.ImageUrl = artistImageUrl;
+          artistViewModel.ImageAlternateText = artistImageAlternateText;
+          artistViewModel.CreatedAt = createdAt;
+          artistViewModel.ModifiedAt = modifiedAt;
+        }
+      }
+      else
+      {
+        throw new ArtistNotFoundException(artistSlug);
       }
 
       return artistViewModel;
@@ -287,7 +299,63 @@
       return dictionary;
     }
 
-    private IDictionary<char, List<LibraryArtistViewModel>> BuildDictionary(List<LibraryArtistViewModel> artists)
+    public async Task<ArtistCreationResult> AddArtistAsync(
+      CreateArtistViewModel viewModel)
+    {
+      ArtistCreationResult result = new ArtistCreationResult();
+      string connectionString = _databaseOptions.ConnectionString;
+      string sqlStatement = "insert into artists (first_name, last_name, full_name, is_approved, user_id, created_at, is_deleted, has_image) values (@first_name, @last_name, @full_name, @is_approved, @user_id, @created_at, @is_deleted, @has_image) returning id";
+      int artistId = 0;
+
+      string firstName = viewModel.FirstName.ToLower();
+      string lastName = viewModel.LastName.ToLower();
+      string fullName = string.IsNullOrEmpty(lastName) ? firstName : $"{firstName} {lastName}";
+      bool isApproved = false;
+      DateTime createdAt = DateTime.UtcNow;
+      string userId = viewModel.UserId;
+      bool isDeleted = false;
+      bool hasImage = false;
+
+      using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+      {
+        NpgsqlCommand command = new NpgsqlCommand(sqlStatement, connection);
+        command.Parameters.AddWithValue("@first_name", firstName);
+        command.Parameters.AddWithValue("@last_name", lastName);
+        command.Parameters.AddWithValue("@full_name", fullName);
+        command.Parameters.AddWithValue("@is_approved", isApproved);
+        command.Parameters.AddWithValue("@user_id", userId);
+        command.Parameters.AddWithValue("@created_at", createdAt);
+        command.Parameters.AddWithValue("@is_deleted", isDeleted);
+        command.Parameters.AddWithValue("@has_image", hasImage);
+
+        try
+        {
+          await connection.OpenAsync();
+
+          object artistIdentity = command.ExecuteScalar();
+          artistId = (int)artistIdentity;
+
+          ArtistSlugCreateViewModel artistSlug = new ArtistSlugCreateViewModel();
+          artistSlug.Name = fullName.NormalizeStringForUrl();
+          artistSlug.IsPrimary = true;
+          artistSlug.CreatedAt = createdAt;
+          artistSlug.ArtistId = artistId;
+
+          await _artistSlugsService.AddArtistSlugAsync(artistSlug);
+
+          result.PrimarySlug = artistSlug.Name;
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine(ex.Message);
+        }
+      }
+
+      return result;
+    }
+
+    private IDictionary<char, List<LibraryArtistViewModel>> BuildDictionary(
+      List<LibraryArtistViewModel> artists)
     {
       List<char> letters = new List<char>();
 
