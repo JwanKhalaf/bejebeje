@@ -79,10 +79,11 @@
         }
         else
         {
-          viewModel.Artist = artistViewModel;
           viewModel.Lyrics = null;
           viewModel.LyricCount = "0 Lyrics";
         }
+
+        viewModel.Artist = artistViewModel;
       }
       else
       {
