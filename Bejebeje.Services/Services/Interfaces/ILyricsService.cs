@@ -9,7 +9,8 @@
   public interface ILyricsService
   {
     Task<ArtistLyricsViewModel> GetLyricsAsync(
-      string artistSlug);
+      string artistSlug,
+      string userId);
 
     Task<IEnumerable<SearchLyricResultViewModel>> SearchLyricsAsync(
       string title);

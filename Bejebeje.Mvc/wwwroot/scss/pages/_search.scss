@@ -26,7 +26,7 @@
   }
 
   &__input {
-    border-radius: 5px;
+    border-radius: $border-radius;
     background-color: #1d1d24;
     color: rgba($clr-white, 0.5);
     padding: 0.8rem;

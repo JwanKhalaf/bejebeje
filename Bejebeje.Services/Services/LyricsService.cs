@@ -34,44 +34,60 @@
     }
 
     public async Task<ArtistLyricsViewModel> GetLyricsAsync(
-      string artistSlug)
+      string artistSlug,
+      string userId)
     {
       ArtistLyricsViewModel viewModel = new ArtistLyricsViewModel();
 
       ArtistViewModel artistViewModel = await _artistsService
-        .GetArtistDetailsAsync(artistSlug);
+        .GetArtistDetailsAsync(artistSlug, userId);
 
-      string sqlCommand = "select l.title as lyric_title, lslugs.name as lyric_slug, l.is_verified from lyrics as l inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_id = @artist_id and l.is_deleted = false and l.is_approved = true and lslugs.is_primary = true order by l.title asc;";
-
-      List<LyricCardViewModel> lyricCardViewModels = new List<LyricCardViewModel>();
-
-      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
-      await connection.OpenAsync();
-
-      await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
-
-      command.Parameters.AddWithValue("@artist_id", artistViewModel.Id);
-
-      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
-
-      while (await reader.ReadAsync())
+      if (artistViewModel != null)
       {
-        LyricCardViewModel lyricCardViewModel = new LyricCardViewModel();
+        string sqlCommand = "select l.title as lyric_title, lslugs.name as lyric_slug, l.is_verified from lyrics as l inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_id = @artist_id and l.is_deleted = false and l.is_approved = true and lslugs.is_primary = true order by l.title asc;";
 
-        string title = Convert.ToString(reader[0]);
-        string primarySlug = Convert.ToString(reader[1]);
-        bool isVerified = Convert.ToBoolean(reader[2]);
+        List<LyricCardViewModel> lyricCardViewModels = new List<LyricCardViewModel>();
 
-        lyricCardViewModel.Title = title;
-        lyricCardViewModel.Slug = primarySlug;
-        lyricCardViewModel.IsVerified = isVerified;
+        await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+        await connection.OpenAsync();
 
-        lyricCardViewModels.Add(lyricCardViewModel);
+        await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+        command.Parameters.AddWithValue("@artist_id", artistViewModel.Id);
+
+        await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+        if (reader.HasRows)
+        {
+          while (await reader.ReadAsync())
+          {
+            LyricCardViewModel lyricCardViewModel = new LyricCardViewModel();
+
+            string title = Convert.ToString(reader[0]);
+            string primarySlug = Convert.ToString(reader[1]);
+            bool isVerified = Convert.ToBoolean(reader[2]);
+
+            lyricCardViewModel.Title = title;
+            lyricCardViewModel.Slug = primarySlug;
+            lyricCardViewModel.IsVerified = isVerified;
+
+            lyricCardViewModels.Add(lyricCardViewModel);
+          }
+
+          viewModel.LyricCount = lyricCardViewModels.Count == 1 ? "1 Lyric" : $"{lyricCardViewModels.Count} Lyrics";
+          viewModel.Lyrics = lyricCardViewModels;
+        }
+        else
+        {
+          viewModel.Artist = artistViewModel;
+          viewModel.Lyrics = null;
+          viewModel.LyricCount = "0 Lyrics";
+        }
       }
-
-      viewModel.Artist = artistViewModel;
-      viewModel.LyricCount = lyricCardViewModels.Count == 1 ? "1 Lyric" : $"{lyricCardViewModels.Count} Lyrics";
-      viewModel.Lyrics = lyricCardViewModels;
+      else
+      {
+        viewModel = null;
+      }
 
       return viewModel;
     }
@@ -119,7 +135,7 @@
       LyricDetailsViewModel viewModel = new LyricDetailsViewModel();
 
       ArtistViewModel artistViewModel = await _artistsService
-        .GetArtistDetailsAsync(artistSlug);
+        .GetArtistDetailsAsync(artistSlug, userId);
 
       viewModel.Artist = artistViewModel;
 

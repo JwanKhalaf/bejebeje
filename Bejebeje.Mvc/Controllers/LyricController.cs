@@ -10,11 +10,15 @@
 
   public class LyricController : Controller
   {
+    private readonly IArtistsService _artistsService;
+
     private readonly ILyricsService _lyricsService;
 
     public LyricController(
+      IArtistsService artistsService,
       ILyricsService lyricsService)
     {
+      _artistsService = artistsService;
       _lyricsService = lyricsService;
     }
 
@@ -22,8 +26,17 @@
     public async Task<IActionResult> ArtistLyrics(
       string artistSlug)
     {
+      string userId = User.Identity.IsAuthenticated
+        ? User.GetUserId().ToString()
+        : string.Empty;
+
       ArtistLyricsViewModel viewModel = await _lyricsService
-        .GetLyricsAsync(artistSlug);
+        .GetLyricsAsync(artistSlug, userId);
+
+      if (viewModel == null)
+      {
+        return RedirectToAction("Index", "Home");
+      }
 
       return View(viewModel);
     }

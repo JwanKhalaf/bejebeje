@@ -11,3 +11,44 @@
     letter-spacing: 4px;
   }
 }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  padding: 0 $spacing-s 0 0;
+  margin: 0 0 $spacing-s 0;
+}
+
+.actions__heading {
+  margin: 0 0 $spacing-s 0;
+}
+
+.actions__prompt {
+  color: rgba($clr-text, 0.7);
+  font-family: $serif;
+  line-height: 1.5625rem;
+  margin: 0 0 $spacing-s 0;
+}
+
+.actions__add-artist {
+  display: block;
+  padding: $spacing-s;
+  background-color: $clr-brand;
+  color: $clr-text;
+  font-family: $sans-serif;
+  text-align: center;
+  border-radius: $border-radius;
+}
+
+.warning {
+  border-left: 3px solid #f0ad4e;
+  padding: 0 $spacing-s 0 $spacing-s;
+
+  p {
+    color: rgba($clr-white, 0.5);
+    margin: 0 0 $spacing-s 0;
+    font-family: $serif;
+    font-size: 1rem;
+    line-height: 1.5625rem;
+  }
+}
