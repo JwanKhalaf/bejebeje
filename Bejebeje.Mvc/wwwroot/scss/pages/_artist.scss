@@ -76,3 +76,22 @@ ul.artist-lyrics {
     background-size: cover;
   }
 }
+
+.artist-lyric__awaiting-approval-badge {
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+
+  &::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 0;
+    background-image: url('../images/icons/shield.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+}

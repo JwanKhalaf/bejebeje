@@ -14,6 +14,7 @@
   using Microsoft.Extensions.Options;
   using Models.Artist;
   using Models.Lyric;
+  using Models.LyricSlug;
   using Models.Search;
   using Npgsql;
 
@@ -44,7 +45,7 @@
 
       if (artistViewModel != null)
       {
-        string sqlCommand = "select l.title as lyric_title, lslugs.name as lyric_slug, l.is_verified from lyrics as l inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_id = @artist_id and l.is_deleted = false and l.is_approved = true and lslugs.is_primary = true order by l.title asc;";
+        string sqlCommand = "select l.title as lyric_title, lslugs.name as lyric_slug, l.is_approved, l.is_verified from lyrics as l inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where case when @user_id <> '' then l.user_id = @user_id or l.is_approved = true else l.is_approved = true end and artist_id = @artist_id and l.is_deleted = false and lslugs.is_primary = true order by l.title asc;";
 
         List<LyricCardViewModel> lyricCardViewModels = new List<LyricCardViewModel>();
 
@@ -53,6 +54,7 @@
 
         await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
+        command.Parameters.AddWithValue("@user_id", userId);
         command.Parameters.AddWithValue("@artist_id", artistViewModel.Id);
 
         await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
@@ -65,10 +67,12 @@
 
             string title = Convert.ToString(reader[0]);
             string primarySlug = Convert.ToString(reader[1]);
-            bool isVerified = Convert.ToBoolean(reader[2]);
+            bool isApproved = Convert.ToBoolean(reader[2]);
+            bool isVerified = Convert.ToBoolean(reader[3]);
 
             lyricCardViewModel.Title = title;
             lyricCardViewModel.Slug = primarySlug;
+            lyricCardViewModel.IsAwaitingApproval = !isApproved;
             lyricCardViewModel.IsVerified = isVerified;
 
             lyricCardViewModels.Add(lyricCardViewModel);
@@ -79,7 +83,7 @@
         }
         else
         {
-          viewModel.Lyrics = null;
+          viewModel.Lyrics = new List<LyricCardViewModel>();
           viewModel.LyricCount = "0 Lyrics";
         }
 
@@ -143,8 +147,9 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where ls.name = @lyric_slug and artist_slugs.name = @artist_slug group by l.id order by number_of_likes;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at, l.is_approved from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where case when @user_id <> '' then l.user_id = @user_id or a.is_approved = true else l.is_approved = true end and ls.name = @lyric_slug and artist_slugs.name = @artist_slug group by l.id order by number_of_likes;", connection);
 
+      command.Parameters.AddWithValue("@user_id", userId);
       command.Parameters.AddWithValue("@artist_slug", artistSlug);
       command.Parameters.AddWithValue("@lyric_slug", lyricSlug);
 
@@ -159,6 +164,7 @@
         bool isVerified = Convert.ToBoolean(reader[4]);
         DateTime lyricCreatedAt = Convert.ToDateTime(reader[5]);
         DateTime? lyricModifiedAt = reader[6] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
+        bool isApproved = Convert.ToBoolean(reader[7]);
 
         viewModel.Id = lyricId;
         viewModel.Title = lyricTitle;
@@ -167,6 +173,7 @@
         viewModel.IsVerified = isVerified;
         viewModel.CreatedAt = lyricCreatedAt;
         viewModel.ModifiedAt = lyricModifiedAt;
+        viewModel.IsApproved = isApproved;
       }
 
       viewModel.AlreadyLiked = await LyricAlreadyLikedAsync(userId, viewModel.Id);
@@ -218,11 +225,12 @@
     }
 
     public async Task<bool> LyricExistsAsync(
-      int lyricId)
+      int lyricId,
+      string userId)
     {
       bool lyricExists = false;
 
-      string sqlCommand = "select exists(select 1 from lyrics where is_deleted = false and is_approved = true and id = @lyric_id);";
+      string sqlCommand = "select exists(select 1 from lyrics where case when @user_id <> '' then user_id = @user_id or is_approved = true else is_approved = true end and is_deleted = false and id = @lyric_id);";
 
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
 
@@ -231,6 +239,7 @@
       await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
       command.Parameters.AddWithValue("@lyric_id", lyricId);
+      command.Parameters.AddWithValue("@user_id", userId);
 
       await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
 
@@ -246,7 +255,7 @@
       string userId,
       int lyricId)
     {
-      bool lyricExists = await LyricExistsAsync(lyricId);
+      bool lyricExists = await LyricExistsAsync(lyricId, userId);
 
       if (lyricExists)
       {
@@ -299,6 +308,84 @@
       }
 
       return lyricAlreadyLiked;
+    }
+
+    public async Task<LyricSlugCreateResultViewModel> AddLyricSlugAsync(
+      CreateLyricSlugViewModel viewModel)
+    {
+      LyricSlugCreateResultViewModel result = new LyricSlugCreateResultViewModel();
+      string connectionString = _databaseOptions.ConnectionString;
+      string sqlStatement = "insert into lyric_slugs (name, is_primary, created_at, is_deleted, lyric_id) values (@name, @is_primary, @created_at, @is_deleted, @lyric_id) returning name";
+
+      string name = viewModel.Name.NormalizeStringForUrl();
+      bool isPrimary = true;
+      DateTime createdAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      int lyricId = viewModel.LyricId;
+
+      using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+      {
+        NpgsqlCommand command = new NpgsqlCommand(sqlStatement, connection);
+        command.Parameters.AddWithValue("@name", name);
+        command.Parameters.AddWithValue("@is_primary", isPrimary);
+        command.Parameters.AddWithValue("@created_at", createdAt);
+        command.Parameters.AddWithValue("@is_deleted", isDeleted);
+        command.Parameters.AddWithValue("@lyric_id", lyricId);
+
+        await connection.OpenAsync();
+
+        object artistSlug = command.ExecuteScalar();
+        result.LyricPrimarySlug = (string)artistSlug;
+      }
+
+      return result;
+    }
+
+    public async Task<LyricCreateResultViewModel> AddLyricAsync(
+      CreateLyricViewModel viewModel)
+    {
+      LyricCreateResultViewModel result = new LyricCreateResultViewModel();
+      string connectionString = _databaseOptions.ConnectionString;
+      string sqlStatement = "insert into lyrics (title, body, user_id, created_at, is_deleted, is_approved, artist_id, is_verified) values (@title, @body, @user_id, @created_at, @is_deleted, @is_approved, @artist_id, @is_verified) returning id;";
+
+      string title = viewModel.Title.ToLower().FirstCharToUpper();
+      string body = viewModel.Body;
+      string userId = viewModel.UserId;
+      DateTime createdAt = DateTime.UtcNow;
+      bool isDeleted = false;
+      bool isApproved = false;
+      int artistId = viewModel.Artist.Id;
+      bool isVerified = false;
+
+      using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+      {
+        NpgsqlCommand command = new NpgsqlCommand(sqlStatement, connection);
+        command.Parameters.AddWithValue("@title", title);
+        command.Parameters.AddWithValue("@body", body);
+        command.Parameters.AddWithValue("@user_id", userId);
+        command.Parameters.AddWithValue("@created_at", createdAt);
+        command.Parameters.AddWithValue("@is_deleted", isDeleted);
+        command.Parameters.AddWithValue("@is_approved", isApproved);
+        command.Parameters.AddWithValue("@artist_id", artistId);
+        command.Parameters.AddWithValue("@is_verified", isVerified);
+
+        await connection.OpenAsync();
+
+        object lyricIdentity = command.ExecuteScalar();
+        int lyricId = (int)lyricIdentity;
+
+        CreateLyricSlugViewModel createLyricSlugModel = new CreateLyricSlugViewModel();
+        createLyricSlugModel.Name = title.NormalizeStringForUrl();
+        createLyricSlugModel.LyricId = lyricId;
+
+        LyricSlugCreateResultViewModel slugCreationResult = await AddLyricSlugAsync(createLyricSlugModel);
+
+        result.LyricId = lyricId;
+        result.ArtistSlug = viewModel.Artist.PrimarySlug;
+        result.LyricSlug = slugCreationResult.LyricPrimarySlug;
+      }
+
+      return result;
     }
   }
 }

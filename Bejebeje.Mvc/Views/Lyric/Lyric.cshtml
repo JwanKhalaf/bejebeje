@@ -17,6 +17,13 @@
   </form>
 </div>
 
+@if (!Model.IsApproved)
+{
+  <div class="warning">
+    <p>Your submission is awaiting approval.</p>
+  </div>
+}
+
 <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug" class="artist-info-wrap">
   <div class="artist-info">
     <picture>
