@@ -1,12 +1,13 @@
 ﻿namespace Bejebeje.Mvc.Controllers
 {
+  using System;
   using System.Threading.Tasks;
   using Bejebeje.Models.Artist;
   using Bejebeje.Models.Lyric;
-  using Bejebeje.Services.Services.Interfaces;
   using Extensions;
   using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Mvc;
+  using Services.Services.Interfaces;
 
   public class LyricController : Controller
   {
@@ -71,12 +72,49 @@
 
         await _lyricsService.LikeLyricAsync(userId, lyricId);
 
-        return RedirectToAction("Lyric", new { artistSlug = artistSlug, lyricSlug = lyricSlug });
+        return RedirectToAction("Lyric", new { artistSlug, lyricSlug });
       }
       catch
       {
-        return RedirectToAction("Lyric", new { artistSlug = artistSlug, lyricSlug = lyricSlug });
+        return RedirectToAction("Lyric", new { artistSlug, lyricSlug });
       }
+    }
+
+    [HttpGet]
+    [Authorize]
+    [Route("artists/{artistSlug}/lyrics/new")]
+    public async Task<IActionResult> Create(
+      string artistSlug)
+    {
+      string userId = User
+        .GetUserId()
+        .ToString();
+
+      ArtistViewModel artist = await _artistsService
+        .GetArtistDetailsAsync(artistSlug, userId);
+
+      CreateLyricViewModel viewModel = new CreateLyricViewModel();
+      viewModel.Artist = artist;
+
+      return View(viewModel);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Route("artists/{artistSlug}/lyrics/new")]
+    public async Task<IActionResult> Create(
+      CreateLyricViewModel viewModel)
+    {
+      string userId = User
+        .GetUserId()
+        .ToString();
+
+      viewModel.UserId = userId;
+
+      LyricCreateResultViewModel result = await _lyricsService
+        .AddLyricAsync(viewModel);
+
+      return RedirectToAction("Like", "Lyric", new { artistSlug = result.ArtistSlug, lyricSlug = result.LyricSlug, lyricId = result.LyricId });
     }
   }
 }

@@ -6,6 +6,8 @@
 
     public string Slug { get; set; }
 
+    public bool IsAwaitingApproval { get; set; }
+
     public bool IsVerified { get; set; }
   }
 }

@@ -4,6 +4,7 @@
   using System.Threading.Tasks;
   using Models.Artist;
   using Models.Lyric;
+  using Models.LyricSlug;
   using Models.Search;
 
   public interface ILyricsService
@@ -23,7 +24,8 @@
     Task<IEnumerable<LyricItemViewModel>> GetRecentLyricsAsync();
 
     Task<bool> LyricExistsAsync(
-      int lyricId);
+      int lyricId,
+      string userId);
 
     Task LikeLyricAsync(
       string userId,
@@ -32,5 +34,11 @@
     Task<bool> LyricAlreadyLikedAsync(
       string userId,
       int lyricId);
+
+    Task<LyricSlugCreateResultViewModel> AddLyricSlugAsync(
+      CreateLyricSlugViewModel viewModel);
+
+    Task<LyricCreateResultViewModel> AddLyricAsync(
+      CreateLyricViewModel viewModel);
   }
 }

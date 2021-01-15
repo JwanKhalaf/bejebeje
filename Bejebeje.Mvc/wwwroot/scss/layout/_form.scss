@@ -1,4 +1,5 @@
-﻿.form__new-artist {
+﻿.form__new-artist,
+.form__new-lyric {
   padding: 0 $spacing-s 0 0;
 
   form {
@@ -34,4 +35,12 @@ input[type=submit] {
   font-weight: bold;
   border-radius: $border-radius;
   letter-spacing: 3px;
+}
+
+textarea {
+  padding: 0.8rem;
+  border-radius: $border-radius;
+  background-color: #1d1d24;
+  color: rgba($clr-white, 0.5);
+  resize: vertical;
 }

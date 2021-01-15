@@ -44,18 +44,35 @@
   </div>
 </div>
 
-<ul class="artist-lyrics">
-  @foreach (var lyric in Model.Lyrics)
-  {
-    <li class="artist-lyric">
-      <a class="artist-lyric__link" asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
-        <h4 class="artist-lyric__title">@lyric.Title</h4>
+@if (Model.Lyrics.Any())
+{
+  <ul class="artist-lyrics">
+    @foreach (var lyric in Model.Lyrics)
+    {
+      <li class="artist-lyric">
+        <a class="artist-lyric__link" asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
+          <h4 class="artist-lyric__title">@lyric.Title</h4>
 
-        @if (lyric.IsVerified)
-        {
-          <span class="artist-lyric__verification-badge" title="Verified for accuracy"></span>
-        }
-      </a>
-    </li>
-  }
-</ul>
+          @if (lyric.IsVerified)
+          {
+            <span class="artist-lyric__verification-badge" title="Verified for accuracy"></span>
+          }
+
+          @if (lyric.IsAwaitingApproval)
+          {
+            <span class="artist-lyric__awaiting-approval-badge" title="Awaiting approval"></span>
+          }
+        </a>
+      </li>
+    }
+  </ul>
+}
+
+<div class="actions">
+  <a asp-controller="Lyric"
+     asp-action="Create"
+     asp-route-artistSlug="@Model.Artist.PrimarySlug"
+     class="actions__add-lyric">
+    Add a lyric for @Model.Artist.FullName
+  </a>
+</div>
