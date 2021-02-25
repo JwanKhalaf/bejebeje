@@ -52,7 +52,7 @@
       return String.Join("-", result.Split(new char[] { '_' }
         , StringSplitOptions.RemoveEmptyEntries));
     }
-    
+
     public static string FirstCharToUpper(this string input) =>
       input switch
       {
