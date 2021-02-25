@@ -30,6 +30,6 @@
 
     public bool HasImage { get; set; }
 
-    public Sex Sex { get; set; }
+    public char Sex { get; set; }
   }
 }

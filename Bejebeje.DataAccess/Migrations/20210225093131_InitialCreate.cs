@@ -1,9 +1,9 @@
-﻿namespace Bejebeje.DataAccess.Migrations
-{
-  using System;
-  using Microsoft.EntityFrameworkCore.Migrations;
-  using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
+namespace Bejebeje.DataAccess.Migrations
+{
   public partial class InitialCreate : Migration
   {
     protected override void Up(MigrationBuilder migrationBuilder)
@@ -12,18 +12,18 @@
           name: "artists",
           columns: table => new
           {
-            id = table.Column<int>(nullable: false)
+            id = table.Column<int>(type: "integer", nullable: false)
                   .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            first_name = table.Column<string>(nullable: true),
-            last_name = table.Column<string>(nullable: true),
-            full_name = table.Column<string>(nullable: true),
-            is_approved = table.Column<bool>(nullable: false),
-            user_id = table.Column<string>(nullable: true),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false),
-            has_image = table.Column<bool>(nullable: false),
-            sex = table.Column<int>(nullable: false)
+            first_name = table.Column<string>(type: "text", nullable: true),
+            last_name = table.Column<string>(type: "text", nullable: true),
+            full_name = table.Column<string>(type: "text", nullable: true),
+            is_approved = table.Column<bool>(type: "boolean", nullable: false),
+            user_id = table.Column<string>(type: "text", nullable: true),
+            created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+            modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+            is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+            has_image = table.Column<bool>(type: "boolean", nullable: false),
+            sex = table.Column<char>(type: "character(1)", nullable: false)
           },
           constraints: table =>
           {
@@ -34,19 +34,19 @@
           name: "authors",
           columns: table => new
           {
-            id = table.Column<int>(nullable: false)
+            id = table.Column<int>(type: "integer", nullable: false)
                   .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            first_name = table.Column<string>(nullable: true),
-            last_name = table.Column<string>(nullable: true),
-            full_name = table.Column<string>(nullable: true),
-            biography = table.Column<string>(nullable: true),
-            is_approved = table.Column<bool>(nullable: false),
-            user_id = table.Column<string>(nullable: true),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false),
-            has_image = table.Column<bool>(nullable: false),
-            sex = table.Column<int>(nullable: false)
+            first_name = table.Column<string>(type: "text", nullable: true),
+            last_name = table.Column<string>(type: "text", nullable: true),
+            full_name = table.Column<string>(type: "text", nullable: true),
+            biography = table.Column<string>(type: "text", nullable: true),
+            is_approved = table.Column<bool>(type: "boolean", nullable: false),
+            user_id = table.Column<string>(type: "text", nullable: true),
+            created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+            modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+            is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+            has_image = table.Column<bool>(type: "boolean", nullable: false),
+            sex = table.Column<char>(type: "character(1)", nullable: false)
           },
           constraints: table =>
           {
@@ -57,14 +57,14 @@
           name: "artist_slugs",
           columns: table => new
           {
-            id = table.Column<int>(nullable: false)
+            id = table.Column<int>(type: "integer", nullable: false)
                   .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            name = table.Column<string>(nullable: true),
-            is_primary = table.Column<bool>(nullable: false),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false),
-            artist_id = table.Column<int>(nullable: false)
+            name = table.Column<string>(type: "text", nullable: true),
+            is_primary = table.Column<bool>(type: "boolean", nullable: false),
+            created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+            modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+            is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+            artist_id = table.Column<int>(type: "integer", nullable: false)
           },
           constraints: table =>
           {
@@ -81,14 +81,14 @@
           name: "author_slugs",
           columns: table => new
           {
-            id = table.Column<int>(nullable: false)
+            id = table.Column<int>(type: "integer", nullable: false)
                   .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            name = table.Column<string>(nullable: true),
-            is_primary = table.Column<bool>(nullable: false),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false),
-            author_id = table.Column<int>(nullable: false)
+            name = table.Column<string>(type: "text", nullable: true),
+            is_primary = table.Column<bool>(type: "boolean", nullable: false),
+            created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+            modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+            is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+            author_id = table.Column<int>(type: "integer", nullable: false)
           },
           constraints: table =>
           {
@@ -105,17 +105,17 @@
           name: "lyrics",
           columns: table => new
           {
-            id = table.Column<int>(nullable: false)
+            id = table.Column<int>(type: "integer", nullable: false)
                   .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            title = table.Column<string>(nullable: true),
-            body = table.Column<string>(nullable: true),
-            user_id = table.Column<string>(nullable: true),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false),
-            is_approved = table.Column<bool>(nullable: false),
-            artist_id = table.Column<int>(nullable: false),
-            author_id = table.Column<int>(nullable: true)
+            title = table.Column<string>(type: "text", nullable: true),
+            body = table.Column<string>(type: "text", nullable: true),
+            user_id = table.Column<string>(type: "text", nullable: true),
+            created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+            modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+            is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+            is_approved = table.Column<bool>(type: "boolean", nullable: false),
+            artist_id = table.Column<int>(type: "integer", nullable: false),
+            author_id = table.Column<int>(type: "integer", nullable: true)
           },
           constraints: table =>
           {
@@ -138,14 +138,14 @@
           name: "lyric_slugs",
           columns: table => new
           {
-            id = table.Column<int>(nullable: false)
+            id = table.Column<int>(type: "integer", nullable: false)
                   .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-            name = table.Column<string>(nullable: true),
-            is_primary = table.Column<bool>(nullable: false),
-            created_at = table.Column<DateTime>(nullable: false),
-            modified_at = table.Column<DateTime>(nullable: true),
-            is_deleted = table.Column<bool>(nullable: false),
-            lyric_id = table.Column<int>(nullable: false)
+            name = table.Column<string>(type: "text", nullable: true),
+            is_primary = table.Column<bool>(type: "boolean", nullable: false),
+            created_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+            modified_at = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+            is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+            lyric_id = table.Column<int>(type: "integer", nullable: false)
           },
           constraints: table =>
           {
