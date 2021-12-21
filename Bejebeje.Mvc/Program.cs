@@ -18,13 +18,9 @@ using Bejebeje.Services.Config;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-/* IdentityModelEventSource.ShowPII = true; */
+IdentityModelEventSource.ShowPII = true;
 string authority = builder.Configuration["IdentityServerConfiguration:Authority"];
-System.Console.WriteLine("Authority is:");
-System.Console.WriteLine(authority);
 string clientId = builder.Configuration["IdentityServerConfiguration:ClientId"];
-System.Console.WriteLine("Client Id is:");
-System.Console.WriteLine(clientId);
 string clientSecret = builder.Configuration["IdentityServerConfiguration:ClientSecret"];
 string connectionString = builder.Configuration["ConnectionString"];
 
