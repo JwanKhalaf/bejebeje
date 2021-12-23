@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,11 +44,11 @@ builder.Services.AddScoped<ISitemapService, SitemapService>();
 
 builder.Services.AddAuthentication(options =>
     {
-      options.DefaultScheme = "Cookies";
-      options.DefaultChallengeScheme = "oidc";
+      options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+      options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
     })
-    .AddCookie("Cookies")
-    .AddOpenIdConnect("oidc", options =>
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
       options.Authority = authority;
       options.RequireHttpsMetadata = false;
@@ -58,7 +60,7 @@ builder.Services.AddAuthentication(options =>
       options.Scope.Clear();
       options.Scope.Add("openid");
       options.ClaimActions.MapUniqueJsonKey("role", "role");
-      options.TokenValidationParameters = new TokenValidationParameters { RoleClaimType = "role" };
+      options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = "cognito:user", RoleClaimType = "role" };
     });
 
 builder.Services.AddControllersWithViews();
