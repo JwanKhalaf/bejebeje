@@ -1,16 +1,31 @@
-﻿.breadcrumb-nav {
-  margin: $spacing-s $spacing-s $spacing-s 0;
+﻿.header {
+  display: flex;
+  justify-content: space-between;
 
-  nav {
-    background-color: transparent;
-    color: #9194a8;
-    text-transform: uppercase;
-    font-family: $sans-serif;
+  .breadcrumb-nav {
+    margin: $spacing-s $spacing-s $spacing-s 0;
 
-    a {
+    nav {
+      background-color: transparent;
+      color: #9194a8;
       text-transform: uppercase;
-      color: #72758f;
       font-family: $sans-serif;
+
+      a {
+        text-transform: uppercase;
+        color: #72758f;
+        font-family: $sans-serif;
+      }
+    }
+  }
+
+  .header-cta {
+    margin: 1.25rem;
+
+    .btn-contribute {
+      background-color: #ec6164;
+      border-radius: 4px;
+      padding: 0.5rem 1.25rem;
     }
   }
 }
