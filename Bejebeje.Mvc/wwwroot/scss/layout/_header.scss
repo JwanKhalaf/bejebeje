@@ -1,31 +1,50 @@
-﻿.header {
-  display: flex;
-  justify-content: space-between;
+﻿.breadcrumb-nav {
+  margin: $spacing-s $spacing-s $spacing-s 0;
 
-  .breadcrumb-nav {
-    margin: $spacing-s $spacing-s $spacing-s 0;
+  nav {
+    background-color: transparent;
+    color: #9194a8;
+    text-transform: uppercase;
+    font-family: $sans-serif;
 
-    nav {
-      background-color: transparent;
-      color: #9194a8;
+    a {
       text-transform: uppercase;
+      color: #72758f;
       font-family: $sans-serif;
+    }
+  }
+}
 
-      a {
-        text-transform: uppercase;
-        color: #72758f;
-        font-family: $sans-serif;
-      }
+.actions-panel {
+  display: none;
+  z-index: 2;
+
+  &.visible {
+    display: block;
+    position: absolute;
+    width: 100%;
+    background: $clr-background;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    padding: $spacing-s;
+
+    p {
+      margin: 0 0 $spacing-s 0;
+      line-height: 1.75rem;
     }
   }
 
-  .header-cta {
-    margin: 1.25rem;
-
-    .btn-contribute {
-      background-color: #ec6164;
-      border-radius: 4px;
-      padding: 0.5rem 1.25rem;
+  .actions-buttons {
+    .actions-button {
+      text-align: center;
+      display: block;
+      margin: 0 0 $spacing-s 0;
+      padding: $spacing-xs $spacing-s;
+      font-family: $sans-serif;
+      color: $clr-white;
+      background-color: $clr-brand;
+      border-radius: $border-radius;
+      font-weight: bold;
     }
   }
 }

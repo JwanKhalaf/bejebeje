@@ -9,6 +9,7 @@ body {
   grid-template-rows: auto 80px;
   grid-template-areas: "main main" "nav nav";
   background-color: $clr-background;
+  position: relative;
 }
 
 main {

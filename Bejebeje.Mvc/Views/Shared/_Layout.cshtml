@@ -54,11 +54,33 @@
   <nav class="nav">
     <a asp-controller="Home" asp-action="Index" class="link home-icon"></a>
 
-    <a asp-controller="Artist" asp-action="Index" class="link artists-icon"></a>
+    <a href="#" id="contribute-button" class="link contribute-icon"></a>
 
     <a asp-controller="Profile" asp-action="Index" class="link profile-icon"></a>
   </nav>
 
+  <aside class="actions-panel">
+    <p>Thank you for wanting to contribute and making Kurdish music more accessible.</p>
+
+    <p>How would you like to help?</p>
+
+    <div class="actions-buttons">
+      <a asp-controller="Artist" asp-action="Create" class="actions-button">Add new artist</a>
+      <a asp-controller="Artist" asp-action="Create" class="actions-button">Add new lyric</a>
+    </div>
+  </aside>
+
+  <script>
+    const toggleVisiblityOfActionsPanel = (event) => {
+      event.preventDefault();
+      const actions_panel = document.querySelector(".actions-panel");
+      actions_panel.classList.toggle("visible");
+    }
+
+    const contribute_button = document.getElementById("contribute-button");
+
+    contribute_button.addEventListener("click", toggleVisiblityOfActionsPanel);
+  </script>
   @RenderSection("Scripts", required: false)
 </body>
 </html>
