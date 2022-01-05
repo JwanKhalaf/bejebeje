@@ -14,3 +14,38 @@
     }
   }
 }
+
+.actions-panel {
+  display: none;
+  z-index: 2;
+  box-shadow: 0 6px #15151a;
+
+  &.visible {
+    display: block;
+    position: absolute;
+    width: 100%;
+    background: $clr-background;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    padding: $spacing-s;
+
+    p {
+      margin: 0 0 $spacing-s 0;
+      line-height: 1.75rem;
+    }
+  }
+
+  .actions-buttons {
+    .actions-button {
+      text-align: center;
+      display: block;
+      margin: 0 0 $spacing-s 0;
+      padding: $spacing-xs $spacing-s;
+      font-family: $sans-serif;
+      color: $clr-white;
+      background-color: $clr-brand;
+      border-radius: $border-radius;
+      font-weight: bold;
+    }
+  }
+}

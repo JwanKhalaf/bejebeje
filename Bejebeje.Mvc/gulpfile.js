@@ -6,7 +6,7 @@ const rimraf = require("rimraf");
 const concat = require("gulp-concat");
 const cssnano = require('gulp-cssnano');
 const uglify = require("gulp-uglify");
-const sass = require("gulp-sass");
+const sass = require("gulp-sass")(require("sass"));
 const rename = require("gulp-rename");
 
 let paths = {

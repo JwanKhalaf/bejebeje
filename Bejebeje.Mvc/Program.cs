@@ -60,7 +60,7 @@ builder.Services.AddAuthentication(options =>
       options.Scope.Clear();
       options.Scope.Add("openid");
       options.ClaimActions.MapUniqueJsonKey("role", "role");
-      options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = "cognito:user", RoleClaimType = "role" };
+      options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = "cognito:user", RoleClaimType = "cognito:groups" };
     });
 
 builder.Services.AddControllersWithViews();
