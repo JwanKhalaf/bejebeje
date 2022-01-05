@@ -60,13 +60,12 @@
   </nav>
 
   <aside class="actions-panel">
-    <p>Thank you for wanting to contribute and making Kurdish music more accessible.</p>
+    <p>Thank you for wanting to contribute. Your contributions help make Kurdish music more accessible.</p>
 
     <p>How would you like to help?</p>
 
     <div class="actions-buttons">
       <a asp-controller="Artist" asp-action="Create" class="actions-button">Add new artist</a>
-      <a asp-controller="Artist" asp-action="Create" class="actions-button">Add new lyric</a>
     </div>
   </aside>
 
@@ -74,7 +73,9 @@
     const toggleVisiblityOfActionsPanel = (event) => {
       event.preventDefault();
       const actions_panel = document.querySelector(".actions-panel");
+      const contribute_button = event.target;
       actions_panel.classList.toggle("visible");
+      contribute_button.classList.toggle("visible");
     }
 
     const contribute_button = document.getElementById("contribute-button");

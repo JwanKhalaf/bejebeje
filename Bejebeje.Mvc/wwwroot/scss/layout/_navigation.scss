@@ -1,10 +1,9 @@
 ﻿.nav {
-
   .logo {
     display: block;
     width: 24px;
     height: 24px;
-    background-image: url('../images/logo.svg');
+    background-image: url("../images/logo.svg");
     background-repeat: no-repeat;
     background-position: center;
   }
@@ -20,7 +19,7 @@
     position: relative;
 
     &::before {
-      content: '';
+      content: "";
       width: 24px;
       height: 24px;
       position: absolute;
@@ -32,25 +31,32 @@
   }
 
   .home-icon::before {
-    background-image: url('../images/icons/home.svg');
+    background-image: url("../images/icons/home.svg");
   }
 
-  .contribute-icon::before {
-    background-image: url('../images/icons/contribute.svg');
+  .contribute-icon {
+    transition: 100ms linear all;
+
+    &.visible {
+      transition: 100ms linear all;
+      transform: rotate(45deg);
+    }
+
+    &::before {
+      background-image: url("../images/icons/contribute.svg");
+    }
   }
 
   .artists-icon::before {
-    background-image: url('../images/icons/artists.svg');
+    background-image: url("../images/icons/artists.svg");
   }
 
   .profile-icon::before {
-    background-image: url('../images/icons/user.svg');
+    background-image: url("../images/icons/user.svg");
   }
 }
 
-
 @media (min-width: 1024px) {
-
   .nav {
     .link {
       width: 34px;
@@ -63,11 +69,18 @@
     }
   }
 
+  .actions-panel {
+    &.visible {
+      left: 120px;
+      width: calc(100% - 120px);
+    }
+  }
+
   .logo {
     display: block;
     width: 24px;
     height: 24px;
-    background-image: url('../images/logo.svg');
+    background-image: url("../images/logo.svg");
     background-repeat: no-repeat;
     background-position: center;
     margin-bottom: $spacing-s;
