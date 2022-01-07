@@ -1,10 +1,14 @@
 ﻿.form__new-artist,
 .form__new-lyric {
-  padding: 0 $spacing-s 0 0;
+  padding: $spacing-m 0 0 0;
 
   form {
     position: relative;
   }
+}
+
+.form-group {
+  margin: 0 0 $spacing-m 0;
 }
 
 .label {
@@ -12,35 +16,48 @@
   color: rgba($clr-white, 0.5);
   margin: 0 0 0.6rem 0;
   font-size: 1rem;
-  font-family: $serif;
+  font-family: $sans-serif;
 }
 
 .form-control {
-  margin: 0 0 $spacing-s 0;
   width: 100%;
 }
 
-input[type=text] {
-  padding: 0.8rem;
+input[type="text"] {
+  padding: 1rem;
   border-radius: $border-radius;
-  background-color: #1d1d24;
-  color: rgba($clr-white, 0.5);
+  background-color: $clr-dark-x2;
+  caret-color: hsla(0, 0%, 100%, 0.75);
+  color: hsla(0, 0%, 100%, 0.75);
+  font-family: $serif;
 }
 
-input[type=submit] {
-  background-color: $clr-brand;
+.btn {
   color: $clr-white;
-  padding: 0.8rem;
-  font-size: 1.2rem;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
   font-weight: bold;
   border-radius: $border-radius;
-  letter-spacing: 3px;
+  margin: 0 $spacing-xs 0 0;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: $clr-brand;
+  color: hsla(0, 0%, 100%, 0.75);
+}
+
+.btn-secondary {
+  border: 1px solid hsla(0, 0%, 100%, 0.5);
+  color: hsla(0, 0%, 100%, 0.5);
 }
 
 textarea {
-  padding: 0.8rem;
+  font-family: $serif;
+  padding: 1rem;
   border-radius: $border-radius;
-  background-color: #1d1d24;
-  color: rgba($clr-white, 0.5);
+  background-color: $clr-dark-x2;
   resize: vertical;
+  caret-color: hsla(0, 0%, 100%, 0.75);
+  color: hsla(0, 0%, 100%, 0.75);
 }

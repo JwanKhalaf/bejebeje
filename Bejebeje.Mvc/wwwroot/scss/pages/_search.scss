@@ -1,5 +1,4 @@
-﻿
-.search {
+﻿.search {
   padding: 1.5rem $spacing-s 0 0;
   margin-bottom: $spacing-s;
 
@@ -9,14 +8,14 @@
     position: relative;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       z-index: 1;
       right: 15px;
       top: 50%;
       width: 22px;
       height: 22px;
-      background-image: url('../images/icons/search.svg');
+      background-image: url("../images/icons/search.svg");
       background-repeat: no-repeat;
       background-size: 22px 22px;
       background-position: 95%;
@@ -29,7 +28,7 @@
     border-radius: $border-radius;
     background-color: #1d1d24;
     color: rgba($clr-white, 0.5);
-    padding: 0.8rem;
+    padding: 1rem;
     font-size: 1rem;
     position: relative;
   }
