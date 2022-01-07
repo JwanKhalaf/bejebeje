@@ -1,4 +1,5 @@
-﻿html, body {
+﻿html,
+body {
   height: 100%;
 }
 
@@ -41,7 +42,7 @@ main {
     height: 24px;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       width: 24px;
@@ -65,28 +66,28 @@ main {
 }
 
 .facebook-icon::before {
-  -webkit-mask-image: url('../images/icons/facebook.svg');
-  mask-image: url('../images/icons/facebook.svg');
+  -webkit-mask-image: url("../images/icons/facebook.svg");
+  mask-image: url("../images/icons/facebook.svg");
 }
 
 .twitter-icon::before {
-  -webkit-mask-image: url('../images/icons/twitter.svg');
-  mask-image: url('../images/icons/twitter.svg');
+  -webkit-mask-image: url("../images/icons/twitter.svg");
+  mask-image: url("../images/icons/twitter.svg");
 }
 
 .instagram-icon::before {
-  -webkit-mask-image: url('../images/icons/instagram.svg');
-  mask-image: url('../images/icons/instagram.svg');
+  -webkit-mask-image: url("../images/icons/instagram.svg");
+  mask-image: url("../images/icons/instagram.svg");
 }
 
 .tiktok-icon::before {
-  -webkit-mask-image: url('../images/icons/tiktok.svg');
-  mask-image: url('../images/icons/tiktok.svg');
+  -webkit-mask-image: url("../images/icons/tiktok.svg");
+  mask-image: url("../images/icons/tiktok.svg");
 }
 
 .youtube-icon::before {
-  -webkit-mask-image: url('../images/icons/youtube.svg');
-  mask-image: url('../images/icons/youtube.svg');
+  -webkit-mask-image: url("../images/icons/youtube.svg");
+  mask-image: url("../images/icons/youtube.svg");
 }
 
 nav.nav {
@@ -119,6 +120,10 @@ nav.nav {
     box-shadow: 0 6px #15151a;
   }
 
+  .container-m {
+    width: 750px;
+  }
+
   .secondary_content {
     display: flex;
     padding: 0 2.5rem;
@@ -141,7 +146,7 @@ nav.nav {
       margin: 0 $spacing-s 0 0;
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         width: 24px;

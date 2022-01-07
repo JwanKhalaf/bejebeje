@@ -5,31 +5,36 @@
   ViewData["Description"] = "Contribute to Kurdish Music and the archiving project by submitting a new lyric";
 }
 
-<div class="breadcrumb-nav">
-  <nav>
-    <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / New Lyric
-  </nav>
-</div>
+<div class="container-m">
+  <div class="breadcrumb-nav">
+    <nav>
+      <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / New Lyric
+    </nav>
+  </div>
 
-<div class="form__new-lyric">
-  <form asp-controller="Lyric" asp-action="Create" method="post">
-    <div class="form-group">
-      <label class="label">Title</label>
-      <input asp-for="Title" class="form-control" />
-    </div>
+  <div class="form__new-lyric">
+    <form asp-controller="Lyric" asp-action="Create" method="post">
+      <div class="form-group">
+        <label class="label">Title</label>
+        <input asp-for="Title" class="form-control" />
+      </div>
 
-    <div class="form-group">
-      <label class="label">Body</label>
-      <textarea asp-for="Body" class="form-control" rows="6"></textarea>
-    </div>
+      <div class="form-group">
+        <label class="label">Body</label>
+        <textarea asp-for="Body" class="form-control" rows="6"></textarea>
+      </div>
 
-    <input asp-for="Artist.Id" type="hidden" />
-    <input asp-for="Artist.PrimarySlug" type="hidden" />
+      <input asp-for="Artist.Id" type="hidden" />
+      <input asp-for="Artist.PrimarySlug" type="hidden" />
 
-    <div class="warning">
-      <p>Before adding the new lyric, please make sure the lyric does not already exist.</p>
-    </div>
+      <div class="warning">
+        <p>Before adding the new lyric, please make sure the lyric does not already exist.</p>
+      </div>
 
-    <input type="submit" class="form-control" value="Add lyric" />
-  </form>
+      <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Add lyric" />
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
 </div>

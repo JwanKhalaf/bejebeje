@@ -5,7 +5,7 @@
 
   p {
     font-family: $sans-serif;
-    color: rgba($clr-white, .7);
+    color: rgba($clr-white, 0.7);
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 4px;
@@ -44,10 +44,10 @@
 .warning {
   border-left: 3px solid #f0ad4e;
   padding: 0 $spacing-s 0 $spacing-s;
+  margin: 0 0 $spacing-m 0;
 
   p {
     color: rgba($clr-white, 0.5);
-    margin: 0 0 $spacing-s 0;
     font-family: $serif;
     font-size: 1rem;
     line-height: 1.5625rem;
