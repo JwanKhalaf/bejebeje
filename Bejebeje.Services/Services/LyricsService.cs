@@ -205,7 +205,7 @@
         bool artistHasImage = Convert.ToBoolean(reader[6]);
 
         string artistImageUrl = ImageUrlBuilder
-          .BuildImageUrl(artistHasImage, artistPrimarySlug, artistId, ImageSize.Small);
+          .BuildImageUrl(artistHasImage, artistId, ImageSize.Small);
 
         string artistImageAlternateText = ImageUrlBuilder
           .GetImageAlternateText(artistHasImage, artistFullName);

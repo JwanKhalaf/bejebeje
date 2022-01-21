@@ -101,7 +101,7 @@
         string artistFullName = $"{firstName} {lastName}".Trim();
 
         string artistImageUrl = ImageUrlBuilder
-          .BuildImageUrl(hasImage, primarySlug, id, ImageSize.Standard);
+          .BuildImageUrl(hasImage, id, ImageSize.Standard);
 
         string artistImageAlternateText = ImageUrlBuilder
           .GetImageAlternateText(hasImage, artistFullName);
@@ -154,7 +154,7 @@
           string artistFullName = $"{firstName} {lastName}".Trim();
 
           string artistImageUrl = ImageUrlBuilder
-            .BuildImageUrl(artistHasImage, artistPrimarySlug, artistId, ImageSize.Standard);
+            .BuildImageUrl(artistHasImage, artistId, ImageSize.Standard);
 
           string artistImageAlternateText = ImageUrlBuilder
             .GetImageAlternateText(artistHasImage, artistFullName);
@@ -239,7 +239,7 @@
         bool hasImage = Convert.ToBoolean(reader[4]);
 
         string imageUrl = ImageUrlBuilder
-          .BuildImageUrl(hasImage, primarySlug, artistId, ImageSize.ExtraSmall);
+          .BuildImageUrl(hasImage, artistId, ImageSize.ExtraSmall);
 
         string imageAlternateText = ImageUrlBuilder
           .GetImageAlternateText(hasImage, name);
@@ -278,7 +278,7 @@
         int numberOfLyrics = Convert.ToInt32(reader[5]);
 
         string imageUrl = ImageUrlBuilder
-          .BuildImageUrl(hasImage, primarySlug, artistId, ImageSize.Small);
+          .BuildImageUrl(hasImage, artistId, ImageSize.Small);
 
         string imageAlternateText = ImageUrlBuilder
           .GetImageAlternateText(hasImage, primarySlug);
