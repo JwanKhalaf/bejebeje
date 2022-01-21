@@ -4,11 +4,11 @@
 
   public static class ImageSizeEnumExtensions
   {
-    private const string ExtraSmall = "extra-small";
+    private const string ExtraSmall = "xsm";
 
-    private const string Small = "small";
+    private const string Small = "sm";
 
-    private const string Standard = "standard";
+    private const string Standard = "s";
 
     public static string GetCorrespondingFolder(this ImageSize imageSize)
     {

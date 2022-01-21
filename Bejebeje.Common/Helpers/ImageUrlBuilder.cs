@@ -7,12 +7,11 @@
   {
     public static string BuildImageUrl(
       bool hasImage,
-      string artistPrimarySlug,
       int artistId,
       ImageSize imageSize)
     {
       return hasImage
-        ? BuildS3ImageUrl(artistPrimarySlug, artistId, imageSize)
+        ? BuildS3ImageUrl(artistId, imageSize)
         : GetPlaceholderImageUrl(imageSize);
     }
 
@@ -26,21 +25,20 @@
     }
 
     private static string BuildS3ImageUrl(
-      string artistPrimarySlug,
       int artistId,
       ImageSize imageSize)
     {
-      string sizeFolder = imageSize.GetCorrespondingFolder();
+      string size = imageSize.GetCorrespondingFolder();
 
-      return $"https://s3.eu-west-2.amazonaws.com/bejebeje.com/artist-images/{sizeFolder}/{artistPrimarySlug}-{artistId}";
+      return $"https://s3.eu-west-2.amazonaws.com/bejebeje.com/artist-images/{artistId}-{size}";
     }
 
     private static string GetPlaceholderImageUrl(
       ImageSize imageSize)
     {
-      string sizeFolder = imageSize.GetCorrespondingFolder();
+      string size = imageSize.GetCorrespondingFolder();
 
-      return $"https://s3.eu-west-2.amazonaws.com/bejebeje.com/artist-images/{sizeFolder}/artist-placeholder";
+      return $"https://s3.eu-west-2.amazonaws.com/bejebeje.com/artist-images/placeholder-{size}";
     }
   }
 }
