@@ -1,32 +1,36 @@
-using Microsoft.AspNetCore.Builder;
+using System.IdentityModel.Tokens.Jwt;
+using Bejebeje.DataAccess.Context;
+using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
 using Bejebeje.Services.Services.Interfaces;
-using Bejebeje.DataAccess.Context;
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Bejebeje.Services.Config;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// add services to the container.
 IdentityModelEventSource.ShowPII = true;
+
 string authority = builder.Configuration["IdentityServerConfiguration:Authority"];
+
 string clientId = builder.Configuration["IdentityServerConfiguration:ClientId"];
+
 string clientSecret = builder.Configuration["IdentityServerConfiguration:ClientSecret"];
+
 string connectionString = builder.Configuration["ConnectionString"];
 
 builder.Services.Configure<DatabaseOptions>(builder.Configuration);
+
+builder.WebHost.UseSentry();
 
 builder.Services.AddDbContext<BbContext>(options => options
       .UseNpgsql(connectionString)
@@ -69,27 +73,32 @@ JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 ForwardedHeadersOptions forwardedHeadersOptions = new ForwardedHeadersOptions
 {
-  ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+  ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
 };
 
 forwardedHeadersOptions.KnownNetworks.Clear();
+
 forwardedHeadersOptions.KnownProxies.Clear();
 
 app.UseForwardedHeaders(forwardedHeadersOptions);
 
-// Configure the HTTP request pipeline.
+app.UseSentryTracing();
+
+// configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
   app.UseExceptionHandler("/Error");
-  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+
+  // the default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
   app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
