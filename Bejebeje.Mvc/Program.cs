@@ -1,3 +1,4 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using Bejebeje.DataAccess.Context;
 using Bejebeje.Services.Config;
@@ -95,6 +96,10 @@ if (!app.Environment.IsDevelopment())
 
   // the default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
   app.UseHsts();
+}
+else
+{
+  Console.WriteLine("We are in development environment!!!");
 }
 
 app.UseHttpsRedirection();
