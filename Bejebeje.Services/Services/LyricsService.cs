@@ -213,7 +213,7 @@
         lyricItemViewModel.ArtistId = artistId;
         lyricItemViewModel.Title = lyricTitle;
         lyricItemViewModel.LyricPrimarySlug = lyricPrimarySlug;
-        lyricItemViewModel.ArtistName = artistFullName;
+        lyricItemViewModel.ArtistName = artistFullName.TruncateLongString(11);
         lyricItemViewModel.ArtistPrimarySlug = artistPrimarySlug;
         lyricItemViewModel.ArtistImageUrl = artistImageUrl;
         lyricItemViewModel.ArtistImageAlternateText = artistImageAlternateText;

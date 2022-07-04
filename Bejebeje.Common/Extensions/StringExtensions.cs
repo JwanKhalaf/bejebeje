@@ -60,5 +60,12 @@
         "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
         _ => input.First().ToString().ToUpper() + input.Substring(1)
       };
+    
+    public static string TruncateLongString(this string str, int maxLength)
+    {
+      if (string.IsNullOrEmpty(str) || str.Length < maxLength) return str;
+      
+      return str.Substring(0, Math.Min(str.Length, maxLength)) + "…";
+    }
   }
 }
