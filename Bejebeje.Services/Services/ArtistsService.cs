@@ -77,9 +77,9 @@
       return true;
     }
 
-    public async Task<IEnumerable<ArtistItemViewModel>> GetTopTenFemaleArtistsByLyricsCountAsync()
+    public async Task<IEnumerable<RandomFemaleArtistItemViewModel>> GetTopTenFemaleArtistsByLyricsCountAsync()
     {
-      List<ArtistItemViewModel> femaleArtists = new List<ArtistItemViewModel>();
+      List<RandomFemaleArtistItemViewModel> femaleArtists = new List<RandomFemaleArtistItemViewModel>();
 
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
@@ -93,23 +93,19 @@
       while (await reader.ReadAsync())
       {
         int id = Convert.ToInt32(reader[0]);
-        string firstName = _textInfo.ToTitleCase(Convert.ToString(reader[1])).Trim();
-        string lastName = _textInfo.ToTitleCase(Convert.ToString(reader[2])).Trim();
+        string name = _textInfo.ToTitleCase(Convert.ToString(reader[1]) + " " + Convert.ToString(reader[2])).Trim();
         string primarySlug = Convert.ToString(reader[3]);
         bool hasImage = Convert.ToBoolean(reader[4]);
-
-        string artistFullName = $"{firstName} {lastName}".Trim();
 
         string artistImageUrl = ImageUrlBuilder
           .BuildImageUrl(hasImage, id, ImageSize.Standard);
 
         string artistImageAlternateText = ImageUrlBuilder
-          .GetImageAlternateText(hasImage, artistFullName);
+          .GetImageAlternateText(hasImage, name);
 
-        ArtistItemViewModel artist = new ArtistItemViewModel();
+        RandomFemaleArtistItemViewModel artist = new RandomFemaleArtistItemViewModel();
 
-        artist.FirstName = firstName;
-        artist.LastName = lastName;
+        artist.Name = name.TruncateLongString(9);
         artist.PrimarySlug = primarySlug;
         artist.ImageUrl = artistImageUrl;
         artist.ImageAlternateText = artistImageAlternateText;

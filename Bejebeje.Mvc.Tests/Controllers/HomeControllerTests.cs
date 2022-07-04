@@ -18,7 +18,7 @@
     public async Task Index_ReturnsAViewResult_WithAnIndexViewModel()
     {
       // arrange
-      IEnumerable<ArtistItemViewModel> tenFemaleArtists = GetListOfFemaleArtists();
+      IEnumerable<RandomFemaleArtistItemViewModel> tenFemaleArtists = GetListOfFemaleArtists();
 
       Mock<IArtistsService> mockArtistsService = new Mock<IArtistsService>();
 
@@ -153,86 +153,76 @@
       };
     }
 
-    private static IEnumerable<ArtistItemViewModel> GetListOfFemaleArtists()
+    private static IEnumerable<RandomFemaleArtistItemViewModel> GetListOfFemaleArtists()
     {
-      return new List<ArtistItemViewModel>
+      return new List<RandomFemaleArtistItemViewModel>
       {
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A1",
-          LastName = "A1",
+          Name = "A1",
           ImageAlternateText = "A1",
           ImageUrl = "A1",
           PrimarySlug = "A1",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A2",
-          LastName = "A2",
+          Name = "A2",
           ImageAlternateText = "A2",
           ImageUrl = "A2",
           PrimarySlug = "A2",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A3",
-          LastName = "A3",
+          Name = "A3",
           ImageAlternateText = "A3",
           ImageUrl = "A3",
           PrimarySlug = "A3",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A4",
-          LastName = "A4",
+          Name = "A4",
           ImageAlternateText = "A4",
           ImageUrl = "A4",
           PrimarySlug = "A4",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A5",
-          LastName = "A5",
+          Name = "A5",
           ImageAlternateText = "A5",
           ImageUrl = "A5",
           PrimarySlug = "A5",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A6",
-          LastName = "A6",
+          Name = "A6",
           ImageAlternateText = "A6",
           ImageUrl = "A6",
           PrimarySlug = "A6",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A7",
-          LastName = "A7",
+          Name = "A7",
           ImageAlternateText = "A7",
           ImageUrl = "A7",
           PrimarySlug = "A7",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A8",
-          LastName = "A8",
+          Name = "A8",
           ImageAlternateText = "A8",
           ImageUrl = "A8",
           PrimarySlug = "A8",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A9",
-          LastName = "A9",
+          Name = "A9",
           ImageAlternateText = "A9",
           ImageUrl = "A9",
           PrimarySlug = "A9",
         },
-        new ArtistItemViewModel
+        new RandomFemaleArtistItemViewModel
         {
-          FirstName = "A10",
-          LastName = "A10",
+          Name = "A10",
           ImageAlternateText = "A10",
           ImageUrl = "A10",
           PrimarySlug = "A10",

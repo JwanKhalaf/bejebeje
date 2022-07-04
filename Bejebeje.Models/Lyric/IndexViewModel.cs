@@ -7,6 +7,6 @@
   {
     public IEnumerable<LyricItemViewModel> Lyrics { get; set; }
 
-    public IEnumerable<ArtistItemViewModel> FemaleArtists { get; set; }
+    public IEnumerable<RandomFemaleArtistItemViewModel> FemaleArtists { get; set; }
   }
 }
