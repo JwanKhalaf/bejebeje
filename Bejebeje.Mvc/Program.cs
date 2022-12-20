@@ -92,6 +92,8 @@ app.UseSentryTracing();
 // configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
+  Console.WriteLine("We are in a Production environment!!!");
+
   app.UseExceptionHandler("/Error");
 
   // the default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -99,7 +101,7 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-  Console.WriteLine("We are in development environment!!!");
+  Console.WriteLine("We are in Development environment!!!");
 }
 
 app.UseHttpsRedirection();
