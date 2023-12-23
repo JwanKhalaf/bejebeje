@@ -1,5 +1,5 @@
-# set base image as the dotnet 7.0 SDK.
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+# set base image as the dotnet 8.0 SDK.
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
 # instructions that follows the WORKDIR instruction.
@@ -16,8 +16,8 @@ COPY . ./
 # we now publish the project into a folder called 'out'.
 RUN dotnet publish Bejebeje.Mvc/Bejebeje.Mvc.csproj -c Release -o out
 
-# set base image as the dotnet 7.0 runtime.
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
+# set base image as the dotnet 8.0 runtime.
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 
 # telling the application what port to run on.
 ENV ASPNETCORE_URLS=http://*:5005
