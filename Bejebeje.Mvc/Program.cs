@@ -21,11 +21,11 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // add services to the container.
 IdentityModelEventSource.ShowPII = true;
 
-string authority = builder.Configuration["IdentityServerConfiguration:Authority"];
+string authority = builder.Configuration["Cognito:Authority"];
 
-string clientId = builder.Configuration["IdentityServerConfiguration:ClientId"];
+string clientId = builder.Configuration["Cognito:ClientId"];
 
-string clientSecret = builder.Configuration["IdentityServerConfiguration:ClientSecret"];
+string clientSecret = builder.Configuration["Cognito:ClientSecret"];
 
 string connectionString = builder.Configuration["ConnectionString"];
 
