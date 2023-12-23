@@ -125,7 +125,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at, a.is_approved from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where case when @user_id <> '' then (a.is_approved = true or a.user_id = @user_id) else a.is_approved = true end and aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true order by a.first_name asc;";
+      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at, a.is_approved from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where case when @user_id <> '' then (a.is_approved = true or a.user_id = @user_id) else a.is_approved = true end and aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true and a.is_deleted = false order by a.first_name asc;";
 
       await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
