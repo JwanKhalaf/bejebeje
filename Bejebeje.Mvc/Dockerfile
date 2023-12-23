@@ -19,6 +19,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 # telling the application what port to run on.
 ENV ASPNETCORE_URLS=http://*:5005
 
+# disable diagnostics 
+ENV COMPlus_EnableDiagnostics=0
+
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
 # instructions that follows the WORKDIR instruction.
 WORKDIR /app
