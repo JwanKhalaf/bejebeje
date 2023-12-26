@@ -13,7 +13,7 @@
 </div>
 
 <div class="search">
-  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
+  <form asp-controller="Search" asp-action="Search" method="get" class="search__form">
     <input asp-for="@Model.SearchTerm" class="search__input" placeholder="artist name or lyric title" />
   </form>
 </div>
