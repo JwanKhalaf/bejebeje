@@ -12,11 +12,7 @@
   </nav>
 </div>
 
-<div class="search">
-  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
-    <input asp-for="@Model.SearchTerm" class="search__input" placeholder="artist name or lyric title" />
-  </form>
-</div>
+@await Html.PartialAsync("_SearchForm")
 
 <div class="results">
   @if (!Model.Lyrics.Any() && !Model.Artists.Any() && !string.IsNullOrEmpty(Model.SearchTerm))

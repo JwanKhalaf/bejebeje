@@ -27,14 +27,14 @@
       return View(viewModel);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Index(string searchTerm)
+    [HttpGet]
+    public async Task<IActionResult> Search(string searchTerm)
     {
       SearchViewModel viewModel = new SearchViewModel();
 
       if (string.IsNullOrEmpty(searchTerm))
       {
-        return View(viewModel);
+        return View("Index", viewModel);
       }
 
       viewModel.SearchTerm = searchTerm;
@@ -45,7 +45,7 @@
       viewModel.Lyrics = await _lyricsService
         .SearchLyricsAsync(searchTerm);
 
-      return View(viewModel);
+      return View("Index", viewModel);
     }
   }
 }

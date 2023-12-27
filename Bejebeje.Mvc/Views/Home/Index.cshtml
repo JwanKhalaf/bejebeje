@@ -13,11 +13,7 @@
   </nav>
 </div>
 
-<div class="search">
-  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
-    <input class="search__input" placeholder="search for artist or lyric" name="searchTerm" />
-  </form>
-</div>
+@await Html.PartialAsync("_SearchForm")
 
 <section class="featured_list">
   <h2 class="featured_list__title">Recent Submissions</h2>

@@ -9,11 +9,7 @@
   </nav>
 </div>
 
-<div class="search">
-  <form asp-controller="Search" asp-action="Index" method="post" class="search__form">
-    <input class="search__input" placeholder="search for artist or lyric" name="searchTerm" />
-  </form>
-</div>
+@await Html.PartialAsync("_SearchForm")
 
 <div class="actions">
   <h2 class="actions__heading">Want to help?</h2>
