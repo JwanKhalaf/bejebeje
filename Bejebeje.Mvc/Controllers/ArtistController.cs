@@ -1,4 +1,6 @@
-﻿namespace Bejebeje.Mvc.Controllers
+﻿using System;
+
+namespace Bejebeje.Mvc.Controllers
 {
   using System.Collections.Generic;
   using System.Threading.Tasks;
@@ -11,11 +13,14 @@
   public class ArtistController : Controller
   {
     private readonly IArtistsService _artistsService;
+    private readonly IEmailNotificationsService _emailNotificationsService;
 
     public ArtistController(
-      IArtistsService artistsService)
+      IArtistsService artistsService,
+      IEmailNotificationsService emailNotificationsService)
     {
       _artistsService = artistsService;
+      _emailNotificationsService = emailNotificationsService;
     }
 
     [Route("artists")]
@@ -50,6 +55,9 @@
 
         ArtistCreationResult result = await _artistsService
           .AddArtistAsync(viewModel);
+
+        await _emailNotificationsService
+          .AcknowledgeArtistSubmission(Environment.UserName, viewModel);
 
         return RedirectToAction("ArtistLyrics", "Lyric", new { artistSlug = result.PrimarySlug });
       }

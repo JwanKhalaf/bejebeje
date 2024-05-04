@@ -45,6 +45,8 @@ builder.Services.AddScoped<IArtistsService, ArtistsService>();
 
 builder.Services.AddScoped<ILyricsService, LyricsService>();
 
+builder.Services.AddScoped<IEmailNotificationsService, EmailNotificationsService>();
+
 builder.Services.AddScoped<ISitemapService, SitemapService>();
 
 builder.Services.AddAuthentication(options =>
