@@ -147,7 +147,7 @@
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at, l.is_approved from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where case when @user_id <> '' then l.user_id = @user_id or a.is_approved = true else l.is_approved = true end and ls.name = @lyric_slug and artist_slugs.name = @artist_slug group by l.id order by number_of_likes;", connection);
+      await using NpgsqlCommand command = new NpgsqlCommand("select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at, l.is_approved from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs as ars on ars.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where case when @user_id <> '' then l.user_id = @user_id or a.is_approved = true else l.is_approved = true end and ls.name = @lyric_slug and ars.name = @artist_slug and ars.is_deleted = false and ls.is_deleted = false group by l.id order by number_of_likes;", connection);
 
       command.Parameters.AddWithValue("@user_id", userId);
       command.Parameters.AddWithValue("@artist_slug", artistSlug);

@@ -13,7 +13,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/j/.aspnet/https/bejebeje.pfx"
+        "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/j/.aspnet/https/local-devcert.pfx"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }
