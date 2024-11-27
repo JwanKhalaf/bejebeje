@@ -5,7 +5,6 @@ using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
 using Bejebeje.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,10 +48,10 @@ builder.Services.AddScoped<ISitemapService, SitemapService>();
 
 builder.Services.AddAuthentication(options =>
     {
-      options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+      options.DefaultScheme = "Cookies";
       options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
     })
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie("Cookies")
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
       options.Authority = authority;
@@ -106,7 +105,7 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseStaticFiles();
+app.MapStaticAssets();
 
 app.UseRouting();
 
