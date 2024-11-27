@@ -48,10 +48,10 @@ builder.Services.AddScoped<ISitemapService, SitemapService>();
 
 builder.Services.AddAuthentication(options =>
     {
-      options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+      options.DefaultScheme = "Cookies";
       options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
     })
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie("Cookies")
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     {
       options.Authority = authority;
