@@ -14,14 +14,36 @@ services:
       - ./variables.env
     depends_on:
       - database
+    networks:
+      - bejebeje_network
+    container_name: bejebeje-mvc
+
   database:
-    image: postgres:12.4
+    image: postgres:16.3
     ports:
       - "8002:5432"
     volumes:
-      - data-volume:/var/lib/postgresql/data
+      - ./data/postgresql:/var/lib/postgresql/data
     env_file:
       - ./variables.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bejebeje_network
+    container_name: bejebeje-database
 
 volumes:
   data-volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./data/postgresql
+
+networks:
+  bejebeje_network:
+    driver: bridge
+
