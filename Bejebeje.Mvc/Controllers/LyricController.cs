@@ -1,6 +1,5 @@
 ﻿namespace Bejebeje.Mvc.Controllers
 {
-  using System;
   using System.Threading.Tasks;
   using Bejebeje.Models.Artist;
   using Bejebeje.Models.Lyric;

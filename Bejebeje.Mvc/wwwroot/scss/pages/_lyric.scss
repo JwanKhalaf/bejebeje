@@ -19,6 +19,14 @@
   font-size: 2rem;
   font-family: $serif;
   line-height: 3.75rem;
+  margin-bottom: $spacing-xs;
+}
+
+.lyric__metadata-submitter {
+  color: #e0e0e6;
+  opacity: 0.8;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 .lyric__body-wrap {

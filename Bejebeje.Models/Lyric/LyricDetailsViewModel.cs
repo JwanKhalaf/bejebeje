@@ -26,5 +26,7 @@
     public DateTime? ModifiedAt { get; set; }
 
     public ArtistViewModel Artist { get; set; }
+
+    public string SubmitterUsername { get; set; }
   }
 }
