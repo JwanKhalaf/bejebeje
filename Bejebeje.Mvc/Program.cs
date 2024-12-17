@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using Amazon.CognitoIdentityProvider;
 using Bejebeje.DataAccess.Context;
 using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
@@ -28,6 +30,10 @@ string clientSecret = builder.Configuration["Cognito:ClientSecret"];
 
 string connectionString = builder.Configuration["ConnectionString"];
 
+builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+
+builder.Services.AddAWSService<IAmazonCognitoIdentityProvider>();
+
 builder.Services.Configure<DatabaseOptions>(builder.Configuration);
 
 builder.WebHost.UseSentry();
@@ -45,6 +51,8 @@ builder.Services.AddScoped<IArtistsService, ArtistsService>();
 builder.Services.AddScoped<ILyricsService, LyricsService>();
 
 builder.Services.AddScoped<ISitemapService, SitemapService>();
+
+builder.Services.AddScoped<ICognitoService, CognitoService>();
 
 builder.Services.AddAuthentication(options =>
     {

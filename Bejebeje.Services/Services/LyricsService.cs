@@ -24,14 +24,18 @@
 
     private readonly IArtistsService _artistsService;
 
+    private readonly ICognitoService _cognitoService;
+
     private readonly TextInfo _textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public LyricsService(
       IOptionsMonitor<DatabaseOptions> optionsAccessor,
-      IArtistsService artistsService)
+      IArtistsService artistsService,
+      ICognitoService cognitoService)
     {
       _databaseOptions = optionsAccessor.CurrentValue;
       _artistsService = artistsService;
+      _cognitoService = cognitoService;
     }
 
     public async Task<ArtistLyricsViewModel> GetLyricsAsync(
@@ -174,6 +178,7 @@
         viewModel.CreatedAt = lyricCreatedAt;
         viewModel.ModifiedAt = lyricModifiedAt;
         viewModel.IsApproved = isApproved;
+        viewModel.SubmitterUsername = await _cognitoService.GetPreferredUsernameAsync(userId);
       }
 
       viewModel.AlreadyLiked = await LyricAlreadyLikedAsync(userId, viewModel.Id);
