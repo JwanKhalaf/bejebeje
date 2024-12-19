@@ -23,5 +23,12 @@
     public DateTime CreatedAt { get; set; }
 
     public DateTime? ModifiedAt { get; set; }
+
+    public bool IsOwnSubmission { get; set; }
+
+    public bool IsEditable()
+    {
+      return IsOwnSubmission && (DateTime.UtcNow - CreatedAt).TotalDays < 2 && !IsApproved;
+    }
   }
 }

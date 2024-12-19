@@ -64,7 +64,17 @@
   </ul>
 }
 
-<div class="actions">
+<div class="flex flex-col gap-y-4">
+  @if (Model.Artist.IsEditable())
+  {
+    <a asp-controller="Artist"
+       asp-action="Update"
+       asp-route-artistSlug="@Model.Artist.PrimarySlug"
+       class="actions__add-lyric">
+      Update artist details
+    </a>
+  }
+  
   <a asp-controller="Lyric"
      asp-action="Create"
      asp-route-artistSlug="@Model.Artist.PrimarySlug"

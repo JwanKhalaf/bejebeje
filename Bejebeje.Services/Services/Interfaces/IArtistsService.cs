@@ -7,26 +7,26 @@
 
   public interface IArtistsService
   {
-    Task<int> GetArtistIdAsync(
-      string artistSlug);
+    Task<int> GetArtistIdAsync(string artistSlug);
 
-    Task<bool> ArtistExistsAsync(
-      string artistSlug);
+    Task<ArtistViewModel> GetArtistDetailsByIdAsync(int artistId, string userId);
+
+    Task<bool> ArtistExistsAsync(string artistSlug);
 
     Task<IEnumerable<RandomFemaleArtistItemViewModel>> GetTopTenFemaleArtistsByLyricsCountAsync();
 
     Task<ArtistViewModel> GetArtistDetailsAsync(
-      string artistSlug, string userId);
+      string artistSlug,
+      string userId);
 
-    Task<CreateNewArtistResponse> CreateNewArtistAsync(
-      CreateNewArtistRequest request);
+    Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request);
 
-    Task<IEnumerable<SearchArtistResultViewModel>> SearchArtistsAsync(
-      string artistName);
+    Task<IEnumerable<SearchArtistResultViewModel>> SearchArtistsAsync(string artistName);
 
     Task<IDictionary<char, List<LibraryArtistViewModel>>> GetAllArtistsAsync();
 
-    Task<ArtistCreationResult> AddArtistAsync(
-      CreateArtistViewModel viewModel);
+    Task<ArtistCreationResult> AddArtistAsync(CreateArtistViewModel viewModel);
+
+    Task<ArtistUpdateResult> UpdateArtistAsync(UpdateArtistViewModel viewModel);
   }
 }

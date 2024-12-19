@@ -41,8 +41,7 @@
       _context = context;
     }
 
-    public async Task<int> GetArtistIdAsync(
-      string artistSlug)
+    public async Task<int> GetArtistIdAsync(string artistSlug)
     {
       int? artistId = await _context
         .Artists
@@ -59,8 +58,64 @@
       return artistId.Value;
     }
 
-    public async Task<bool> ArtistExistsAsync(
-      string artistSlug)
+    public async Task<ArtistViewModel> GetArtistDetailsByIdAsync(int artistId, string userId)
+    {
+      ArtistViewModel artistViewModel = new ArtistViewModel();
+
+      await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+      await connection.OpenAsync();
+
+      string sqlCommand = @"select a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at, a.is_approved, a.user_id from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where a.id = @artist_id and aslug.is_primary = true;";
+
+      await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
+
+      command.Parameters.AddWithValue("@artist_id", artistId);
+
+      await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+      if (reader.HasRows)
+      {
+        while (await reader.ReadAsync())
+        {
+          string firstName = _textInfo.ToTitleCase(Convert.ToString(reader[0])).Trim();
+          string lastName = _textInfo.ToTitleCase(Convert.ToString(reader[1])).Trim();
+          string artistPrimarySlug = Convert.ToString(reader[2]);
+          bool artistHasImage = Convert.ToBoolean(reader[3]);
+          DateTime createdAt = Convert.ToDateTime(reader[4]);
+          DateTime? modifiedAt = reader[5] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[5]);
+          bool isApproved = Convert.ToBoolean(reader[6]);
+          string submitterUserId = Convert.ToString(reader[7]);
+
+          string artistFullName = $"{firstName} {lastName}".Trim();
+
+          string artistImageUrl = ImageUrlBuilder
+            .BuildImageUrl(artistHasImage, artistId, ImageSize.Standard);
+
+          string artistImageAlternateText = ImageUrlBuilder
+            .GetImageAlternateText(artistHasImage, artistFullName);
+
+          artistViewModel.Id = artistId;
+          artistViewModel.FirstName = firstName;
+          artistViewModel.LastName = lastName;
+          artistViewModel.FullName = $"{firstName} {lastName}";
+          artistViewModel.PrimarySlug = artistPrimarySlug;
+          artistViewModel.IsApproved = isApproved;
+          artistViewModel.ImageUrl = artistImageUrl;
+          artistViewModel.ImageAlternateText = artistImageAlternateText;
+          artistViewModel.CreatedAt = createdAt;
+          artistViewModel.ModifiedAt = modifiedAt;
+          artistViewModel.IsOwnSubmission = submitterUserId == userId;
+        }
+      }
+      else
+      {
+        throw new ArtistNotFoundException(artistId);
+      }
+
+      return artistViewModel;
+    }
+
+    public async Task<bool> ArtistExistsAsync(string artistSlug)
     {
       int? artistId = await _context
         .Artists
@@ -116,16 +171,14 @@
       return femaleArtists;
     }
 
-    public async Task<ArtistViewModel> GetArtistDetailsAsync(
-      string artistSlug,
-      string userId)
+    public async Task<ArtistViewModel> GetArtistDetailsAsync(string artistSlug, string userId)
     {
       ArtistViewModel artistViewModel = new ArtistViewModel();
 
       await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
       await connection.OpenAsync();
 
-      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at, a.is_approved from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where case when @user_id <> '' then (a.is_approved = true or a.user_id = @user_id) else a.is_approved = true end and aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true and a.is_deleted = false order by a.first_name asc;";
+      string sqlCommand = @"select a.id as artist_id, a.first_name, a.last_name, aslug.name as artist_slug, a.has_image, a.created_at, a.modified_at, a.is_approved, a.user_id from artists as a inner join artist_slugs as aslug on aslug.artist_id = a.id where case when @user_id <> '' then (a.is_approved = true or a.user_id = @user_id) else a.is_approved = true end and aslug.artist_id = (select artist_id from artist_slugs where name = @artist_slug) and aslug.is_primary = true and a.is_deleted = false order by a.first_name asc;";
 
       await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
@@ -146,6 +199,7 @@
           DateTime createdAt = Convert.ToDateTime(reader[5]);
           DateTime? modifiedAt = reader[6] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
           bool isApproved = Convert.ToBoolean(reader[7]);
+          string submitterUserId = Convert.ToString(reader[8]);
 
           string artistFullName = $"{firstName} {lastName}".Trim();
 
@@ -165,6 +219,7 @@
           artistViewModel.ImageAlternateText = artistImageAlternateText;
           artistViewModel.CreatedAt = createdAt;
           artistViewModel.ModifiedAt = modifiedAt;
+          artistViewModel.IsOwnSubmission = submitterUserId == userId;
         }
       }
       else
@@ -175,8 +230,7 @@
       return artistViewModel;
     }
 
-    public async Task<CreateNewArtistResponse> CreateNewArtistAsync(
-      CreateNewArtistRequest request)
+    public async Task<CreateNewArtistResponse> CreateNewArtistAsync(CreateNewArtistRequest request)
     {
       string artistFullName = string.IsNullOrEmpty(request.LastName) ? request.FirstName : $"{request.FirstName} {request.LastName}";
 
@@ -210,8 +264,7 @@
       return response;
     }
 
-    public async Task<IEnumerable<SearchArtistResultViewModel>> SearchArtistsAsync(
-      string artistName)
+    public async Task<IEnumerable<SearchArtistResultViewModel>> SearchArtistsAsync(string artistName)
     {
       string artistNameStandardized = artistName.NormalizeStringForUrl();
 
@@ -295,8 +348,7 @@
       return dictionary;
     }
 
-    public async Task<ArtistCreationResult> AddArtistAsync(
-      CreateArtistViewModel viewModel)
+    public async Task<ArtistCreationResult> AddArtistAsync(CreateArtistViewModel viewModel)
     {
       ArtistCreationResult result = new ArtistCreationResult();
       string connectionString = _databaseOptions.ConnectionString;
@@ -350,8 +402,53 @@
       return result;
     }
 
-    private IDictionary<char, List<LibraryArtistViewModel>> BuildDictionary(
-      List<LibraryArtistViewModel> artists)
+    public async Task<ArtistUpdateResult> UpdateArtistAsync(UpdateArtistViewModel viewModel)
+    {
+      ArtistUpdateResult result = new ArtistUpdateResult();
+      string connectionString = _databaseOptions.ConnectionString;
+      string sqlStatement = "update artists set first_name = @first_name, last_name = @last_name, full_name = @full_name, modified_at = current_timestamp where id = @artist_id";
+
+      int artistId = viewModel.Id;
+      string firstName = viewModel.FirstName.ToLower();
+      string lastName = viewModel.LastName.ToLower();
+      string fullName = string.IsNullOrEmpty(lastName) ? firstName : $"{firstName} {lastName}";
+      DateTime timestamp = DateTime.UtcNow;
+
+      using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+      {
+        NpgsqlCommand command = new NpgsqlCommand(sqlStatement, connection);
+        command.Parameters.AddWithValue("@first_name", firstName);
+        command.Parameters.AddWithValue("@last_name", lastName);
+        command.Parameters.AddWithValue("@full_name", fullName);
+        command.Parameters.AddWithValue("@artist_id", artistId);
+
+        try
+        {
+          await connection.OpenAsync();
+          await command.ExecuteNonQueryAsync();
+
+          ArtistSlugCreateViewModel artistSlug = new ArtistSlugCreateViewModel
+          {
+            Name = fullName.NormalizeStringForUrl(),
+            IsPrimary = true,
+            CreatedAt = timestamp,
+            ArtistId = artistId,
+          };
+
+          await _artistSlugsService.AddArtistSlugAsync(artistSlug);
+
+          result.PrimarySlug = artistSlug.Name;
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine(ex.Message);
+        }
+      }
+
+      return result;
+    }
+
+    private IDictionary<char, List<LibraryArtistViewModel>> BuildDictionary(List<LibraryArtistViewModel> artists)
     {
       List<char> letters = new List<char>();
 
