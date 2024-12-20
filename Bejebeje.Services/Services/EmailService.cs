@@ -16,7 +16,9 @@ public class EmailService : IEmailService
     _sesClient = sesClient;
   }
 
-  public async Task SendArtistSubmissionEmailAsync(string username, string artistFullName)
+  public async Task SendArtistSubmissionEmailAsync(
+    string username,
+    string artistFullName)
   {
     string subject = $"New artist submission ({artistFullName})";
     string body = $"""
@@ -35,7 +37,7 @@ public class EmailService : IEmailService
       FromEmailAddress = SenderEmail,
       Destination = new Destination
       {
-        ToAddresses = ["jk.bejebeje@gmail.com"],
+        ToAddresses = [SenderEmail],
       },
       Content = new EmailContent
       {
@@ -64,6 +66,63 @@ public class EmailService : IEmailService
     catch (Exception ex)
     {
       Console.WriteLine($"Failed to send email: {ex.Message}");
+      throw;
+    }
+  }
+
+  public async Task SendLyricSubmissionEmailAsync(
+    string username,
+    string lyricTitle,
+    int lyricId,
+    string artistFullName,
+    int artistId)
+  {
+    string subject = $"New lyric submission ({lyricTitle} under {artistFullName})";
+    string body = $"""
+
+                   Hello,
+
+                   {username} has added a lyric titled {lyricTitle} (Id: {lyricId}) under the artist {artistFullName} (Id: {artistId}).
+
+                   Please review as soon as possible.
+
+                   Thanks
+                   """;
+
+    var sendRequest = new SendEmailRequest
+    {
+      FromEmailAddress = SenderEmail,
+      Destination = new Destination
+      {
+        ToAddresses = [SenderEmail],
+      },
+      Content = new EmailContent
+      {
+        Simple = new Message
+        {
+          Subject = new Content
+          {
+            Data = subject,
+          },
+          Body = new Body
+          {
+            Text = new Content
+            {
+              Data = body,
+            },
+          },
+        },
+      },
+    };
+
+    try
+    {
+      var response = await _sesClient.SendEmailAsync(sendRequest);
+      Console.WriteLine($"Lyric submission email sent! MessageId: {response.MessageId}");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Failed to send lyric submission email: {ex.Message}");
       throw;
     }
   }
