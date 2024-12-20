@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using Amazon.CognitoIdentityProvider;
+using Amazon.SimpleEmailV2;
 using Bejebeje.DataAccess.Context;
 using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
@@ -34,6 +35,8 @@ builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 
 builder.Services.AddAWSService<IAmazonCognitoIdentityProvider>();
 
+builder.Services.AddAWSService<IAmazonSimpleEmailServiceV2>();
+
 builder.Services.Configure<DatabaseOptions>(builder.Configuration);
 
 builder.WebHost.UseSentry();
@@ -53,6 +56,8 @@ builder.Services.AddScoped<ILyricsService, LyricsService>();
 builder.Services.AddScoped<ISitemapService, SitemapService>();
 
 builder.Services.AddScoped<ICognitoService, CognitoService>();
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddAuthentication(options =>
     {

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Bejebeje.Mvc.Controllers
+﻿namespace Bejebeje.Mvc.Controllers
 {
+  using System;
   using System.Collections.Generic;
   using System.Threading.Tasks;
   using Bejebeje.Models.Artist;

@@ -27,6 +27,10 @@
 
     private readonly IArtistSlugsService _artistSlugsService;
 
+    private readonly ICognitoService _cognitoService;
+
+    private readonly IEmailService _emailService;
+
     private readonly BbContext _context;
 
     private readonly TextInfo _textInfo = new CultureInfo("ku-TR", false).TextInfo;
@@ -34,10 +38,14 @@
     public ArtistsService(
       IOptionsMonitor<DatabaseOptions> optionsAccessor,
       IArtistSlugsService artistSlugsService,
+      ICognitoService cognitoService,
+      IEmailService emailService,
       BbContext context)
     {
       _databaseOptions = optionsAccessor.CurrentValue;
       _artistSlugsService = artistSlugsService;
+      _cognitoService = cognitoService;
+      _emailService = emailService;
       _context = context;
     }
 
@@ -398,6 +406,10 @@
           Console.WriteLine(ex.Message);
         }
       }
+
+      string submitterName = await _cognitoService.GetPreferredUsernameAsync(userId);
+
+      await _emailService.SendArtistSubmissionEmailAsync(submitterName, _textInfo.ToTitleCase(fullName).Trim());
 
       return result;
     }
