@@ -19,27 +19,64 @@
   <h2 class="featured_list__title">Recent Submissions</h2>
 
   <ul class="featured_list__content">
-    @foreach (LyricItemViewModel item in Model.Lyrics)
+    @foreach (LyricItemViewModel item in Model.RecentlySubmittedLyrics)
     {
       <li class="featured_list__content-item">
         <div class="recent">
-          <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
+          <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
+             asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
             <picture>
               <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
               <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
 
               <img class="recent__artist-image"
-                   src=@( $"{item.ArtistImageUrl}.jpg" )
+                   src=@($"{item.ArtistImageUrl}.jpg")
                    width="80"
                    height="80"
                    loading="lazy"
-                   alt="@item.ArtistImageAlternateText" />
+                   alt="@item.ArtistImageAlternateText"/>
             </picture>
 
             <h2 class="recent__lyric-title">@item.Title</h2>
           </a>
 
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug" class="recent__artist-link">
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug"
+             class="recent__artist-link">
+            <h3 class="recent__artist-name">@item.ArtistName</h3>
+          </a>
+        </div>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="featured_list">
+  <h2 class="featured_list__title">Recently Verified</h2>
+
+  <ul class="featured_list__content">
+    @foreach (LyricItemViewModel item in Model.RecentlyVerifiedLyrics)
+    {
+      <li class="featured_list__content-item">
+        <div class="recent">
+          <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
+             asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
+            <picture>
+              <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
+              <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
+
+              <img class="recent__artist-image"
+                   src=@($"{item.ArtistImageUrl}.jpg")
+                   width="80"
+                   height="80"
+                   loading="lazy"
+                   alt="@item.ArtistImageAlternateText"/>
+            </picture>
+
+            <h2 class="recent__lyric-title">@item.Title</h2>
+          </a>
+
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug"
+             class="recent__artist-link">
             <h3 class="recent__artist-name">@item.ArtistName</h3>
           </a>
         </div>
@@ -56,17 +93,18 @@
     {
       <li class="featured_list__content-item">
         <div class="recent">
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug" class="recent__lyric-link">
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug"
+             class="recent__lyric-link">
             <picture>
               <source type="image/webp" srcset=@($"{item.ImageUrl}.webp")>
               <source type="image/jpeg" srcset=@($"{item.ImageUrl}.jpg")>
 
               <img class="recent__artist-image"
-                   src=@( $"{item.ImageUrl}.jpg" )
+                   src=@($"{item.ImageUrl}.jpg")
                    width="80"
                    height="80"
                    loading="lazy"
-                   alt="@item.ImageAlternateText" />
+                   alt="@item.ImageAlternateText"/>
             </picture>
 
             <h2 class="recent__lyric-title">@item.Name</h2>

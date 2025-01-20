@@ -31,7 +31,7 @@
       Mock<ILyricsService> mockLyricsService = new Mock<ILyricsService>();
 
       mockLyricsService
-        .Setup(x => x.GetRecentLyricsAsync())
+        .Setup(x => x.GetRecentlySubmittedLyricsAsync())
         .ReturnsAsync(tenRecentLyrics);
 
       HomeController homeController = new HomeController(mockArtistsService.Object, mockLyricsService.Object);
@@ -43,7 +43,7 @@
       ViewResult view = actionResult.Should().BeOfType<ViewResult>().Subject;
       IndexViewModel viewModel = view.Model.Should().BeOfType<IndexViewModel>().Subject;
       viewModel.FemaleArtists.Should().HaveCount(10);
-      viewModel.Lyrics.Should().HaveCount(10);
+      viewModel.RecentlySubmittedLyrics.Should().HaveCount(10);
     }
 
     private static IEnumerable<LyricItemViewModel> GetListOfRecentLyrics()

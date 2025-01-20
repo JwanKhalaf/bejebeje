@@ -190,7 +190,7 @@ public class LyricsService : ILyricsService
     return viewModel;
   }
 
-  public async Task<IEnumerable<LyricItemViewModel>> GetRecentLyricsAsync()
+  public async Task<IEnumerable<LyricItemViewModel>> GetRecentlySubmittedLyricsAsync()
   {
     List<LyricItemViewModel> lyricItemViewModels = new List<LyricItemViewModel>();
 
@@ -199,6 +199,52 @@ public class LyricsService : ILyricsService
 
     await using NpgsqlCommand command = new NpgsqlCommand(
       "select a.id, l.title as lyric_title, lslugs.name as primary_lyric_slug, a.first_name, a.last_name, artist_slugs.name as artist_slug, a.has_image from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_slugs.is_primary = true and l.is_approved = true and l.is_deleted = false and lslugs.is_primary = true order by l.created_at desc limit 10;",
+      connection);
+
+    await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();
+
+    while (await reader.ReadAsync())
+    {
+      LyricItemViewModel lyricItemViewModel = new LyricItemViewModel();
+      int artistId = Convert.ToInt32(reader[0]);
+      string lyricTitle = Convert.ToString(reader[1]).Length > 8
+        ? Convert.ToString(reader[1]).Truncate(8).Trim() + "…"
+        : Convert.ToString(reader[1]);
+      string lyricPrimarySlug = Convert.ToString(reader[2]);
+      string artistFullName =
+        _textInfo.ToTitleCase(Convert.ToString(reader[3]) + " " + Convert.ToString(reader[4])).Trim();
+      string artistPrimarySlug = Convert.ToString(reader[5]);
+      bool artistHasImage = Convert.ToBoolean(reader[6]);
+
+      string artistImageUrl = ImageUrlBuilder
+        .BuildImageUrl(artistHasImage, artistId, ImageSize.Small);
+
+      string artistImageAlternateText = ImageUrlBuilder
+        .GetImageAlternateText(artistHasImage, artistFullName);
+
+      lyricItemViewModel.ArtistId = artistId;
+      lyricItemViewModel.Title = lyricTitle;
+      lyricItemViewModel.LyricPrimarySlug = lyricPrimarySlug;
+      lyricItemViewModel.ArtistName = artistFullName.TruncateLongString(11);
+      lyricItemViewModel.ArtistPrimarySlug = artistPrimarySlug;
+      lyricItemViewModel.ArtistImageUrl = artistImageUrl;
+      lyricItemViewModel.ArtistImageAlternateText = artistImageAlternateText;
+
+      lyricItemViewModels.Add(lyricItemViewModel);
+    }
+
+    return lyricItemViewModels;
+  }
+
+  public async Task<IEnumerable<LyricItemViewModel>> GetRecentlyVerifiedLyricsAsync()
+  {
+    List<LyricItemViewModel> lyricItemViewModels = [];
+
+    await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
+    await connection.OpenAsync();
+
+    await using NpgsqlCommand command = new NpgsqlCommand(
+      "select a.id, l.title as lyric_title, lslugs.name as primary_lyric_slug, a.first_name, a.last_name, artist_slugs.name as artist_slug, a.has_image from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_slugs.is_primary = true and a.is_deleted = false and a.is_approved = true and l.is_verified = true and l.verified_at is not null and l.is_approved = true and l.is_deleted = false and lslugs.is_primary = true order by l.verified_at desc limit 10;\n",
       connection);
 
     await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();

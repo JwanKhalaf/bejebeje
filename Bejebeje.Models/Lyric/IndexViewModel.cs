@@ -5,7 +5,9 @@
 
   public class IndexViewModel
   {
-    public IEnumerable<LyricItemViewModel> Lyrics { get; set; }
+    public IEnumerable<LyricItemViewModel> RecentlyVerifiedLyrics { get; set; }
+
+    public IEnumerable<LyricItemViewModel> RecentlySubmittedLyrics { get; set; }
 
     public IEnumerable<RandomFemaleArtistItemViewModel> FemaleArtists { get; set; }
   }

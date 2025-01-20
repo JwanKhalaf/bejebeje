@@ -25,8 +25,11 @@
     {
       IndexViewModel viewModel = new IndexViewModel();
 
-      viewModel.Lyrics = await _lyricsService
-        .GetRecentLyricsAsync();
+      viewModel.RecentlyVerifiedLyrics = await _lyricsService
+        .GetRecentlyVerifiedLyricsAsync();
+
+      viewModel.RecentlySubmittedLyrics = await _lyricsService
+        .GetRecentlySubmittedLyricsAsync();
 
       viewModel.FemaleArtists = await _artistsService
         .GetTopTenFemaleArtistsByLyricsCountAsync();
