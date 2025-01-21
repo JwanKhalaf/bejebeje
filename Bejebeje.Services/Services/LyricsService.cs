@@ -1,4 +1,6 @@
-﻿namespace Bejebeje.Services.Services;
+﻿using Bejebeje.Models.Author;
+
+namespace Bejebeje.Services.Services;
 
 using System;
 using System.Collections.Generic;
@@ -149,11 +151,13 @@ public class LyricsService : ILyricsService
 
     viewModel.Artist = artistViewModel;
 
+    viewModel.Author = new AuthorViewModel();
+
     await using NpgsqlConnection connection = new NpgsqlConnection(_databaseOptions.ConnectionString);
     await connection.OpenAsync();
 
     await using NpgsqlCommand command = new NpgsqlCommand(
-      "select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at, l.is_approved, l.user_id from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs as ars on ars.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id where case when @user_id <> '' then l.user_id = @user_id or a.is_approved = true else l.is_approved = true end and ls.name = @lyric_slug and ars.name = @artist_slug and ars.is_deleted = false and ls.is_deleted = false group by l.id order by number_of_likes;",
+      "select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at, l.is_approved, l.user_id, auth.id as author_id, auth.full_name as author_full_name from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs as ars on ars.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id left join authors as auth on l.author_id = auth.id where case when @user_id <> '' then l.user_id = @user_id or a.is_approved = true else l.is_approved = true end and ls.name = @lyric_slug and ars.name = @artist_slug and ars.is_deleted = false and ls.is_deleted = false group by l.id, auth.id, auth.full_name order by number_of_likes;",
       connection);
 
     command.Parameters.AddWithValue("@user_id", userId);
@@ -173,6 +177,10 @@ public class LyricsService : ILyricsService
       DateTime? lyricModifiedAt = reader[6] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader[6]);
       bool isApproved = Convert.ToBoolean(reader[7]);
       string submitterUserId = Convert.ToString(reader[8]);
+      int? authorId = reader[9] == DBNull.Value ? (int?)null : Convert.ToInt32(reader[9]);
+      string authorFullName = reader[10] == DBNull.Value
+        ? (string)null
+        : _textInfo.ToTitleCase(Convert.ToString(reader[10])).Trim();
 
       viewModel.Id = lyricId;
       viewModel.Title = lyricTitle;
@@ -183,6 +191,8 @@ public class LyricsService : ILyricsService
       viewModel.ModifiedAt = lyricModifiedAt;
       viewModel.IsApproved = isApproved;
       viewModel.SubmitterUsername = await _cognitoService.GetPreferredUsernameAsync(submitterUserId);
+      viewModel.Author.Id = authorId;
+      viewModel.Author.FullName = authorFullName;
     }
 
     viewModel.AlreadyLiked = await LyricAlreadyLikedAsync(userId, viewModel.Id);
@@ -244,7 +254,7 @@ public class LyricsService : ILyricsService
     await connection.OpenAsync();
 
     await using NpgsqlCommand command = new NpgsqlCommand(
-      "select a.id, l.title as lyric_title, lslugs.name as primary_lyric_slug, a.first_name, a.last_name, artist_slugs.name as artist_slug, a.has_image from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_slugs.is_primary = true and a.is_deleted = false and a.is_approved = true and l.is_verified = true and l.verified_at is not null and l.is_approved = true and l.is_deleted = false and lslugs.is_primary = true order by l.verified_at desc limit 10;\n",
+      "select a.id, l.title as lyric_title, lslugs.name as primary_lyric_slug, a.first_name, a.last_name, artist_slugs.name as artist_slug, a.has_image from lyrics as l inner join artists as a on l.artist_id = a.id inner join artist_slugs on artist_slugs.artist_id = a.id inner join lyric_slugs as lslugs on lslugs.lyric_id = l.id where artist_slugs.is_primary = true and a.is_deleted = false and a.is_approved = true and l.is_verified = true and l.verified_at is not null and l.is_approved = true and l.is_deleted = false and lslugs.is_primary = true order by l.verified_at desc limit 10;",
       connection);
 
     await using NpgsqlDataReader reader = await command.ExecuteReaderAsync();

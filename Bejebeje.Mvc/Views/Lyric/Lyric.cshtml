@@ -7,7 +7,8 @@
 
 <div class="breadcrumb-nav">
   <nav>
-    <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / @Model.Title
+    <a asp-controller="Lyric" asp-action="ArtistLyrics"
+       asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / @Model.Title
   </nav>
 </div>
 
@@ -20,7 +21,8 @@
   </div>
 }
 
-<a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug" class="artist-info-wrap">
+<a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug"
+   class="artist-info-wrap">
   <div class="artist-info">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
@@ -30,7 +32,7 @@
            src=@($"{Model.Artist.ImageUrl}.jpg")
            alt="@Model.Artist.ImageAlternateText"
            width="100"
-           height="100" />
+           height="100"/>
     </picture>
 
     <div>
@@ -42,7 +44,7 @@
 <div class="lyric__wrap">
   <div class="lyric__title-wrap">
     <h1 class="lyric__title">@Model.Title</h1>
-    
+
     <div class="lyric__metadata-wrap">
       <h4 class="lyric__metadata-submitter">Submitted by: @Model.SubmitterUsername</h4>
     </div>
@@ -50,7 +52,16 @@
 
   <div class="lyric__body-wrap">
     <div class="lyric__body">
-      @Model.Body
+      <div>
+        @Model.Body
+      </div>
+
+      @if (Model.Author.Id != null)
+      {
+        <div>
+          Lyrics by: @Model.Author.FullName
+        </div>
+      }
     </div>
 
     <div class="actions__wrap">
