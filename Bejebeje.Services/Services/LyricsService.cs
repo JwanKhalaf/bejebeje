@@ -157,7 +157,7 @@ public class LyricsService : ILyricsService
     await connection.OpenAsync();
 
     await using NpgsqlCommand command = new NpgsqlCommand(
-      "select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at, l.is_approved, l.user_id, auth.id as author_id, auth.full_name as author_full_name from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs as ars on ars.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id left join authors as auth on l.author_id = auth.id where case when @user_id <> '' then l.user_id = @user_id or a.is_approved = true else l.is_approved = true end and ls.name = @lyric_slug and ars.name = @artist_slug and ars.is_deleted = false and ls.is_deleted = false group by l.id, auth.id, auth.full_name order by number_of_likes;",
+      "select l.id, l.title, l.body, count(likes.lyric_id) as number_of_likes, l.is_verified, l.created_at, l.modified_at, l.is_approved, l.user_id, auth.id as author_id, auth.full_name as author_full_name from artists as a inner join lyrics as l on l.artist_id = a.id inner join artist_slugs as ars on ars.artist_id = a.id inner join lyric_slugs as ls on ls.lyric_id = l.id left join likes on l.id = likes.lyric_id left join authors as auth on l.author_id = auth.id where case when @user_id <> '' then l.user_id = @user_id or a.is_approved = true else l.is_approved = true end and ls.name = @lyric_slug and ars.name = @artist_slug and ars.is_deleted = false and ls.is_deleted = false and l.is_deleted = false group by l.id, auth.id, auth.full_name order by l.id;",
       connection);
 
     command.Parameters.AddWithValue("@user_id", userId);
