@@ -23,15 +23,6 @@
   width: 100%;
 }
 
-input[type="text"] {
-  padding: 1rem;
-  border-radius: $border-radius;
-  background-color: $clr-dark-x2;
-  caret-color: hsla(0, 0%, 100%, 0.75);
-  color: hsla(0, 0%, 100%, 0.75);
-  font-family: $serif;
-}
-
 .btn {
   color: $clr-white;
   padding: 0.8rem 1rem;
@@ -50,14 +41,4 @@ input[type="text"] {
 .btn-secondary {
   border: 1px solid hsla(0, 0%, 100%, 0.5);
   color: hsla(0, 0%, 100%, 0.5);
-}
-
-textarea {
-  font-family: $serif;
-  padding: 1rem;
-  border-radius: $border-radius;
-  background-color: $clr-dark-x2;
-  resize: vertical;
-  caret-color: hsla(0, 0%, 100%, 0.75);
-  color: hsla(0, 0%, 100%, 0.75);
 }

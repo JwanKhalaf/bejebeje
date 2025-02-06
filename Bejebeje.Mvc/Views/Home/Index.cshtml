@@ -7,64 +7,62 @@
   ViewData["Description"] = "The largest community driven archive of Kurdish lyrics on the web. Erşîva herî mezin ya gotinê stranê Kurdî.";
 }
 
-<div class="breadcrumb-nav">
-  <nav>
+<div class="py-4 pr-4">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Home" asp-action="Index">/ Home</a>
   </nav>
 </div>
 
 @await Html.PartialAsync("_SearchForm")
 
-<section class="featured_list">
-  <h2 class="featured_list__title">Recent Submissions</h2>
+<section class="mb-8">
+  <h2 class="font-open-sans text-red-400 tracking-wide opacity-90 uppercase text-lg mb-2">Recent Submissions</h2>
 
-  <ul class="featured_list__content">
+  <ul class="flex gap-3 overflow-y-hidden">
     @foreach (LyricItemViewModel item in Model.RecentlySubmittedLyrics)
     {
-      <li class="featured_list__content-item">
-        <div class="recent">
-          <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
-             asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
-            <picture>
-              <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
-              <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
+      <li>
+        <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
+           asp-route-lyricSlug="@item.LyricPrimarySlug" class="block mb-1">
+          <picture>
+            <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
+            <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
 
-              <img class="recent__artist-image"
-                   src=@($"{item.ArtistImageUrl}.jpg")
-                   width="80"
-                   height="80"
-                   loading="lazy"
-                   alt="@item.ArtistImageAlternateText"/>
-            </picture>
+            <img class="rounded-sm mb-2"
+                 src=@($"{item.ArtistImageUrl}.jpg")
+                 width="80"
+                 height="80"
+                 loading="lazy"
+                 alt="@item.ArtistImageAlternateText"/>
+          </picture>
 
-            <h2 class="recent__lyric-title">@item.Title</h2>
-          </a>
+          <h2 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Title</h2>
+        </a>
 
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug"
-             class="recent__artist-link">
-            <h3 class="recent__artist-name">@item.ArtistName</h3>
-          </a>
-        </div>
+        <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug">
+          <h3 class="text-neutral-200 opacity-50 text-xs font-open-sans">@item.ArtistName</h3>
+        </a>
+
       </li>
     }
   </ul>
 </section>
 
-<section class="featured_list">
-  <h2 class="featured_list__title">Recently Verified</h2>
+<section class="mb-8">
+  <h2 class="font-open-sans text-red-400 tracking-wide opacity-90 uppercase text-lg mb-2">Recently Verified</h2>
 
-  <ul class="featured_list__content">
+  <ul class="flex gap-3 overflow-y-hidden">
     @foreach (LyricItemViewModel item in Model.RecentlyVerifiedLyrics)
     {
       <li class="featured_list__content-item">
         <div class="recent">
           <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
-             asp-route-lyricSlug="@item.LyricPrimarySlug" class="recent__lyric-link">
+             asp-route-lyricSlug="@item.LyricPrimarySlug" class="block mb-1">
             <picture>
               <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
               <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
 
-              <img class="recent__artist-image"
+              <img class="rounded-sm mb-2"
                    src=@($"{item.ArtistImageUrl}.jpg")
                    width="80"
                    height="80"
@@ -72,12 +70,11 @@
                    alt="@item.ArtistImageAlternateText"/>
             </picture>
 
-            <h2 class="recent__lyric-title">@item.Title</h2>
+            <h2 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Title</h2>
           </a>
 
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug"
-             class="recent__artist-link">
-            <h3 class="recent__artist-name">@item.ArtistName</h3>
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug">
+            <h3 class="text-neutral-200 opacity-50 text-xs font-open-sans">@item.ArtistName</h3>
           </a>
         </div>
       </li>
@@ -85,21 +82,21 @@
   </ul>
 </section>
 
-<section class="featured_list">
-  <h2 class="featured_list__title">Popular Female Artists</h2>
+<section>
+  <h2 class="font-open-sans text-red-400 tracking-wide opacity-90 uppercase text-lg mb-2">Popular Female Artists</h2>
 
-  <ul class="featured_list__content">
+  <ul class="flex gap-3 overflow-y-hidden">
     @foreach (RandomFemaleArtistItemViewModel item in Model.FemaleArtists)
     {
       <li class="featured_list__content-item">
         <div class="recent">
           <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug"
-             class="recent__lyric-link">
+             class="block mb-1">
             <picture>
               <source type="image/webp" srcset=@($"{item.ImageUrl}.webp")>
               <source type="image/jpeg" srcset=@($"{item.ImageUrl}.jpg")>
 
-              <img class="recent__artist-image"
+              <img class="rounded-sm mb-2"
                    src=@($"{item.ImageUrl}.jpg")
                    width="80"
                    height="80"
@@ -107,7 +104,7 @@
                    alt="@item.ImageAlternateText"/>
             </picture>
 
-            <h2 class="recent__lyric-title">@item.Name</h2>
+            <h2 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Name</h2>
           </a>
         </div>
       </li>

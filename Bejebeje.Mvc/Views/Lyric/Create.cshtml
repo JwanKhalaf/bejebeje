@@ -16,12 +16,12 @@
     <form asp-controller="Lyric" asp-action="Create" method="post">
       <div class="form-group">
         <label class="label">Title</label>
-        <input asp-for="Title" class="form-control" />
+        <input asp-for="Title" class="p-4 w-full text-neutral-300 bg-zinc-700 rounded font-semibold" />
       </div>
 
       <div class="form-group">
         <label class="label">Body</label>
-        <textarea asp-for="Body" class="form-control" rows="6"></textarea>
+        <textarea asp-for="Body" class="p-4 w-full text-neutral-300 bg-zinc-700 rounded font-semibold" rows="6"></textarea>
       </div>
 
       <input asp-for="Artist.Id" type="hidden" />

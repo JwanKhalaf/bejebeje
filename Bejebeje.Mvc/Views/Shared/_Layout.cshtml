@@ -1,13 +1,17 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XMV1NEC87"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
-  
+
     gtag('config', 'G-3XMV1NEC87');
   </script>
 
@@ -15,6 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>@ViewData["Title"] | Bêjebêje</title>
   <meta name="description" content="@ViewData["Description"]">
+  <script src="https://kit.fontawesome.com/9d33bfa319.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="~/css/styles.css" media="screen"/>
 
   <link media="screen" rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -24,65 +29,92 @@
   <link media="screen" rel="mask-icon" href="/safari-pinned-tab.svg" color="#41414d">
   <meta name="msapplication-TileColor" content="#41414d">
   <meta name="theme-color" content="#41414d">
-  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  <main>
-    <div class="main_content">
-      @RenderBody()
+<body class="h-full m-0 grid relative grid-cols-[80px_auto] grid-rows-[auto_80px]">
+<main class="col-start-1 col-end-3 row-end-1 overflow-y-scroll lg:col-start-2 lg:row-start-1 lg:row-end-3 lg:grid lg:grid-rows-[auto_120px]">
+  <div class="pl-4 lg:pl-8 bg-neutral-800 rounded-bl-lg">
+    @RenderBody()
+  </div>
+
+  <div class="hidden lg:flex items-center justify-between row-start-2 px-8">
+    <div class="flex gap-4">
+      <a href="https://www.facebook.com/bejebejefermi" class="">
+        <i class="fa-brands fa-facebook-f text-neutral-800"></i>
+      </a>
+
+      <a href="https://twitter.com/bejebejefermi" class="">
+        <i class="fa-brands fa-x-twitter text-neutral-800"></i>
+      </a>
+
+      <a href="https://www.youtube.com/channel/UCo7WnWABL3QiA1tErvs1w2w"
+         class="">
+        <i class="fa-brands fa-youtube text-neutral-800"></i>
+      </a>
+
+      <a href="https://www.instagram.com/bejebejefermi/" class="">
+        <i class="fa-brands fa-instagram text-neutral-800"></i>
+      </a>
+
+      <a href="https://tiktok.com/@@bejebejefermi/" class="">
+        <i class="fa-brands fa-tiktok text-neutral-800"></i>
+      </a>
     </div>
 
-    <div class="secondary_content">
-      <div class="secondary_content__social">
-        <a href="https://www.facebook.com/bejebejefermi" class="secondary_content__link facebook-icon"></a>
-
-        <a href="https://twitter.com/bejebejefermi" class="secondary_content__link twitter-icon"></a>
-
-        <a href="https://www.youtube.com/channel/UCo7WnWABL3QiA1tErvs1w2w" class="secondary_content__link youtube-icon"></a>
-
-        <a href="https://www.instagram.com/bejebejefermi/" class="secondary_content__link instagram-icon"></a>
-
-        <a href="https://tiktok.com/@@bejebejefermi/" class="secondary_content__link tiktok-icon"></a>
-      </div>
-
-      <div class="secondary_content__site-meta">
-        <p>Bêjebêje &copy; 2015-@(DateTime.UtcNow.Year)</p>
-      </div>
+    <div class="">
+      <p class="font-open-sans uppercase text-neutral-600 opacity-80 tracking-wide">Bêjebêje &copy; 2015-@(DateTime.UtcNow.Year)</p>
     </div>
-  </main>
+  </div>
+</main>
 
-  <nav class="nav">
-    <a asp-controller="Home" asp-action="Index" class="link home-icon"></a>
+<nav class="col-start-1 col-end-3 row-start-1 lg:col-start-1 lg:row-start-1 lg:py-0 px-4 lg:pt-10">
+  <ul class="flex justify-between lg:flex-col gap-6">
+    <li class="">
+      <a asp-controller="Home" asp-action="Index" class="flex flex-col justify-between items-center text-sm gap-1.5">
+        <i class="fa-solid fa-house text-2xl text-neutral-800"></i>
+        Home
+      </a>
+    </li>
 
-    <a href="#" id="contribute-button" class="link contribute-icon"></a>
+    <li>
+      <a href="#" id="contribute-button" class="flex flex-col justify-between items-center text-sm gap-1.5">
+        <i class="fa-solid fa-plus text-2xl text-neutral-800"></i>
+        Add
+      </a>
+    </li>
 
-    <a asp-controller="Profile" asp-action="Index" class="link profile-icon"></a>
-  </nav>
+    <li>
+      <a asp-controller="Profile" asp-action="Index" class="flex flex-col justify-between items-center text-sm gap-1.5">
+        <i class="fa-solid fa-user text-2xl text-neutral-800"></i>
+        Profile
+      </a>
+    </li>
+  </ul>
+</nav>
 
-  <aside class="actions-panel">
-    <p>Thank you for wanting to contribute. Your contributions help make Kurdish music more accessible.</p>
+@* <aside class="actions-panel"> *@
+@*   <p>Thank you for wanting to contribute. Your contributions help make Kurdish music more accessible.</p> *@
+@* *@
+@*   <p>How would you like to help?</p> *@
+@* *@
+@*   <div class="actions-buttons"> *@
+@*     <a asp-controller="Artist" asp-action="Create" class="actions-button">Add new artist</a> *@
+@*   </div> *@
+@* </aside> *@
 
-    <p>How would you like to help?</p>
+<script>
+  const toggleVisiblityOfActionsPanel = (event) => {
+    event.preventDefault();
+    const actions_panel = document.querySelector(".actions-panel");
+    const contribute_button = event.target;
+    actions_panel.classList.toggle("visible");
+    contribute_button.classList.toggle("visible");
+  }
 
-    <div class="actions-buttons">
-      <a asp-controller="Artist" asp-action="Create" class="actions-button">Add new artist</a>
-    </div>
-  </aside>
+  const contribute_button = document.getElementById("contribute-button");
 
-  <script>
-    const toggleVisiblityOfActionsPanel = (event) => {
-      event.preventDefault();
-      const actions_panel = document.querySelector(".actions-panel");
-      const contribute_button = event.target;
-      actions_panel.classList.toggle("visible");
-      contribute_button.classList.toggle("visible");
-    }
-
-    const contribute_button = document.getElementById("contribute-button");
-
-    contribute_button.addEventListener("click", toggleVisiblityOfActionsPanel);
-  </script>
-  @RenderSection("Scripts", required: false)
+  contribute_button.addEventListener("click", toggleVisiblityOfActionsPanel);
+</script>
+@RenderSection("Scripts", required: false)
 </body>
 </html>

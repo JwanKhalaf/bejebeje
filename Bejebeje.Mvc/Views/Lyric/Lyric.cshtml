@@ -5,8 +5,8 @@
   ViewData["Description"] = $"Lyrics for {Model.Title} by {Model.Artist.FullName}. Gotinê strana {Model.Title} ya {Model.Artist.FullName}. {Model.Title} sözleri - {Model.Artist.FullName}";
 }
 
-<div class="breadcrumb-nav">
-  <nav>
+<div class="py-4 pr-4">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Lyric" asp-action="ArtistLyrics"
        asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / @Model.Title
   </nav>
@@ -21,38 +21,39 @@
   </div>
 }
 
-<a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug"
-   class="artist-info-wrap">
-  <div class="artist-info">
+<a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug" class="block mb-8">
+  <div class="flex gap-8 items-center">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
       <source type="image/jpeg" srcset=@($"{Model.Artist.ImageUrl}.jpg")>
 
-      <img class="artist-info__image"
+      <img class="rounded-full"
            src=@($"{Model.Artist.ImageUrl}.jpg")
            alt="@Model.Artist.ImageAlternateText"
-           width="100"
-           height="100"/>
+           width="150"
+           height="150"/>
     </picture>
 
     <div>
-      <h1 class="artist-info__name">@Model.Artist.FullName</h1>
+      <h1 class="text-neutral-200 font-open-sans uppercase">@Model.Artist.FullName</h1>
     </div>
   </div>
 </a>
 
-<div class="lyric__wrap">
-  <div class="lyric__title-wrap">
-    <h1 class="lyric__title">@Model.Title</h1>
+<div>
+  <div>
+    <h1 class="font-lora text-neutral-200 text-4xl mb-2">@Model.Title</h1>
 
-    <div class="lyric__metadata-wrap">
-      <h4 class="lyric__metadata-submitter">Submitted by: @Model.SubmitterUsername</h4>
+    <div>
+      <div class="flex gap-2 items-center">
+        <p class="font-open-sans text-neutral-200 text-sm"><span class="opacity-70">By:</span> @Model.SubmitterUsername</p>
+      </div>
     </div>
   </div>
 
   <div class="lyric__body-wrap">
     <div class="lyric__body">
-      <div>
+      <div class="text-neutral-200 font-lora whitespace-pre-line">
         @Model.Body
       </div>
 
