@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- global site tag (gtag.js) - google analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XMV1NEC87"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -32,60 +32,64 @@
 </head>
 
 <body class="h-full m-0 grid relative grid-cols-[80px_auto] grid-rows-[auto_80px]">
-<main class="col-start-1 col-end-3 row-end-1 overflow-y-scroll lg:col-start-2 lg:row-start-1 lg:row-end-3 lg:grid lg:grid-rows-[auto_120px]">
-  <div class="pl-4 lg:pl-8 bg-neutral-800 rounded-bl-lg">
+<main
+  class="pl-4 lg:pl-8 bg-neutral-800 rounded-b-lg lg:rounded-bl-lg col-start-1 col-end-3 row-end-2 overflow-y-scroll lg:col-start-2 lg:row-start-1 lg:row-end-3 lg:grid lg:grid-rows-[auto_120px]">
+  <div class="">
     @RenderBody()
   </div>
 
-  <div class="hidden lg:flex items-center justify-between row-start-2 px-8">
-    <div class="flex gap-4">
+  <div class="pr-4 lg:flex items-center justify-between row-start-2">
+    <div class="mb-4 bg-neutral-950 px-4 py-2 rounded flex items-center justify-between gap-4">
       <a href="https://www.facebook.com/bejebejefermi" class="">
-        <i class="fa-brands fa-facebook-f text-neutral-800"></i>
+        <i class="fa-brands fa-facebook-f text-neutral-600"></i>
       </a>
 
       <a href="https://twitter.com/bejebejefermi" class="">
-        <i class="fa-brands fa-x-twitter text-neutral-800"></i>
+        <i class="fa-brands fa-x-twitter text-neutral-600"></i>
       </a>
 
       <a href="https://www.youtube.com/channel/UCo7WnWABL3QiA1tErvs1w2w"
          class="">
-        <i class="fa-brands fa-youtube text-neutral-800"></i>
+        <i class="fa-brands fa-youtube text-neutral-600"></i>
       </a>
 
       <a href="https://www.instagram.com/bejebejefermi/" class="">
-        <i class="fa-brands fa-instagram text-neutral-800"></i>
+        <i class="fa-brands fa-instagram text-neutral-600"></i>
       </a>
 
       <a href="https://tiktok.com/@@bejebejefermi/" class="">
-        <i class="fa-brands fa-tiktok text-neutral-800"></i>
+        <i class="fa-brands fa-tiktok text-neutral-600"></i>
       </a>
     </div>
 
-    <div class="">
-      <p class="font-open-sans uppercase text-neutral-600 opacity-80 tracking-wide">Bêjebêje &copy; 2015-@(DateTime.UtcNow.Year)</p>
+    <div class="mb-8 flex justify-center">
+      <p class="text-xs font-open-sans uppercase text-neutral-400 opacity-80 tracking-wider">Bêjebêje &copy;
+        2015-@(DateTime.UtcNow.Year)</p>
     </div>
   </div>
 </main>
 
-<nav class="col-start-1 col-end-3 row-start-1 lg:col-start-1 lg:row-start-1 lg:py-0 px-4 lg:pt-10">
-  <ul class="flex justify-between lg:flex-col gap-6">
+<nav class="col-start-1 col-end-3 row-start-2 flex items-center lg:col-start-1 lg:row-start-1 lg:py-0 px-8 lg:pt-10">
+  <ul class="flex justify-between lg:flex-col gap-6 w-full">
     <li class="">
-      <a asp-controller="Home" asp-action="Index" class="flex flex-col justify-between items-center text-sm gap-1.5">
-        <i class="fa-solid fa-house text-2xl text-neutral-800"></i>
+      <a asp-controller="Home" asp-action="Index"
+         class="flex flex-col justify-between items-center text-xs lg:text-sm gap-1.5">
+        <i class="fa-solid fa-house text-lg lg:text-2xl text-neutral-800"></i>
         Home
       </a>
     </li>
 
     <li>
-      <a href="#" id="contribute-button" class="flex flex-col justify-between items-center text-sm gap-1.5">
-        <i class="fa-solid fa-plus text-2xl text-neutral-800"></i>
+      <a href="#" id="contribute-button" class="flex flex-col justify-between items-center text-xs lg:text-sm gap-1.5">
+        <i class="fa-solid fa-plus text-lg lg:text-2xl text-neutral-800"></i>
         Add
       </a>
     </li>
 
     <li>
-      <a asp-controller="Profile" asp-action="Index" class="flex flex-col justify-between items-center text-sm gap-1.5">
-        <i class="fa-solid fa-user text-2xl text-neutral-800"></i>
+      <a asp-controller="Profile" asp-action="Index"
+         class="flex flex-col justify-between items-center text-xs lg:text-sm gap-1.5">
+        <i class="fa-solid fa-user text-lg lg:text-2xl text-neutral-800"></i>
         Profile
       </a>
     </li>

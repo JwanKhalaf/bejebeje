@@ -18,10 +18,42 @@
 <section class="mb-8">
   <h2 class="font-open-sans text-red-400 tracking-wide opacity-90 uppercase text-lg mb-2">Recent Submissions</h2>
 
-  <ul class="flex gap-3 overflow-y-hidden">
+  <ul class="flex gap-4 overflow-y-hidden">
     @foreach (LyricItemViewModel item in Model.RecentlySubmittedLyrics)
     {
-      <li>
+      <li class="basis-[80px] grow-0 shrink-0">
+        <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
+           asp-route-lyricSlug="@item.LyricPrimarySlug" class="block mb-1">
+          <picture>
+            <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
+            <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
+
+            <img class="rounded-sm mb-2"
+                 src=@($"{item.ArtistImageUrl}.jpg")
+                 width="80"
+                 height="80"
+                 loading="lazy"
+                 alt="@item.ArtistImageAlternateText"/>
+          </picture>
+
+          <h2 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Title</h2>
+        </a>
+
+        <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug">
+          <h3 class="text-neutral-200 opacity-50 text-xs font-open-sans">@item.ArtistName</h3>
+        </a>
+      </li>
+    }
+  </ul>
+</section>
+
+<section class="mb-8">
+  <h2 class="font-open-sans text-red-400 tracking-wide opacity-90 uppercase text-lg mb-2">Recently Verified</h2>
+
+  <ul class="flex gap-4 overflow-y-hidden">
+    @foreach (LyricItemViewModel item in Model.RecentlyVerifiedLyrics)
+    {
+      <li class="basis-[80px] grow-0 shrink-0">
         <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
            asp-route-lyricSlug="@item.LyricPrimarySlug" class="block mb-1">
           <picture>
@@ -49,64 +81,28 @@
 </section>
 
 <section class="mb-8">
-  <h2 class="font-open-sans text-red-400 tracking-wide opacity-90 uppercase text-lg mb-2">Recently Verified</h2>
-
-  <ul class="flex gap-3 overflow-y-hidden">
-    @foreach (LyricItemViewModel item in Model.RecentlyVerifiedLyrics)
-    {
-      <li class="featured_list__content-item">
-        <div class="recent">
-          <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
-             asp-route-lyricSlug="@item.LyricPrimarySlug" class="block mb-1">
-            <picture>
-              <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
-              <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
-
-              <img class="rounded-sm mb-2"
-                   src=@($"{item.ArtistImageUrl}.jpg")
-                   width="80"
-                   height="80"
-                   loading="lazy"
-                   alt="@item.ArtistImageAlternateText"/>
-            </picture>
-
-            <h2 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Title</h2>
-          </a>
-
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug">
-            <h3 class="text-neutral-200 opacity-50 text-xs font-open-sans">@item.ArtistName</h3>
-          </a>
-        </div>
-      </li>
-    }
-  </ul>
-</section>
-
-<section>
   <h2 class="font-open-sans text-red-400 tracking-wide opacity-90 uppercase text-lg mb-2">Popular Female Artists</h2>
 
-  <ul class="flex gap-3 overflow-y-hidden">
+  <ul class="flex gap-4 overflow-y-hidden">
     @foreach (RandomFemaleArtistItemViewModel item in Model.FemaleArtists)
     {
-      <li class="featured_list__content-item">
-        <div class="recent">
-          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug"
-             class="block mb-1">
-            <picture>
-              <source type="image/webp" srcset=@($"{item.ImageUrl}.webp")>
-              <source type="image/jpeg" srcset=@($"{item.ImageUrl}.jpg")>
+      <li class="basis-[80px] grow-0 shrink-0">
+        <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug"
+           class="block mb-1">
+          <picture>
+            <source type="image/webp" srcset=@($"{item.ImageUrl}.webp")>
+            <source type="image/jpeg" srcset=@($"{item.ImageUrl}.jpg")>
 
-              <img class="rounded-sm mb-2"
-                   src=@($"{item.ImageUrl}.jpg")
-                   width="80"
-                   height="80"
-                   loading="lazy"
-                   alt="@item.ImageAlternateText"/>
-            </picture>
+            <img class="rounded-sm mb-2"
+                 src=@($"{item.ImageUrl}.jpg")
+                 width="80"
+                 height="80"
+                 loading="lazy"
+                 alt="@item.ImageAlternateText"/>
+          </picture>
 
-            <h2 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Name</h2>
-          </a>
-        </div>
+          <h2 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Name</h2>
+        </a>
       </li>
     }
   </ul>
