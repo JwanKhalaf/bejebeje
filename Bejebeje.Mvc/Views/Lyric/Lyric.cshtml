@@ -5,7 +5,7 @@
   ViewData["Description"] = $"Lyrics for {Model.Title} by {Model.Artist.FullName}. Gotinê strana {Model.Title} ya {Model.Artist.FullName}. {Model.Title} sözleri - {Model.Artist.FullName}";
 }
 
-<div class="py-4 pr-4">
+<div class="py-5 pr-4 mb-6">
   <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Lyric" asp-action="ArtistLyrics"
        asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / @Model.Title
@@ -16,22 +16,23 @@
 
 @if (!Model.IsApproved)
 {
-  <div class="warning">
+  <div class="">
     <p>Your submission is awaiting approval.</p>
   </div>
 }
 
-<a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug" class="block mb-8">
-  <div class="flex gap-8 items-center">
+<a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug"
+   class="block mb-8 pr-4 lg:pr-8">
+  <div class="flex gap-5 items-center bg-neutral-700 rounded-sm p-4">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
       <source type="image/jpeg" srcset=@($"{Model.Artist.ImageUrl}.jpg")>
 
-      <img class="rounded-full"
+      <img class="rounded-full border border-neutral-500"
            src=@($"{Model.Artist.ImageUrl}.jpg")
            alt="@Model.Artist.ImageAlternateText"
-           width="150"
-           height="150"/>
+           width="100"
+           height="100"/>
     </picture>
 
     <div>
@@ -46,12 +47,13 @@
 
     <div>
       <div class="flex gap-2 items-center">
-        <p class="font-open-sans text-neutral-200 text-sm"><span class="opacity-70">By:</span> @Model.SubmitterUsername</p>
+        <p class="font-open-sans text-neutral-200 text-sm"><span class="opacity-70">By:</span> @Model.SubmitterUsername
+        </p>
       </div>
     </div>
   </div>
 
-  <div class="lyric__body-wrap">
+  <div class="flex justify-between pr-4">
     <div class="lyric__body">
       <div class="text-neutral-200 font-lora whitespace-pre-line">
         @Model.Body
@@ -71,10 +73,10 @@
         <span class="verification-badge" title="Verified for accuracy"></span>
       }
 
-      <div class="like__button">
+      <div class="flex flex-col items-center justify-center">
         @if (Model.AlreadyLiked)
         {
-          <span class="like__link-clicked"></span>
+          <i class="fa-solid fa-heart text-3xl lg:text-2xl text-red-400"></i>
         }
         else
         {
@@ -82,11 +84,12 @@
              asp-action="Like"
              asp-route-artistSlug="@Model.Artist.PrimarySlug"
              asp-route-lyricSlug="@Model.PrimarySlug"
-             asp-route-lyricId="@Model.Id"
-             class="like__link"></a>
+             asp-route-lyricId="@Model.Id">
+            <i class="fa-solid fa-heart text-3xl lg:text-2xl text-neutral-500"></i>
+          </a>
         }
 
-        <p class="like__count">@Model.NumberOfLikes</p>
+        <p class="text-neutral-500 font-bold font-lora text-xl">@Model.NumberOfLikes</p>
       </div>
     </div>
   </div>
