@@ -33,22 +33,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\scss\abstracts\_variables.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\base\_reset.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\base\_typography.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\layout\_form.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\layout\_grid.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\layout\_header.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\layout\_navigation.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\pages\_artist.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\pages\_artists.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\pages\_home.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\pages\_lyric.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\pages\_profile.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\pages\_search.scss" />
-    <_ContentIncludedByDefault Remove="wwwroot\scss\styles.scss" />
-  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES2015</TypeScriptTarget>
     <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
