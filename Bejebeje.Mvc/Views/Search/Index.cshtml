@@ -6,18 +6,18 @@
   ViewData["Description"] = "Search and find lyrics in the largest, community driven archive of Kurdish lyrics on the internet";
 }
 
-<div class="breadcrumb-nav">
-  <nav>
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Search" asp-action="Index">/ Search</a> / @Model.SearchTerm
   </nav>
 </div>
 
 @await Html.PartialAsync("_SearchForm")
 
-<div class="results">
+<div class="pr-4 lg:pr-8">
   @if (!Model.Lyrics.Any() && !Model.Artists.Any() && !string.IsNullOrEmpty(Model.SearchTerm))
   {
-    <div class="results__wrap">
+    <div class="mb-10">
       <div class="results__heading">
         <h2>There were no matching artists and lyrics!</h2>
       </div>
@@ -27,29 +27,32 @@
   {
     @if (!string.IsNullOrEmpty(Model.SearchTerm))
     {
-      <div class="results__wrap">
-        <h2 class="results__heading">Artists</h2>
+      <div class="mb-10">
+        <h2 class="text-neutral-200 font-open-sans text-xl font-semibold mb-6">Artists</h2>
 
         @if (Model.Artists.Any())
         {
-          <ul class="results__artists">
+          <ul class="flex flex-col gap-4">
             @foreach (SearchArtistResultViewModel artist in Model.Artists)
             {
-              <li class="results__artist-item">
-                <picture>
-                  <source type="image/webp" srcset=@($"{artist.ImageUrl}.webp")>
-                  <source type="image/jpeg" srcset=@($"{artist.ImageUrl}.jpg")>
+              <li class="">
+                <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug"
+                   class="flex gap-4 items-center">
+                  <picture>
+                    <source type="image/webp" srcset=@($"{artist.ImageUrl}.webp")>
+                    <source type="image/jpeg" srcset=@($"{artist.ImageUrl}.jpg")>
 
-                  <img class="results__artist-image"
-                       src=@($"{artist.ImageUrl}.jpg")
-                       width="60"
-                       height="60"
-                       loading="lazy"
-                       alt="@artist.ImageAlternateText" />
-                </picture>
+                    <img class="rounded-sm"
+                         src=@($"{artist.ImageUrl}.jpg")
+                         width="60"
+                         height="60"
+                         loading="lazy"
+                         alt="@artist.ImageAlternateText"/>
+                  </picture>
 
-                <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug" class="results__artist-link">
-                  @artist.Name
+                  <h5 class="text-neutral-200 font-open-sans text-base">
+                    @artist.Name
+                  </h5>
                 </a>
               </li>
             }
@@ -61,17 +64,18 @@
         }
       </div>
 
-      <div class="results__wrap">
-        <h2 class="results__heading">Lyrics</h2>
+      <div class="mb-10">
+        <h2 class="text-neutral-200 font-open-sans text-xl font-semibold mb-6">Lyrics</h2>
 
         @if (Model.Lyrics.Any())
         {
-          <ul class="results__lyrics">
+          <ul class="flex flex-col gap-4">
             @foreach (var item in Model.Lyrics)
             {
-              <li class="results__lyric-item">
-                <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistSlug" asp-route-lyricSlug="@item.LyricPrimarySlug" class="results__lyric-link">
-                  <strong>@item.Title</strong>
+              <li class="bg-neutral-700 p-4">
+                <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistSlug"
+                   asp-route-lyricSlug="@item.LyricPrimarySlug" class="flex flex-col gap-0.5 text-neutral-400 text-sm">
+                  <strong class="text-neutral-200 font-lora text-base">@item.Title</strong>
 
                   @item.ArtistFullName
                 </a>
