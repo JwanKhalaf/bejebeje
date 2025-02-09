@@ -9,8 +9,8 @@
   var dictionaryKeys = Model.Keys;
 }
 
-<div class="breadcrumb-nav">
-  <nav>
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Artist" asp-action="Index">/ Artists</a>
   </nav>
 </div>
@@ -20,35 +20,35 @@
 <div class="letters-wrapper">
   @foreach (char letter in dictionaryKeys)
   {
-    <section class="letter-section">
-      <h2 class="letter">@letter</h2>
+    <section class="pr-4 lg:pr-8">
+      <h2 class="sticky py-6 bg-neutral-800 font-open-sans text-neutral-200 text-2xl top-0">@letter</h2>
 
-      <ul>
+      <ul class="flex flex-col justify-center gap-4">
         @foreach (var artist in Model[letter])
         {
           <li>
-            <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug">
-              <div class="artist">
-                <picture>
-                  <source type="image/webp" srcset=@($"{artist.ImageUrl}.webp")>
-                  <source type="image/jpeg" srcset=@($"{artist.ImageUrl}.jpg")>
+            <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug" class="flex gap-4">
 
-                  <img src=@($"{artist.ImageUrl}.jpg")
-                       width="80"
-                       height="80"
-                       loading="lazy"
-                       alt="@artist.ImageAlternateText" />
-                </picture>
+              <picture>
+                <source type="image/webp" srcset=@($"{artist.ImageUrl}.webp")>
+                <source type="image/jpeg" srcset=@($"{artist.ImageUrl}.jpg")>
+
+                <img src=@($"{artist.ImageUrl}.jpg")
+                     width="80"
+                     height="80"
+                     loading="lazy"
+                     alt="@artist.ImageAlternateText"
+                     class="rounded-sm"/>
+              </picture>
 
 
-                <div class="artist-details">
-                  @{
-                    string text = artist.NumberOfLyrics > 1 ? "Lyrics" : "Lyric";
-                  }
+              <div class="flex flex-col justify-center gap-0.5">
+                @{
+                  string text = artist.NumberOfLyrics > 1 ? "Lyrics" : "Lyric";
+                }
 
-                  <h3>@artist.FullName</h3>
-                  <h4>@artist.NumberOfLyrics @text</h4>
-                </div>
+                <h3 class="text-base text-neutral-200 font-open-sans">@artist.FullName</h3>
+                <h4 class="text-sm text-neutral-400 font-lora">@artist.NumberOfLyrics @text</h4>
               </div>
             </a>
           </li>
