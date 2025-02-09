@@ -80,7 +80,7 @@
     </li>
 
     <li>
-      <a href="#" id="contribute-button" class="flex flex-col justify-between items-center text-xs lg:text-sm gap-1.5">
+      <a asp-controller="Artist" asp-action="Create" class="flex flex-col justify-between items-center text-xs lg:text-sm gap-1.5">
         <i class="fa-kit fa-contribute text-lg lg:text-2xl text-neutral-800"></i>
         Add
       </a>
@@ -96,29 +96,6 @@
   </ul>
 </nav>
 
-@* <aside class="actions-panel"> *@
-@*   <p>Thank you for wanting to contribute. Your contributions help make Kurdish music more accessible.</p> *@
-@* *@
-@*   <p>How would you like to help?</p> *@
-@* *@
-@*   <div class="actions-buttons"> *@
-@*     <a asp-controller="Artist" asp-action="Create" class="actions-button">Add new artist</a> *@
-@*   </div> *@
-@* </aside> *@
-
-<script>
-  const toggleVisiblityOfActionsPanel = (event) => {
-    event.preventDefault();
-    const actions_panel = document.querySelector(".actions-panel");
-    const contribute_button = event.target;
-    actions_panel.classList.toggle("visible");
-    contribute_button.classList.toggle("visible");
-  }
-
-  const contribute_button = document.getElementById("contribute-button");
-
-  contribute_button.addEventListener("click", toggleVisiblityOfActionsPanel);
-</script>
 @RenderSection("Scripts", required: false)
 </body>
 </html>
