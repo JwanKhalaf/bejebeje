@@ -163,7 +163,7 @@ public class ArtistsService : IArtistsService
       bool hasImage = Convert.ToBoolean(reader[4]);
 
       string artistImageUrl = ImageUrlBuilder
-        .BuildImageUrl(hasImage, id, ImageSize.Standard);
+        .BuildImageUrl(hasImage, id, ImageSize.Small);
 
       string artistImageAlternateText = ImageUrlBuilder
         .GetImageAlternateText(hasImage, name);

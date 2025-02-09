@@ -5,8 +5,8 @@
   ViewData["Description"] = $"Lyrics for {Model.Title} by {Model.Artist.FullName}. Gotinê strana {Model.Title} ya {Model.Artist.FullName}. {Model.Title} sözleri - {Model.Artist.FullName}";
 }
 
-<div class="breadcrumb-nav">
-  <nav>
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Lyric" asp-action="ArtistLyrics"
        asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / @Model.Title
   </nav>
@@ -16,19 +16,19 @@
 
 @if (!Model.IsApproved)
 {
-  <div class="warning">
+  <div class="">
     <p>Your submission is awaiting approval.</p>
   </div>
 }
 
 <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug"
-   class="artist-info-wrap">
-  <div class="artist-info">
+   class="block mb-8 pr-4 lg:pr-8">
+  <div class="flex gap-5 items-center bg-neutral-700 rounded-sm p-4">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
       <source type="image/jpeg" srcset=@($"{Model.Artist.ImageUrl}.jpg")>
 
-      <img class="artist-info__image"
+      <img class="rounded-full border border-neutral-500"
            src=@($"{Model.Artist.ImageUrl}.jpg")
            alt="@Model.Artist.ImageAlternateText"
            width="100"
@@ -36,23 +36,26 @@
     </picture>
 
     <div>
-      <h1 class="artist-info__name">@Model.Artist.FullName</h1>
+      <h1 class="text-neutral-200 font-open-sans uppercase">@Model.Artist.FullName</h1>
     </div>
   </div>
 </a>
 
-<div class="lyric__wrap">
-  <div class="lyric__title-wrap">
-    <h1 class="lyric__title">@Model.Title</h1>
+<div>
+  <div>
+    <h1 class="font-lora text-neutral-200 text-4xl mb-2">@Model.Title</h1>
 
-    <div class="lyric__metadata-wrap">
-      <h4 class="lyric__metadata-submitter">Submitted by: @Model.SubmitterUsername</h4>
+    <div>
+      <div class="flex gap-2 items-center">
+        <p class="font-open-sans text-neutral-200 text-sm"><span class="opacity-70">By:</span> @Model.SubmitterUsername
+        </p>
+      </div>
     </div>
   </div>
 
-  <div class="lyric__body-wrap">
-    <div class="lyric__body">
-      <div>
+  <div class="flex justify-between pr-4 lg:pr-8">
+    <div class="mb-8">
+      <div class="text-neutral-200 font-lora whitespace-pre-line">
         @Model.Body
       </div>
 
@@ -64,16 +67,16 @@
       }
     </div>
 
-    <div class="actions__wrap">
+    <div class="flex flex-col gap-4">
       @if (Model.IsVerified)
       {
-        <span class="verification-badge" title="Verified for accuracy"></span>
+        <i class="fa-kit fa-badge text-3xl lg:text-2xl text-blue-500" title="Verified for accuracy"></i>
       }
 
-      <div class="like__button">
+      <div class="flex flex-col items-center justify-center">
         @if (Model.AlreadyLiked)
         {
-          <span class="like__link-clicked"></span>
+          <i class="fa-solid fa-heart text-3xl lg:text-2xl text-red-400" title="Lyric likes"></i>
         }
         else
         {
@@ -81,11 +84,12 @@
              asp-action="Like"
              asp-route-artistSlug="@Model.Artist.PrimarySlug"
              asp-route-lyricSlug="@Model.PrimarySlug"
-             asp-route-lyricId="@Model.Id"
-             class="like__link"></a>
+             asp-route-lyricId="@Model.Id">
+            <i class="fa-solid fa-heart text-3xl lg:text-2xl text-neutral-500"></i>
+          </a>
         }
 
-        <p class="like__count">@Model.NumberOfLikes</p>
+        <p class="text-neutral-500 font-bold font-lora text-xl">@Model.NumberOfLikes</p>
       </div>
     </div>
   </div>

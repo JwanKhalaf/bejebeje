@@ -5,36 +5,36 @@
   ViewData["Description"] = "Contribute to Kurdish Music and the archiving project by submitting a new lyric";
 }
 
-<div class="container-m">
-  <div class="breadcrumb-nav">
-    <nav>
-      <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / New Lyric
-    </nav>
-  </div>
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+    <a asp-controller="Lyric" asp-action="ArtistLyrics"
+       asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / New Lyric
+  </nav>
+</div>
 
-  <div class="form__new-lyric">
-    <form asp-controller="Lyric" asp-action="Create" method="post">
-      <div class="form-group">
-        <label class="label">Title</label>
-        <input asp-for="Title" class="form-control" />
-      </div>
+<div>
+  <form asp-controller="Lyric" asp-action="Create" method="post" class="flex flex-col gap-6 pr-4 lg:pr-8">
+    <div>
+      <label class="block text-neutral-200 text-base font-open-sans mb-1">Title</label>
+      <input asp-for="Title" class="p-4 w-full text-neutral-300 bg-zinc-700 rounded font-semibold"/>
+    </div>
 
-      <div class="form-group">
-        <label class="label">Body</label>
-        <textarea asp-for="Body" class="form-control" rows="6"></textarea>
-      </div>
+    <div>
+      <label class="block text-neutral-200 text-base font-open-sans mb-1">Body</label>
+      <textarea asp-for="Body" class="p-4 w-full text-neutral-300 bg-zinc-700 rounded font-semibold"
+                rows="6"></textarea>
+    </div>
 
-      <input asp-for="Artist.Id" type="hidden" />
-      <input asp-for="Artist.PrimarySlug" type="hidden" />
+    <input asp-for="Artist.Id" type="hidden"/>
+    <input asp-for="Artist.PrimarySlug" type="hidden"/>
 
-      <div class="warning">
-        <p>Before adding the new lyric, please make sure the lyric does not already exist.</p>
-      </div>
+    <div>
+      <p class="text-neutral-400 text-sm">Before adding the new lyric, please make sure the lyric does not already exist.</p>
+    </div>
 
-      <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Add lyric" />
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
-      </div>
-    </form>
-  </div>
+    <div class="flex flex-col gap-4 mb-8">
+      <input type="submit" class="bg-red-400 p-4 rounded-sm text-center font-open-sans text-base text-neutral-800 font-semibold" value="Add lyric"/>
+      <a asp-controller="Home" asp-action="Index" class="p-4 border border-b-neutral-400 rounded-sm text-center font-open-sans text-base text-neutral-200 font-semibold">Cancel</a>
+    </div>
+  </form>
 </div>
