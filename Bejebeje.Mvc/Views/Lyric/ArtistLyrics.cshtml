@@ -5,8 +5,8 @@
   ViewData["Description"] = $"{Model.Artist.FullName} lyrics. Gotinê stranê {Model.Artist.FullName}. {Model.Artist.FullName} sözleri";
 }
 
-<div class="breadcrumb-nav">
-  <nav>
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Artist" asp-action="Index">/ Artists</a> / @Model.Artist.FullName
   </nav>
 </div>
@@ -15,43 +15,44 @@
 
 @if (!Model.Artist.IsApproved)
 {
-  <div class="warning">
+  <div class="">
     <p>Your submission is awaiting approval.</p>
   </div>
 }
 
-<div class="artist-info-wrap">
-  <div class="artist-info">
+<div class="mb-10 bg-neutral-700 mr-4 lg:mr-8 rounded-sm p-4">
+  <div class="flex gap-5 items-center">
     <picture>
       <source type="image/webp" srcset=@($"{Model.Artist.ImageUrl}.webp")>
       <source type="image/jpeg" srcset=@($"{Model.Artist.ImageUrl}.jpg")>
 
-      <img class="artist-info__image"
+      <img class="rounded-full border border-neutral-500"
            src=@($"{Model.Artist.ImageUrl}.jpg")
            alt="@Model.Artist.ImageAlternateText"
            width="100"
-           height="100" />
+           height="100"/>
     </picture>
 
     <div>
-      <h1 class="artist-info__name">@Model.Artist.FullName</h1>
-      <span class="artist-info__lyric-count">@Model.LyricCount</span>
+      <h1 class="font-open-sans text-neutral-200 uppercase">@Model.Artist.FullName</h1>
+      <span class="font-open-sans text-neutral-400">@Model.LyricCount</span>
     </div>
   </div>
 </div>
 
 @if (Model.Lyrics.Any())
 {
-  <ul class="artist-lyrics">
+  <ul class="mr-4 lg:mr-8 mb-10">
     @foreach (var lyric in Model.Lyrics)
     {
-      <li class="artist-lyric">
-        <a class="artist-lyric__link" asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
-          <h4 class="artist-lyric__title">@lyric.Title</h4>
+      <li class="mb-4 bg-neutral-700 rounded-sm artist-lyric">
+        <a class="p-4 flex justify-between items-center artist-lyric__link" asp-controller="Lyric" asp-action="Lyric"
+           asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
+          <h4 class="font-lora text-neutral-400 artist-lyric__title">@lyric.Title</h4>
 
           @if (lyric.IsVerified)
           {
-            <span class="artist-lyric__verification-badge" title="Verified for accuracy"></span>
+            <i class="fa-kit fa-badge text-blue-500" title="Verified for accuracy"></i>
           }
 
           @if (lyric.IsAwaitingApproval)
@@ -64,13 +65,13 @@
   </ul>
 }
 
-<div class="flex flex-col gap-y-4 pr-5 mb-6">
+<div class="flex flex-col gap-y-4 pr-4 lg:pr-8 mb-6">
   @if (Model.Artist.IsEditable())
   {
     <a asp-controller="Artist"
        asp-action="Update"
        asp-route-artistSlug="@Model.Artist.PrimarySlug"
-       class="actions__add-lyric">
+       class="bg-red-400 p-4 rounded-sm text-center font-open-sans text-base text-neutral-800 font-semibold">
       Update artist details
     </a>
   }
@@ -78,7 +79,7 @@
   <a asp-controller="Lyric"
      asp-action="Create"
      asp-route-artistSlug="@Model.Artist.PrimarySlug"
-     class="actions__add-lyric">
+     class="bg-red-400 p-4 rounded-sm text-center font-open-sans text-base text-neutral-800 font-semibold">
     Add a lyric for @Model.Artist.FullName
   </a>
 </div>
