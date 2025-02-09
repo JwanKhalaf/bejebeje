@@ -45,20 +45,22 @@
   <ul class="mr-4 lg:mr-8 mb-10">
     @foreach (var lyric in Model.Lyrics)
     {
-      <li class="mb-4 bg-neutral-700 rounded-sm artist-lyric">
-        <a class="p-4 flex justify-between items-center artist-lyric__link" asp-controller="Lyric" asp-action="Lyric"
+      <li class="mb-4 bg-neutral-700 rounded-sm">
+        <a class="p-4 flex justify-between items-center" asp-controller="Lyric" asp-action="Lyric"
            asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
-          <h4 class="font-lora text-neutral-400 artist-lyric__title">@lyric.Title</h4>
+          <h4 class="font-lora text-neutral-400">@lyric.Title</h4>
 
-          @if (lyric.IsVerified)
-          {
-            <i class="fa-kit fa-badge text-blue-500" title="Verified for accuracy"></i>
-          }
+          <div class="flex gap-4">
+            @if (lyric.IsVerified)
+            {
+              <i class="fa-kit fa-badge text-blue-500" title="Verified for accuracy"></i>
+            }
 
-          @if (lyric.IsAwaitingApproval)
-          {
-            <span class="artist-lyric__awaiting-approval-badge" title="Awaiting approval"></span>
-          }
+            @if (lyric.IsAwaitingApproval)
+            {
+              <i class="fa-sharp fa-solid fa-hourglass-half text-neutral-400" title="Awaiting approval"></i>
+            }
+          </div>
         </a>
       </li>
     }
@@ -75,7 +77,7 @@
       Update artist details
     </a>
   }
-  
+
   <a asp-controller="Lyric"
      asp-action="Create"
      asp-route-artistSlug="@Model.Artist.PrimarySlug"
