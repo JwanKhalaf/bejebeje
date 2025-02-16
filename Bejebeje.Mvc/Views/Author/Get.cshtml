@@ -1,0 +1,57 @@
+@model Bejebeje.Models.Author.AuthorDetailsViewModel
+
+@{
+  ViewData["Title"] = $"Poet {Model.FullName}";
+  ViewData["Description"] = $"Poet {Model.FullName} and lyrics they've written. Helbestvan {Model.FullName}.";
+  Layout = "_Layout";
+}
+
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+    / @Model.FullName
+  </nav>
+</div>
+
+@await Html.PartialAsync("_SearchForm")
+
+<div class="block mb-8 pr-4 lg:pr-8">
+  <div class="flex gap-5 items-center bg-neutral-700 rounded-sm p-4">
+    <picture>
+      <source type="image/webp" srcset=@($"{Model.ImageUrl}.webp")>
+      <source type="image/jpeg" srcset=@($"{Model.ImageUrl}.jpg")>
+
+      <img class="rounded-full border border-neutral-500"
+           src=@($"{Model.ImageUrl}.jpg")
+           alt="@Model.ImageAlternateText"
+           width="100"
+           height="100"/>
+    </picture>
+
+    <div>
+      <h1 class="text-neutral-200 font-open-sans uppercase">@Model.FullName</h1>
+    </div>
+  </div>
+</div>
+
+<div class="mb-8">
+  <div>
+    <h3 class="text-neutral-200 font-semibold mb-4 font-open-sans text-xl">Biography</h3>
+
+    <p class="text-neutral-200 font-lora">@Model.Biography</p>
+  </div>
+</div>
+
+<div>
+  <h3 class="text-neutral-200 font-semibold mb-4 font-open-sans text-xl">Lyrics</h3>
+  
+  <ul class="mr-4 lg:mr-8 mb-10">
+    @foreach (var lyric in Model.Lyrics)
+    {
+      <li class="bg-neutral-700 rounded-sm">
+        <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@lyric.ArtistSlug" asp-route-lyricSlug="@lyric.LyricSlug" class="p-4 block text-neutral-200 font-lora">
+          <h4 class="font-lora text-neutral-400">@lyric.Title</h4>
+        </a>
+      </li>
+    }
+  </ul>
+</div>

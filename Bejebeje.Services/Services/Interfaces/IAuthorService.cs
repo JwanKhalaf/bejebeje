@@ -5,6 +5,6 @@
 
   public interface IAuthorService
   {
-    Task<AuthorDetailsResponse> GetAuthorDetailsAsync(string authorSlug);
+    Task<AuthorDetailsViewModel> GetAuthorDetailsAsync(string authorSlug);
   }
 }

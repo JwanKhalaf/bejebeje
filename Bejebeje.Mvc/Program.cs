@@ -59,6 +59,8 @@ builder.Services.AddScoped<ICognitoService, CognitoService>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+
 builder.Services.AddAuthentication(options =>
     {
       options.DefaultScheme = "Cookies";

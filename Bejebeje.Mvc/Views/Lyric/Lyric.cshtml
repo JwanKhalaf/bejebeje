@@ -61,12 +61,12 @@
 
       @if (Model.Author.Id != null)
       {
-        <div class="bg-neutral-700 p-4 flex items-center gap-2 rounded-sm">
+        <a asp-controller="Author" asp-action="Get" asp-route-authorSlug="@Model.Author.PrimarySlug" class="bg-neutral-700 p-4 flex items-center gap-2 rounded-sm">
           <i class="fa-solid fa-pen-nib text-neutral-400"></i>
           <h6 class="text-neutral-200 font-semibold font-open-sans">
             <span class="text-neutral-400">Lyrics by:</span> @Model.Author.FullName
           </h6>
-        </div>
+        </a>
       }
     </div>
 
