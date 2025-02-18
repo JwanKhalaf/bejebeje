@@ -47,7 +47,7 @@
   <ul class="mr-4 lg:mr-8 mb-10">
     @foreach (var lyric in Model.Lyrics)
     {
-      <li class="bg-neutral-700 rounded-sm">
+      <li class="bg-neutral-700 rounded-sm mb-4">
         <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@lyric.ArtistSlug" asp-route-lyricSlug="@lyric.LyricSlug" class="p-4 block text-neutral-200 font-lora">
           <h4 class="font-lora text-neutral-400">@lyric.Title</h4>
         </a>
