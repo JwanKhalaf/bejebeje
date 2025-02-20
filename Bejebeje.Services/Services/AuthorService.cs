@@ -1,7 +1,6 @@
-﻿using System.Globalization;
-
-namespace Bejebeje.Services.Services
+﻿namespace Bejebeje.Services.Services
 {
+  using System.Globalization;
   using System.Linq;
   using System.Threading.Tasks;
   using Bejebeje.Common.Enums;
@@ -15,7 +14,7 @@ namespace Bejebeje.Services.Services
   public class AuthorService : IAuthorService
   {
     private readonly BbContext _context;
-    
+
     private readonly TextInfo _textInfo = new CultureInfo("ku-TR", false).TextInfo;
 
     public AuthorService(
@@ -43,8 +42,8 @@ namespace Bejebeje.Services.Services
           FullName = _textInfo.ToTitleCase(a.FullName),
           Biography = a.Biography,
           Slug = a.Slugs.Single(s => s.IsPrimary).Name,
-          ImageUrl = ImageUrlBuilder.BuildImageUrl(a.HasImage, a.Id, ImageSize.Small),
-          ImageAlternateText = ImageUrlBuilder.GetImageAlternateText(a.HasImage, a.FullName),
+          ImageUrl = ImageUrlBuilder.BuildAuthorImageUrl(a.HasImage, a.Id, ImageSize.Small),
+          ImageAlternateText = ImageUrlBuilder.GetAuthorImageAlternateText(a.HasImage, a.FullName),
           CreatedAt = a.CreatedAt,
           ModifiedAt = a.ModifiedAt,
           Lyrics = a.Lyrics.Select(x => new AuthorLyricViewModel

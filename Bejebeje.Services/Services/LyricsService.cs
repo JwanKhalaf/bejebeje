@@ -229,10 +229,10 @@ public class LyricsService : ILyricsService
       bool artistHasImage = Convert.ToBoolean(reader[6]);
 
       string artistImageUrl = ImageUrlBuilder
-        .BuildImageUrl(artistHasImage, artistId, ImageSize.Small);
+        .BuildArtistImageUrl(artistHasImage, artistId, ImageSize.Small);
 
       string artistImageAlternateText = ImageUrlBuilder
-        .GetImageAlternateText(artistHasImage, artistFullName);
+        .GetArtistImageAlternateText(artistHasImage, artistFullName);
 
       lyricItemViewModel.ArtistId = artistId;
       lyricItemViewModel.Title = lyricTitle;
@@ -275,10 +275,10 @@ public class LyricsService : ILyricsService
       bool artistHasImage = Convert.ToBoolean(reader[6]);
 
       string artistImageUrl = ImageUrlBuilder
-        .BuildImageUrl(artistHasImage, artistId, ImageSize.Small);
+        .BuildArtistImageUrl(artistHasImage, artistId, ImageSize.Small);
 
       string artistImageAlternateText = ImageUrlBuilder
-        .GetImageAlternateText(artistHasImage, artistFullName);
+        .GetArtistImageAlternateText(artistHasImage, artistFullName);
 
       lyricItemViewModel.ArtistId = artistId;
       lyricItemViewModel.Title = lyricTitle;

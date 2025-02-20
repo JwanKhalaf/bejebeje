@@ -98,10 +98,10 @@ public class ArtistsService : IArtistsService
         string artistFullName = $"{firstName} {lastName}".Trim();
 
         string artistImageUrl = ImageUrlBuilder
-          .BuildImageUrl(artistHasImage, artistId, ImageSize.Standard);
+          .BuildArtistImageUrl(artistHasImage, artistId, ImageSize.Standard);
 
         string artistImageAlternateText = ImageUrlBuilder
-          .GetImageAlternateText(artistHasImage, artistFullName);
+          .GetArtistImageAlternateText(artistHasImage, artistFullName);
 
         artistViewModel.Id = artistId;
         artistViewModel.FirstName = firstName;
@@ -163,10 +163,10 @@ public class ArtistsService : IArtistsService
       bool hasImage = Convert.ToBoolean(reader[4]);
 
       string artistImageUrl = ImageUrlBuilder
-        .BuildImageUrl(hasImage, id, ImageSize.Small);
+        .BuildArtistImageUrl(hasImage, id, ImageSize.Small);
 
       string artistImageAlternateText = ImageUrlBuilder
-        .GetImageAlternateText(hasImage, name);
+        .GetArtistImageAlternateText(hasImage, name);
 
       RandomFemaleArtistItemViewModel artist = new RandomFemaleArtistItemViewModel();
 
@@ -215,10 +215,10 @@ public class ArtistsService : IArtistsService
         string artistFullName = $"{firstName} {lastName}".Trim();
 
         string artistImageUrl = ImageUrlBuilder
-          .BuildImageUrl(artistHasImage, artistId, ImageSize.Standard);
+          .BuildArtistImageUrl(artistHasImage, artistId, ImageSize.Standard);
 
         string artistImageAlternateText = ImageUrlBuilder
-          .GetImageAlternateText(artistHasImage, artistFullName);
+          .GetArtistImageAlternateText(artistHasImage, artistFullName);
 
         artistViewModel.Id = artistId;
         artistViewModel.FirstName = firstName;
@@ -303,10 +303,10 @@ public class ArtistsService : IArtistsService
       bool hasImage = Convert.ToBoolean(reader[4]);
 
       string imageUrl = ImageUrlBuilder
-        .BuildImageUrl(hasImage, artistId, ImageSize.ExtraSmall);
+        .BuildArtistImageUrl(hasImage, artistId, ImageSize.ExtraSmall);
 
       string imageAlternateText = ImageUrlBuilder
-        .GetImageAlternateText(hasImage, name);
+        .GetArtistImageAlternateText(hasImage, name);
 
       artist.Name = name;
       artist.PrimarySlug = primarySlug;
@@ -344,10 +344,10 @@ public class ArtistsService : IArtistsService
       int numberOfLyrics = Convert.ToInt32(reader[5]);
 
       string imageUrl = ImageUrlBuilder
-        .BuildImageUrl(hasImage, artistId, ImageSize.Small);
+        .BuildArtistImageUrl(hasImage, artistId, ImageSize.Small);
 
       string imageAlternateText = ImageUrlBuilder
-        .GetImageAlternateText(hasImage, primarySlug);
+        .GetArtistImageAlternateText(hasImage, primarySlug);
 
       artist.FirstName = firstName;
       artist.LastName = lastName;
