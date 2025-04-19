@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Bejebeje.Models.Artist;
+using Bejebeje.Mvc.ViewModels.Artists.CreateIndividualArtist;
 using Bejebeje.Services.Services.Interfaces;
 using Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -35,8 +36,17 @@ public class ArtistController : Controller
   }
 
   [Authorize]
+  [Route("artists/new/individual")]
+  public IActionResult Create()
+  {
+    CreateIndividualArtistViewModel viewModel = new CreateIndividualArtistViewModel();
+
+    return View(viewModel);
+  }
+
+  [Authorize]
   [HttpPost]
-  [Route("artists/new")]
+  [Route("artists/new/individual")]
   public async Task<IActionResult> Create(CreateIndividualArtistViewModel viewModel)
   {
     try
@@ -45,8 +55,13 @@ public class ArtistController : Controller
         .GetUserId()
         .ToString();
 
+      CreateIndividualArtistDto dto = new CreateIndividualArtistDto();
+      dto.FirstName = viewModel.FirstName;
+      dto.LastName = viewModel.LastName;
+      dto.UserId = viewModel.UserId;
+
       ArtistCreationResult result = await _artistsService
-        .AddArtistAsync(viewModel);
+        .AddArtistAsync(dto);
 
       return RedirectToAction("ArtistLyrics", "Lyric", new { artistSlug = result.PrimarySlug });
     }

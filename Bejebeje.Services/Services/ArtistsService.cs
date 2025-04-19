@@ -365,7 +365,7 @@ public class ArtistsService : IArtistsService
     return dictionary;
   }
 
-  public async Task<ArtistCreationResult> AddArtistAsync(CreateIndividualArtistViewModel viewModel)
+  public async Task<ArtistCreationResult> AddArtistAsync(CreateIndividualArtistDto viewModel)
   {
     ArtistCreationResult result = new ArtistCreationResult();
     string connectionString = _databaseOptions.ConnectionString;
