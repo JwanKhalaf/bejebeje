@@ -2,7 +2,7 @@
 {
   using System.ComponentModel.DataAnnotations;
 
-  public class CreateArtistViewModel
+  public class CreateIndividualArtistViewModel
   {
     [Required]
     [MaxLength(100)]

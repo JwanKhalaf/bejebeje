@@ -28,18 +28,16 @@ public class ArtistController : Controller
   }
 
   [Authorize]
-  [Route("artists/new")]
-  public IActionResult Create()
+  [Route("artists/new/selector")]
+  public IActionResult Selector()
   {
-    CreateArtistViewModel viewModel = new CreateArtistViewModel();
-
-    return View(viewModel);
+    return View();
   }
 
   [Authorize]
   [HttpPost]
   [Route("artists/new")]
-  public async Task<IActionResult> Create(CreateArtistViewModel viewModel)
+  public async Task<IActionResult> Create(CreateIndividualArtistViewModel viewModel)
   {
     try
     {

@@ -1,0 +1,38 @@
+@model Bejebeje.Models.Artist.CreateIndividualArtistViewModel
+
+@{
+  ViewData["Title"] = "What are you adding?";
+  ViewData["Description"] = "Contribute to Kurdish Music and the archiving project by submitting a new artist and their lyrics.";
+}
+
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+    <a asp-controller="Artist" asp-action="Index">/ Artists</a> / New / Select type
+  </nav>
+</div>
+
+<div class="mb-8 w-120">
+  <h1 class="text-neutral-200 text-3xl font-semibold mb-4">
+    What are you adding?
+  </h1>
+  
+  <p class="text-neutral-200 text-base/7">Examples of individual artists are Hesen Zîrek and Şivan Perwer and examples of Groups are Kamkaran and Koma Azad.</p>
+</div>
+
+<div class="w-120">
+  <div class="flex gap-x-8">
+    <div class="flex-1 rounded-md">
+      <a href="#" class="flex flex-col gap-y-6 items-center p-10 text-neutral-200 font-semibold text-lg rounded-md border border-neutral-600 hover:bg-neutral-700 hover:text-red-500 transition-all duration-200 ease-in">
+        <i class="fa-solid fa-microphone-stand text-3xl"></i>
+        Individual
+      </a>
+    </div>
+    
+    <div class="flex-1 rounded-md">
+      <a href="#" class="flex flex-col gap-y-6 items-center p-10 text-neutral-200 font-semibold text-lg rounded-md border border-neutral-600 hover:bg-neutral-700 hover:text-red-500 transition-all duration-200 ease-in">
+        <i class="fa-solid fa-guitars text-3xl"></i>
+        Group
+      </a>
+    </div>
+  </div>
+</div>
