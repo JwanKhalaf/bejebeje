@@ -11,7 +11,13 @@ public class CreateIndividualArtistViewModel
 
   public string Biography { get; set; }
 
-  public string UserId { get; set; }
-
   public IFormFile Photo { get; set; }
+
+  public string ExistingArtistFullName { get; set; }
+
+  public string ExistingArtistSlug { get; set; }
+
+  public string ExistingArtistImageUrl { get; set; }
+
+  public string ExistingArtistImageAlternateText { get; set; }
 }
