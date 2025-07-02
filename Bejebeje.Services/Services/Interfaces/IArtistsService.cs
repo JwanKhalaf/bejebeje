@@ -27,6 +27,10 @@
 
     Task<ArtistCreationResult> AddArtistAsync(CreateIndividualArtistDto viewModel);
 
+    Task<ArtistCreationResult> AddBandArtistAsync(CreateBandArtistDto viewModel);
+
     Task<ArtistUpdateResult> UpdateArtistAsync(UpdateArtistViewModel viewModel);
+
+    Task UpdateArtistImageStatusAsync(int artistId, bool hasImage);
   }
 }

@@ -1,16 +1,13 @@
-namespace Bejebeje.Mvc.ViewModels.Artists.CreateIndividualArtist;
+namespace Bejebeje.Mvc.ViewModels.Artists.CreateBandArtist;
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
-public class CreateIndividualArtistViewModel
+public class CreateBandArtistViewModel
 {
-  [Required(ErrorMessage = "Please enter the artist's first name")]
-  [Display(Name = "First name")]
-  public string FirstName { get; set; }
-
-  [Display(Name = "Last name")]
-  public string LastName { get; set; }
+  [Required(ErrorMessage = "Please enter the band's name")]
+  [Display(Name = "Band name")]
+  public string BandName { get; set; }
 
   public string Biography { get; set; }
 
