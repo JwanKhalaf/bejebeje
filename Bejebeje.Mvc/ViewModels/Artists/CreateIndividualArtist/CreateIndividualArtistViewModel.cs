@@ -9,8 +9,7 @@ public class CreateIndividualArtistViewModel
   [Display(Name = "First name")]
   public string FirstName { get; set; }
 
-  [Display(Name = "Last name")]
-  public string LastName { get; set; }
+  [Display(Name = "Last name")] public string LastName { get; set; }
 
   public string Biography { get; set; }
 

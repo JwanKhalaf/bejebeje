@@ -93,7 +93,7 @@ public class ArtistController : Controller
     try
     {
       string userId = User.GetUserId().ToString();
-      string firstName = viewModel.FirstName.Trim();
+      string firstName = viewModel.FirstName!.Trim();
       string lastName = string.IsNullOrEmpty(viewModel.LastName) ? string.Empty : viewModel.LastName.Trim();
       string fullName = string.IsNullOrEmpty(lastName) ? firstName : $"{firstName} {lastName}";
       string artistSlug = fullName.NormalizeStringForUrl();
@@ -142,30 +142,33 @@ public class ArtistController : Controller
           _logger.LogWarning("Image file too large for artist '{FullName}': {FileSize} bytes", fullName,
             viewModel.Photo.Length);
           ModelState.AddModelError(nameof(viewModel.Photo), "The photo size must not exceed 500KB.");
+
           // Clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
 
         // check file extension (first line of defense)
-        string fileExtension = Path.GetExtension(viewModel.Photo.FileName)?.ToLowerInvariant();
+        string fileExtension = Path.GetExtension(viewModel.Photo.FileName).ToLowerInvariant();
         if (string.IsNullOrEmpty(fileExtension) ||
             (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png"))
         {
           _logger.LogWarning("Invalid file extension for artist '{FullName}': {Extension}", fullName, fileExtension);
           ModelState.AddModelError(nameof(viewModel.Photo), "Only JPG and PNG images are allowed.");
+
           // Clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
 
         // check mime type (second line of defense)
-        var allowedMimeTypes = new[] { "image/jpeg", "image/jpg", "image/png" };
-        if (!allowedMimeTypes.Contains(viewModel.Photo.ContentType?.ToLowerInvariant()))
+        string[] allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png"];
+        if (!allowedMimeTypes.Contains(viewModel.Photo.ContentType.ToLowerInvariant()))
         {
           _logger.LogWarning("Invalid MIME type for artist '{FullName}': {MimeType}", fullName,
             viewModel.Photo.ContentType);
           ModelState.AddModelError(nameof(viewModel.Photo), "Only JPG and PNG images are allowed.");
+
           // Clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
@@ -188,17 +191,19 @@ public class ArtistController : Controller
             _logger.LogWarning("Could not detect image format for artist '{FullName}'", fullName);
             ModelState.AddModelError(nameof(viewModel.Photo),
               "Invalid image format. Only JPG and PNG images are allowed.");
+
             // Clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
           }
 
-          var formatName = detectedFormat.Name.ToLowerInvariant();
+          string formatName = detectedFormat.Name.ToLowerInvariant();
           if (formatName != "jpeg" && formatName != "png")
           {
             _logger.LogWarning("Invalid detected image format for artist '{FullName}': {Format}", fullName, formatName);
             ModelState.AddModelError(nameof(viewModel.Photo),
               "Invalid image format. Only JPG and PNG images are allowed.");
+
             // Clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
@@ -210,6 +215,7 @@ public class ArtistController : Controller
             _logger.LogWarning("Image dimensions too large for artist '{FullName}': {Width}x{Height}", fullName,
               image.Width, image.Height);
             ModelState.AddModelError(nameof(viewModel.Photo), "The photo must be at most 1000x1000 pixels.");
+
             // Clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
@@ -221,6 +227,7 @@ public class ArtistController : Controller
             _logger.LogWarning("Image dimensions too small for artist '{FullName}': {Width}x{Height}", fullName,
               image.Width, image.Height);
             ModelState.AddModelError(nameof(viewModel.Photo), "The image is too small. Minimum size is 10x10 pixels.");
+
             // Clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
@@ -233,6 +240,7 @@ public class ArtistController : Controller
         {
           _logger.LogWarning(ex, "Invalid image content for artist '{FullName}'", fullName);
           ModelState.AddModelError(nameof(viewModel.Photo), "The uploaded file is not a valid image.");
+
           // Clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
@@ -242,6 +250,7 @@ public class ArtistController : Controller
           _logger.LogWarning(ex, "Unknown image format for artist '{FullName}'", fullName);
           ModelState.AddModelError(nameof(viewModel.Photo),
             "Unsupported image format. Only JPG and PNG images are allowed.");
+
           // Clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
@@ -251,6 +260,7 @@ public class ArtistController : Controller
           _logger.LogError(ex, "Failed to process image for artist '{FullName}'", fullName);
           ModelState.AddModelError(nameof(viewModel.Photo),
             "Failed to process the uploaded image. Please try a different file.");
+
           // Clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
@@ -319,7 +329,7 @@ public class ArtistController : Controller
   [Route("artists/{artistSlug}/update")]
   public async Task<IActionResult> Update(string artistSlug)
   {
-    string userId = User.Identity.IsAuthenticated
+    string userId = User.Identity is { IsAuthenticated: true }
       ? User.GetUserId().ToString()
       : string.Empty;
 
@@ -349,7 +359,7 @@ public class ArtistController : Controller
   {
     try
     {
-      string userId = User.Identity.IsAuthenticated
+      string userId = User.Identity is { IsAuthenticated: true }
         ? User.GetUserId().ToString()
         : string.Empty;
 
@@ -389,7 +399,7 @@ public class ArtistController : Controller
   {
     _logger.LogInformation("Band artist creation started for user {UserId}", User.GetUserId());
 
-    // Check ModelState first before any processing
+    // check ModelState first before any processing
     if (!ModelState.IsValid)
     {
       _logger.LogWarning("Band artist creation failed due to validation errors. Errors: {ValidationErrors}",
@@ -397,7 +407,7 @@ public class ArtistController : Controller
       return View(viewModel);
     }
 
-    // Manual length validation (now that MaxLength attribute is removed)
+    // manual length validation (now that MaxLength attribute is removed)
     if (!string.IsNullOrEmpty(viewModel.BandName) && viewModel.BandName.Length > 200)
     {
       _logger.LogWarning("Band name too long for user {UserId}: {Length} characters", User.GetUserId(),
@@ -409,7 +419,8 @@ public class ArtistController : Controller
     try
     {
       string userId = User.GetUserId().ToString();
-      string bandName = viewModel.BandName.Trim();
+
+      string bandName = viewModel.BandName!.Trim();
       string artistSlug = bandName.NormalizeStringForUrl();
 
       _logger.LogInformation("Processing band artist creation for '{BandName}' (slug: {ArtistSlug})", bandName,
@@ -430,13 +441,15 @@ public class ArtistController : Controller
         return View(viewModel);
       }
 
-      string turkishLetters = "ğıİöü";
-      bool containsTurkishLetters = bandName.Any(c => turkishLetters.Contains(c, StringComparison.OrdinalIgnoreCase));
+      string nonKurdishLetters = "ğıİöü";
+      bool containsNonKurdishLetters =
+        bandName.Any(c => nonKurdishLetters.Contains(c, StringComparison.OrdinalIgnoreCase));
 
-      if (containsTurkishLetters)
+      if (containsNonKurdishLetters)
       {
-        _logger.LogWarning("Band name '{BandName}' contains Turkish letters", bandName);
-        ModelState.AddModelError(string.Empty, "Are you sure you're adding Kurdish artists?");
+        _logger.LogWarning("Band name '{BandName}' contains non-Kurdish letters", bandName);
+        ModelState.AddModelError(string.Empty,
+          "Are you sure you're adding Kurdish artists? We've detected some non-Kurdish letters!");
         return View(viewModel);
       }
 
@@ -446,92 +459,100 @@ public class ArtistController : Controller
           "Processing image upload for band '{BandName}'. File size: {FileSize} bytes, Content type: {ContentType}, File name: {FileName}",
           bandName, viewModel.Photo.Length, viewModel.Photo.ContentType, viewModel.Photo.FileName);
 
-        // Check file size first
+        // check file size first
         if (viewModel.Photo is { Length: > 500_000 })
         {
           _logger.LogWarning("Image file too large for band '{BandName}': {FileSize} bytes", bandName,
             viewModel.Photo.Length);
           ModelState.AddModelError(nameof(viewModel.Photo), "The photo size must not exceed 500KB.");
-          // Clear photo to prevent issues while preserving other form data
+
+          // clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
 
-        // Check file extension (first line of defense)
-        string fileExtension = Path.GetExtension(viewModel.Photo.FileName)?.ToLowerInvariant();
+        // check file extension (first line of defense)
+        string fileExtension = Path.GetExtension(viewModel.Photo.FileName).ToLowerInvariant();
         if (string.IsNullOrEmpty(fileExtension) ||
             (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png"))
         {
           _logger.LogWarning("Invalid file extension for band '{BandName}': {Extension}", bandName, fileExtension);
           ModelState.AddModelError(nameof(viewModel.Photo), "Only JPG and PNG images are allowed.");
-          // Clear photo to prevent issues while preserving other form data
+
+          // clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
 
-        // Check MIME type (second line of defense)
-        var allowedMimeTypes = new[] { "image/jpeg", "image/jpg", "image/png" };
-        if (!allowedMimeTypes.Contains(viewModel.Photo.ContentType?.ToLowerInvariant()))
+        // check mime type (second line of defense)
+        string[] allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png"];
+        if (!allowedMimeTypes.Contains(viewModel.Photo.ContentType.ToLowerInvariant()))
         {
           _logger.LogWarning("Invalid MIME type for band '{BandName}': {MimeType}", bandName,
             viewModel.Photo.ContentType);
           ModelState.AddModelError(nameof(viewModel.Photo), "Only JPG and PNG images are allowed.");
-          // Clear photo to prevent issues while preserving other form data
+
+          // clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
 
         try
         {
-          // Read and validate the actual image data (third line of defense)
+          // read and validate the actual image data (third line of defense)
           using var imageStream = viewModel.Photo.OpenReadStream();
 
-          // Reset stream position for proper reading
+          // reset stream position for proper reading
           imageStream.Position = 0;
 
           using Image<Rgba32> image = await Image.LoadAsync<Rgba32>(imageStream);
 
-          // Verify the image format matches what we expect
+          // verify the image format matches what we expect
           var detectedFormat = image.Metadata.DecodedImageFormat;
           if (detectedFormat == null)
           {
             _logger.LogWarning("Could not detect image format for band '{BandName}'", bandName);
             ModelState.AddModelError(nameof(viewModel.Photo),
               "Invalid image format. Only JPG and PNG images are allowed.");
-            // Clear photo to prevent issues while preserving other form data
+
+            // clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
           }
 
-          var formatName = detectedFormat.Name.ToLowerInvariant();
+          string formatName = detectedFormat.Name.ToLowerInvariant();
           if (formatName != "jpeg" && formatName != "png")
           {
             _logger.LogWarning("Invalid detected image format for band '{BandName}': {Format}", bandName, formatName);
             ModelState.AddModelError(nameof(viewModel.Photo),
               "Invalid image format. Only JPG and PNG images are allowed.");
+
             // Clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
           }
 
-          // Check image dimensions
+          // check image dimensions
           if (image.Width > 1000 || image.Height > 1000)
           {
             _logger.LogWarning("Image dimensions too large for band '{BandName}': {Width}x{Height}", bandName,
               image.Width, image.Height);
             ModelState.AddModelError(nameof(viewModel.Photo), "The photo must be at most 1000x1000 pixels.");
-            // Clear photo to prevent issues while preserving other form data
+
+            // clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
           }
 
-          // Additional security: Check for minimum dimensions (helps detect malicious tiny files)
+          // additional security: Check for minimum dimensions (helps detect malicious tiny files)
           if (image.Width < 10 || image.Height < 10)
           {
             _logger.LogWarning("Image dimensions too small for band '{BandName}': {Width}x{Height}", bandName,
               image.Width, image.Height);
-            ModelState.AddModelError(nameof(viewModel.Photo), "The image is too small. Minimum size is 10x10 pixels.");
-            // Clear photo to prevent issues while preserving other form data
+            ModelState.AddModelError(nameof(viewModel.Photo),
+              "The image is too small. Minimum size is 10x10 pixels.");
+
+            // clear photo to prevent issues while preserving other form data
             viewModel.Photo = null;
             return View(viewModel);
           }
@@ -543,7 +564,8 @@ public class ArtistController : Controller
         {
           _logger.LogWarning(ex, "Invalid image content for band '{BandName}'", bandName);
           ModelState.AddModelError(nameof(viewModel.Photo), "The uploaded file is not a valid image.");
-          // Clear photo to prevent issues while preserving other form data
+
+          // clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
@@ -552,7 +574,8 @@ public class ArtistController : Controller
           _logger.LogWarning(ex, "Unknown image format for band '{BandName}'", bandName);
           ModelState.AddModelError(nameof(viewModel.Photo),
             "Unsupported image format. Only JPG and PNG images are allowed.");
-          // Clear photo to prevent issues while preserving other form data
+
+          // clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
@@ -561,7 +584,8 @@ public class ArtistController : Controller
           _logger.LogError(ex, "Failed to process image for band '{BandName}'", bandName);
           ModelState.AddModelError(nameof(viewModel.Photo),
             "Failed to process the uploaded image. Please try a different file.");
-          // Clear photo to prevent issues while preserving other form data
+
+          // clear photo to prevent issues while preserving other form data
           viewModel.Photo = null;
           return View(viewModel);
         }
@@ -612,7 +636,8 @@ public class ArtistController : Controller
         }
       }
 
-      _logger.LogInformation("Band artist creation completed successfully for '{BandName}', redirecting to artist page",
+      _logger.LogInformation(
+        "Band artist creation completed successfully for '{BandName}', redirecting to artist page",
         bandName);
       return RedirectToAction("ArtistLyrics", "Lyric", new { artistSlug = result.PrimarySlug });
     }
