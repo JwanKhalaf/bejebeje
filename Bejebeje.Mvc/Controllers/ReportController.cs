@@ -100,10 +100,10 @@ public class ReportController : Controller
     }
 
     // save the report
-    await _reportsService.CreateReportAsync(userId, viewModel.LyricId, formModel.Category, formModel.Comment);
+    await _reportsService.CreateReportAsync(userId, viewModel.LyricId, formModel.Category.Value, formModel.Comment);
 
     // get category display label
-    string categoryDisplayLabel = GetCategoryDisplayLabel(formModel.Category);
+    string categoryDisplayLabel = GetCategoryDisplayLabel(formModel.Category.Value);
 
     // send emails (errors are caught within the service)
     string reporterEmail = User.FindFirstValue("email");

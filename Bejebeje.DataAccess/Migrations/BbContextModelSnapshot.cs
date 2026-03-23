@@ -303,7 +303,8 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasColumnName("category");
 
                     b.Property<string>("Comment")
-                        .HasColumnType("text")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
                         .HasColumnName("comment");
 
                     b.Property<DateTime>("CreatedAt")
@@ -327,11 +328,21 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasColumnName("status");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_lyric_reports");
+
+                    b.HasIndex("LyricId")
+                        .HasDatabaseName("ix_lyric_reports_lyric_id");
+
+                    b.HasIndex("UserId", "CreatedAt")
+                        .HasDatabaseName("ix_lyric_reports_user_id_created_at");
+
+                    b.HasIndex("UserId", "LyricId", "Status")
+                        .HasDatabaseName("ix_lyric_reports_user_id_lyric_id_status");
 
                     b.ToTable("lyric_reports", (string)null);
                 });

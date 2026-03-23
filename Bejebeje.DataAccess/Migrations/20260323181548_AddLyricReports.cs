@@ -19,9 +19,9 @@ namespace Bejebeje.DataAccess.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     lyric_id = table.Column<int>(type: "integer", nullable: false),
-                    user_id = table.Column<string>(type: "text", nullable: true),
+                    user_id = table.Column<string>(type: "text", nullable: false),
                     category = table.Column<int>(type: "integer", nullable: false),
-                    comment = table.Column<string>(type: "text", nullable: true),
+                    comment = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
                     status = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -35,6 +35,11 @@ namespace Bejebeje.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_lyric_reports_lyric_id",
+                table: "lyric_reports",
+                column: "lyric_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_lyric_reports_user_id_created_at",
                 table: "lyric_reports",
                 columns: new[] { "user_id", "created_at" });
@@ -43,11 +48,6 @@ namespace Bejebeje.DataAccess.Migrations
                 name: "ix_lyric_reports_user_id_lyric_id_status",
                 table: "lyric_reports",
                 columns: new[] { "user_id", "lyric_id", "status" });
-
-            migrationBuilder.CreateIndex(
-                name: "ix_lyric_reports_lyric_id",
-                table: "lyric_reports",
-                column: "lyric_id");
         }
 
         /// <inheritdoc />

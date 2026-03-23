@@ -5,15 +5,18 @@ using System.Threading.Tasks;
 using Amazon.SimpleEmailV2;
 using Amazon.SimpleEmailV2.Model;
 using Bejebeje.Services.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 
 public class EmailService : IEmailService
 {
   private const string SenderEmail = "jk.bejebeje@gmail.com";
   private readonly IAmazonSimpleEmailServiceV2 _sesClient;
+  private readonly ILogger<EmailService> _logger;
 
-  public EmailService(IAmazonSimpleEmailServiceV2 sesClient)
+  public EmailService(IAmazonSimpleEmailServiceV2 sesClient, ILogger<EmailService> logger)
   {
     _sesClient = sesClient;
+    _logger = logger;
   }
 
   public async Task SendArtistSubmissionEmailAsync(
@@ -185,11 +188,11 @@ public class EmailService : IEmailService
     try
     {
       var response = await _sesClient.SendEmailAsync(sendRequest);
-      Console.WriteLine($"Lyric report notification email sent! MessageId: {response.MessageId}");
+      _logger.LogInformation("lyric report notification email sent, message id: {MessageId}", response.MessageId);
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Failed to send lyric report notification email: {ex.Message}");
+      _logger.LogError(ex, "failed to send lyric report notification email for lyric {LyricTitle}", lyricTitle);
       throw;
     }
   }
@@ -241,11 +244,11 @@ public class EmailService : IEmailService
     try
     {
       var response = await _sesClient.SendEmailAsync(sendRequest);
-      Console.WriteLine($"Lyric report confirmation email sent! MessageId: {response.MessageId}");
+      _logger.LogInformation("lyric report confirmation email sent, message id: {MessageId}", response.MessageId);
     }
     catch (Exception ex)
     {
-      Console.WriteLine($"Failed to send lyric report confirmation email: {ex.Message}");
+      _logger.LogError(ex, "failed to send lyric report confirmation email for lyric {LyricTitle}", lyricTitle);
       throw;
     }
   }

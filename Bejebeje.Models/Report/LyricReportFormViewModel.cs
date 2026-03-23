@@ -9,7 +9,7 @@ public class LyricReportFormViewModel
 
   [Required]
   [Range(0, 4)]
-  public int Category { get; set; }
+  public int? Category { get; set; }
 
   [MaxLength(2000)]
   public string Comment { get; set; }

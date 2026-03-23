@@ -1,6 +1,7 @@
 namespace Bejebeje.Domain
 {
   using System;
+  using System.ComponentModel.DataAnnotations;
   using Interfaces;
 
   public class LyricReport : IBaseEntity
@@ -9,10 +10,12 @@ namespace Bejebeje.Domain
 
     public int LyricId { get; set; }
 
+    [Required]
     public string UserId { get; set; }
 
     public int Category { get; set; }
 
+    [MaxLength(2000)]
     public string Comment { get; set; }
 
     public int Status { get; set; }
