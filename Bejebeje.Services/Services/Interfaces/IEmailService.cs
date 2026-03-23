@@ -14,4 +14,16 @@ public interface IEmailService
     int lyricId,
     string artistFullName,
     int artistId);
+
+  Task SendLyricReportNotificationEmailAsync(
+    string reporterUsername,
+    string lyricTitle,
+    string artistName,
+    string categoryDisplayLabel,
+    string comment);
+
+  Task SendLyricReportConfirmationEmailAsync(
+    string reporterEmail,
+    string lyricTitle,
+    string artistName);
 }

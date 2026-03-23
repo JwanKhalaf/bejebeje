@@ -64,6 +64,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 
+builder.Services.AddScoped<ILyricReportsService, LyricReportsService>();
+
 builder.Services.AddAuthentication(options =>
     {
       options.DefaultScheme = "Cookies";
@@ -81,6 +83,7 @@ builder.Services.AddAuthentication(options =>
       options.GetClaimsFromUserInfoEndpoint = true;
       options.Scope.Clear();
       options.Scope.Add("openid");
+      options.Scope.Add("email");
       options.ClaimActions.MapUniqueJsonKey("role", "role");
       options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = "cognito:user", RoleClaimType = "cognito:groups" };
     });
