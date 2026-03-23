@@ -1,6 +1,15 @@
 # set base image as the dotnet 10.0 SDK.
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 
+# source bashrc
+SHELL ["/bin/bash", "--login", "-c"]
+
+# install nvm and nodejs in one step
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
+    && export NVM_DIR="$HOME/.nvm" \
+    && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
+    && nvm install 24.14.0
+
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
 # instructions that follows the WORKDIR instruction.
 WORKDIR /app
@@ -11,7 +20,9 @@ COPY . ./
 
 # again, on the container (we are in /app folder)
 # we now publish the project into a folder called 'out'.
-RUN dotnet publish Bejebeje.Mvc/Bejebeje.Mvc.csproj -c Release -o out
+RUN export NVM_DIR="$HOME/.nvm" \
+    && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
+    && dotnet publish Bejebeje.Mvc/Bejebeje.Mvc.csproj -c Release -o out
 
 # set base image as the dotnet 10.0 runtime.
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
@@ -19,7 +30,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 # telling the application what port to run on.
 ENV ASPNETCORE_URLS=http://*:5005
 
-# disable diagnostics 
+# disable diagnostics
 ENV COMPlus_EnableDiagnostics=0
 
 # set the working directory for any RUN, CMD, ENTRYPOINT, COPY and ADD
