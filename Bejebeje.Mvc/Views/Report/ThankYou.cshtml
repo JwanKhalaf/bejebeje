@@ -1,0 +1,42 @@
+@model Bejebeje.Models.Report.LyricReportThankYouViewModel
+
+@{
+  ViewData["Title"] = "Report submitted";
+  ViewData["Description"] = "Your lyric report has been submitted successfully";
+}
+
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+    <a href="/artists/@Model.ArtistSlug/lyrics">/ @Model.ArtistName</a> /
+    <a href="/artists/@Model.ArtistSlug/lyrics/@Model.LyricSlug">@Model.LyricTitle</a> / Report
+  </nav>
+</div>
+
+<div class="pr-4 lg:pr-8">
+  <div class="rounded-md bg-green-900/30 border border-green-700 p-6 mb-6">
+    <div class="flex gap-3 items-start">
+      <svg viewBox="0 0 640 640" class="size-6 text-green-400 shrink-0 mt-0.5" fill="currentColor">
+        <path d="M320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64zM432.5 254.5L296.5 390.5C290.5 396.5 282.5 400 274 400C265.5 400 257.5 396.5 251.5 390.5L207.5 346.5C195.2 334.2 195.2 313.8 207.5 301.5C219.8 289.2 240.2 289.2 252.5 301.5L274 323L387.5 209.5C399.8 197.2 420.2 197.2 432.5 209.5C444.8 221.8 444.8 242.2 432.5 254.5z"/>
+      </svg>
+      <div>
+        <h1 class="font-lora text-green-200 text-2xl mb-2">Thank you!</h1>
+        <p class="text-neutral-300 font-open-sans text-sm">
+          Your report for <span class="font-semibold text-neutral-200">"@Model.LyricTitle"</span>
+          by <span class="font-semibold text-neutral-200">@Model.ArtistName</span> has been received
+          and will be reviewed.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col sm:flex-row gap-3">
+    <a href="/artists/@Model.ArtistSlug/lyrics/@Model.LyricSlug"
+       class="px-6 py-2 bg-neutral-700 text-neutral-200 text-sm font-medium rounded-sm hover:bg-neutral-600 transition-colors text-center">
+      Go back to lyric
+    </a>
+    <a href="/artists/@Model.ArtistSlug/lyrics"
+       class="px-6 py-2 bg-neutral-700 text-neutral-200 text-sm font-medium rounded-sm hover:bg-neutral-600 transition-colors text-center">
+      View other lyrics by @Model.ArtistName
+    </a>
+  </div>
+</div>

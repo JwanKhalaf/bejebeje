@@ -126,4 +126,127 @@ public class EmailService : IEmailService
       throw;
     }
   }
+
+  public async Task SendLyricReportNotificationEmailAsync(
+    string reporterUsername,
+    string lyricTitle,
+    string artistName,
+    string categoryDisplayLabel,
+    string comment)
+  {
+    string subject = $"New lyric report: {lyricTitle} by {artistName}";
+    string commentSection = string.IsNullOrEmpty(comment)
+      ? "No comment provided."
+      : $"Comment: {comment}";
+
+    string body = $"""
+
+                   Hello,
+
+                   A new lyric report has been submitted.
+
+                   Reporter: {reporterUsername}
+                   Lyric: {lyricTitle}
+                   Artist: {artistName}
+                   Category: {categoryDisplayLabel}
+                   {commentSection}
+
+                   Please review as soon as possible.
+
+                   Thanks
+                   """;
+
+    var sendRequest = new SendEmailRequest
+    {
+      FromEmailAddress = SenderEmail,
+      Destination = new Destination
+      {
+        ToAddresses = [SenderEmail],
+      },
+      Content = new EmailContent
+      {
+        Simple = new Message
+        {
+          Subject = new Content
+          {
+            Data = subject,
+          },
+          Body = new Body
+          {
+            Text = new Content
+            {
+              Data = body,
+            },
+          },
+        },
+      },
+    };
+
+    try
+    {
+      var response = await _sesClient.SendEmailAsync(sendRequest);
+      Console.WriteLine($"Lyric report notification email sent! MessageId: {response.MessageId}");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Failed to send lyric report notification email: {ex.Message}");
+      throw;
+    }
+  }
+
+  public async Task SendLyricReportConfirmationEmailAsync(
+    string reporterEmail,
+    string lyricTitle,
+    string artistName)
+  {
+    string subject = $"Your report for \"{lyricTitle}\" has been received";
+    string body = $"""
+
+                   Hello,
+
+                   Thank you for your report. Your report for "{lyricTitle}" by {artistName} has been received and will be reviewed.
+
+                   We appreciate your help in keeping Bejebeje accurate and high quality.
+
+                   Thanks,
+                   The Bejebeje Team
+                   """;
+
+    var sendRequest = new SendEmailRequest
+    {
+      FromEmailAddress = SenderEmail,
+      Destination = new Destination
+      {
+        ToAddresses = [reporterEmail],
+      },
+      Content = new EmailContent
+      {
+        Simple = new Message
+        {
+          Subject = new Content
+          {
+            Data = subject,
+          },
+          Body = new Body
+          {
+            Text = new Content
+            {
+              Data = body,
+            },
+          },
+        },
+      },
+    };
+
+    try
+    {
+      var response = await _sesClient.SendEmailAsync(sendRequest);
+      Console.WriteLine($"Lyric report confirmation email sent! MessageId: {response.MessageId}");
+    }
+    catch (Exception ex)
+    {
+      Console.WriteLine($"Failed to send lyric report confirmation email: {ex.Message}");
+      throw;
+    }
+  }
 }

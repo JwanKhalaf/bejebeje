@@ -22,6 +22,8 @@
 
     public DbSet<AuthorSlug> AuthorSlugs { get; set; }
 
+    public DbSet<LyricReport> LyricReports { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
       base.OnModelCreating(builder);
