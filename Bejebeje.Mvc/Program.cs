@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using Amazon.CognitoIdentityProvider;
+using Amazon.S3;
 using Amazon.SimpleEmailV2;
 using Bejebeje.DataAccess.Context;
 using Bejebeje.Services.Config;
@@ -36,6 +37,8 @@ builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
 builder.Services.AddAWSService<IAmazonCognitoIdentityProvider>();
 
 builder.Services.AddAWSService<IAmazonSimpleEmailServiceV2>();
+
+builder.Services.AddAWSService<IAmazonS3>();
 
 builder.Services.Configure<DatabaseOptions>(builder.Configuration);
 

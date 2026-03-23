@@ -25,8 +25,12 @@
 
     Task<IDictionary<char, List<LibraryArtistViewModel>>> GetAllArtistsAsync();
 
-    Task<ArtistCreationResult> AddArtistAsync(CreateArtistViewModel viewModel);
+    Task<ArtistCreationResult> AddArtistAsync(CreateIndividualArtistDto viewModel);
+
+    Task<ArtistCreationResult> AddBandArtistAsync(CreateBandArtistDto viewModel);
 
     Task<ArtistUpdateResult> UpdateArtistAsync(UpdateArtistViewModel viewModel);
+
+    Task UpdateArtistImageStatusAsync(int artistId, bool hasImage);
   }
 }

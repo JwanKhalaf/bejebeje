@@ -365,12 +365,12 @@ public class ArtistsService : IArtistsService
     return dictionary;
   }
 
-  public async Task<ArtistCreationResult> AddArtistAsync(CreateArtistViewModel viewModel)
+  public async Task<ArtistCreationResult> AddArtistAsync(CreateIndividualArtistDto viewModel)
   {
     ArtistCreationResult result = new ArtistCreationResult();
     string connectionString = _databaseOptions.ConnectionString;
     string sqlStatement =
-      "insert into artists (first_name, last_name, full_name, is_approved, user_id, created_at, is_deleted, has_image) values (@first_name, @last_name, @full_name, @is_approved, @user_id, @created_at, @is_deleted, @has_image) returning id";
+      "insert into artists (first_name, last_name, full_name, is_approved, user_id, created_at, is_deleted, has_image, biography) values (@first_name, @last_name, @full_name, @is_approved, @user_id, @created_at, @is_deleted, @has_image, @biography) returning id";
     int artistId = 0;
 
     string firstName = viewModel.FirstName.ToLower();
@@ -381,6 +381,7 @@ public class ArtistsService : IArtistsService
     string userId = viewModel.UserId;
     bool isDeleted = false;
     bool hasImage = false;
+    string biography = string.IsNullOrWhiteSpace(viewModel.Biography) ? string.Empty : viewModel.Biography.Trim();
 
     using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
     {
@@ -393,6 +394,7 @@ public class ArtistsService : IArtistsService
       command.Parameters.AddWithValue("@created_at", createdAt);
       command.Parameters.AddWithValue("@is_deleted", isDeleted);
       command.Parameters.AddWithValue("@has_image", hasImage);
+      command.Parameters.AddWithValue("@biography", biography);
 
       try
       {
@@ -409,11 +411,77 @@ public class ArtistsService : IArtistsService
 
         await _artistSlugsService.AddArtistSlugAsync(artistSlug);
 
+        result.ArtistId = artistId;
         result.PrimarySlug = artistSlug.Name;
+        result.IsSuccessful = true;
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex.Message);
+        result.IsSuccessful = false;
+      }
+    }
+
+    string submitterName = await _cognitoService.GetPreferredUsernameAsync(userId);
+
+    await _emailService.SendArtistSubmissionEmailAsync(submitterName, _textInfo.ToTitleCase(fullName).Trim());
+
+    return result;
+  }
+
+  public async Task<ArtistCreationResult> AddBandArtistAsync(CreateBandArtistDto viewModel)
+  {
+    ArtistCreationResult result = new ArtistCreationResult();
+    string connectionString = _databaseOptions.ConnectionString;
+    string sqlStatement =
+      "insert into artists (first_name, last_name, full_name, is_approved, user_id, created_at, is_deleted, has_image, biography) values (@first_name, @last_name, @full_name, @is_approved, @user_id, @created_at, @is_deleted, @has_image, @biography) returning id";
+    int artistId = 0;
+
+    string bandName = viewModel.BandName.ToLower();
+    string fullName = bandName;
+    bool isApproved = false;
+    DateTime createdAt = DateTime.UtcNow;
+    string userId = viewModel.UserId;
+    bool isDeleted = false;
+    bool hasImage = false;
+    string biography = string.IsNullOrWhiteSpace(viewModel.Biography) ? string.Empty : viewModel.Biography.Trim();
+
+    using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+    {
+      NpgsqlCommand command = new NpgsqlCommand(sqlStatement, connection);
+      command.Parameters.AddWithValue("@first_name", string.Empty);
+      command.Parameters.AddWithValue("@last_name", string.Empty);
+      command.Parameters.AddWithValue("@full_name", fullName);
+      command.Parameters.AddWithValue("@is_approved", isApproved);
+      command.Parameters.AddWithValue("@user_id", userId);
+      command.Parameters.AddWithValue("@created_at", createdAt);
+      command.Parameters.AddWithValue("@is_deleted", isDeleted);
+      command.Parameters.AddWithValue("@has_image", hasImage);
+      command.Parameters.AddWithValue("@biography", biography);
+
+      try
+      {
+        await connection.OpenAsync();
+
+        object artistIdentity = command.ExecuteScalar();
+        artistId = (int)artistIdentity;
+
+        ArtistSlugCreateViewModel artistSlug = new ArtistSlugCreateViewModel();
+        artistSlug.Name = fullName.NormalizeStringForUrl();
+        artistSlug.IsPrimary = true;
+        artistSlug.CreatedAt = createdAt;
+        artistSlug.ArtistId = artistId;
+
+        await _artistSlugsService.AddArtistSlugAsync(artistSlug);
+
+        result.ArtistId = artistId;
+        result.PrimarySlug = artistSlug.Name;
+        result.IsSuccessful = true;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+        result.IsSuccessful = false;
       }
     }
 
@@ -469,6 +537,30 @@ public class ArtistsService : IArtistsService
     }
 
     return result;
+  }
+
+  public async Task UpdateArtistImageStatusAsync(int artistId, bool hasImage)
+  {
+    string connectionString = _databaseOptions.ConnectionString;
+    string sqlStatement = "update artists set has_image = @has_image, modified_at = current_timestamp where id = @artist_id";
+
+    using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
+    {
+      NpgsqlCommand command = new NpgsqlCommand(sqlStatement, connection);
+      command.Parameters.AddWithValue("@has_image", hasImage);
+      command.Parameters.AddWithValue("@artist_id", artistId);
+
+      try
+      {
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+        throw;
+      }
+    }
   }
 
   private IDictionary<char, List<LibraryArtistViewModel>> BuildDictionary(List<LibraryArtistViewModel> artists)

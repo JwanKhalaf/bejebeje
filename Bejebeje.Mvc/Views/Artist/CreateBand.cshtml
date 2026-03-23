@@ -1,13 +1,13 @@
-﻿@model Bejebeje.Mvc.ViewModels.Artists.CreateIndividualArtist.CreateIndividualArtistViewModel
+﻿@model Bejebeje.Mvc.ViewModels.Artists.CreateBandArtist.CreateBandArtistViewModel
 
 @{
-  ViewData["Title"] = "Add a new artist";
-  ViewData["Description"] = "Contribute to Kurdish Music and the archiving project by submitting a new artist and their lyrics.";
+  ViewData["Title"] = "Add a new band";
+  ViewData["Description"] = "Contribute to Kurdish Music and the archiving project by submitting a new band and their lyrics.";
 }
 
 <div class="py-5 pr-4 mb-6">
   <nav class="text-neutral-200 opacity-70 uppercase text-base">
-    <a asp-controller="Artist" asp-action="Index">/ Artists</a> / New / Individual
+    <a asp-controller="Artist" asp-action="Index">/ Artists</a> / New / Band
   </nav>
 </div>
 
@@ -22,11 +22,8 @@
       <div class="rounded-md bg-red-50 p-4 mb-4">
         <div class="flex">
           <div class="shrink-0">
-            <svg class="size-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-                 data-slot="icon">
-              <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z"
-                    clip-rule="evenodd"/>
+            <svg class="size-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
             </svg>
           </div>
           <div class="ml-3">
@@ -92,27 +89,19 @@
     }
   </div>
 
-  <form asp-controller="Artist" asp-action="Create" method="post" enctype="multipart/form-data">
+  <form asp-controller="Artist" asp-action="CreateBand" method="post" enctype="multipart/form-data">
     <div class="space-y-12">
       <div class="border-b border-white/10 pb-12">
-        <h2 class="text-base/7 font-semibold text-white">Artist profile</h2>
+        <h2 class="text-base/7 font-semibold text-white">Band profile</h2>
         <p class="mt-1 text-sm/6 text-gray-400">This information will be displayed publicly so be sure to make it
           good</p>
 
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
-          <div class="sm:col-span-3">
-            <label asp-for="FirstName" class="block text-sm/6 font-medium text-white">First name</label>
+          <div class="col-span-full">
+            <label asp-for="BandName" class="block text-sm/6 font-medium text-white">Band name</label>
             <div class="mt-2">
-              <input asp-for="FirstName"
-                     class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <label asp-for="LastName" class="block text-sm/6 font-medium text-white">Last name</label>
-            <div class="mt-2">
-              <input asp-for="LastName"
+              <input asp-for="BandName"
                      class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6">
             </div>
           </div>
@@ -123,7 +112,7 @@
               <textarea asp-for="Biography" rows="3"
                         class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"></textarea>
             </div>
-            <p class="mt-3 text-sm/6 text-gray-400">Write a few sentences about the artist to introduce them to the
+            <p class="mt-3 text-sm/6 text-gray-400">Write a few sentences about the band to introduce them to the
               world.</p>
           </div>
 
@@ -149,7 +138,7 @@
             <!-- preview state: shown when a photo is selected -->
             <div id="photo-preview" class="mt-2 hidden">
               <div class="flex items-center gap-x-3">
-                <img id="photo-preview-img" src="#" alt="Artist photo preview" class="size-12 rounded-full object-cover"/>
+                <img id="photo-preview-img" src="#" alt="Band photo preview" class="size-12 rounded-full object-cover"/>
                 <button id="change-photo-btn" type="button"
                         class="cursor-pointer rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-white/20">
                   Change photo
@@ -170,7 +159,7 @@
          class="cursor-pointer text-sm/6 font-semibold text-white">Cancel</a>
       <button type="submit"
               class="cursor-pointer rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
-        Add artist
+        Add band
       </button>
     </div>
   </form>
