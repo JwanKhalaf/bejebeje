@@ -3,18 +3,18 @@
   ViewData["Description"] = "The user profile page.";
 }
 
-<div class="breadcrumb-nav">
-  <nav>
+<div class="py-5 pr-4 mb-6">
+  <nav class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Profile" asp-action="Index">/ Profile</a>
   </nav>
 </div>
 
 @await Html.PartialAsync("_SearchForm")
 
-<div class="actions">
-  <h2 class="actions__heading">Want to help?</h2>
+<div class="mb-8">
+  <h2 class="text-neutral-200 text-3xl font-semibold mb-4">Want to help?</h2>
 
-  <p class="actions__prompt">First of all, thank you! Kurds now and in the future will be thankful. Please choose an action below.</p>
+  <p class="text-neutral-300 text-base/7 mb-6">First of all, thank you! Kurds now and in the future will be thankful. Please choose an action below.</p>
 
-  <a asp-controller="Artist" asp-action="Create" class="actions__add-artist">Add a new artist</a>
+  <a asp-controller="Artist" asp-action="Create" class="inline-block text-neutral-200 font-semibold border border-neutral-600 rounded-md px-6 py-3 hover:bg-neutral-700 hover:text-red-500 transition-all duration-200 ease-in">Add a new artist</a>
 </div>
