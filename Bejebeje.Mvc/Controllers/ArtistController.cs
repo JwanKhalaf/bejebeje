@@ -387,9 +387,7 @@ public class ArtistController : Controller
   [Route("artists/new/band")]
   public IActionResult CreateBand()
   {
-    CreateBandArtistViewModel viewModel = new();
-
-    return View(viewModel);
+    return View("ComingSoon");
   }
 
   [Authorize]

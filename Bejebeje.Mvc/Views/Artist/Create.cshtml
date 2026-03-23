@@ -129,9 +129,10 @@
 
           <div class="col-span-full">
             <label asp-for="Photo" class="block text-sm/6 font-medium text-white">Photo</label>
-            <input asp-for="Photo" type="file" class="hidden" id="photo-input"/>
-            <span id="selected-file-name" class="text-sm text-gray-400 ml-2"></span>
-            <div class="mt-2 flex items-center gap-x-3">
+            <input asp-for="Photo" type="file" accept="image/*" class="hidden" id="photo-input"/>
+
+            <!-- placeholder state: shown when no photo is selected -->
+            <div id="photo-placeholder" class="mt-2 flex items-center gap-x-3">
               <svg class="size-12 text-gray-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
                    data-slot="icon">
                 <path fill-rule="evenodd"
@@ -143,6 +144,21 @@
                       class="cursor-pointer rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-white/20">
                 Select photo
               </button>
+            </div>
+
+            <!-- preview state: shown when a photo is selected -->
+            <div id="photo-preview" class="mt-2 hidden">
+              <div class="flex items-center gap-x-3">
+                <img id="photo-preview-img" src="#" alt="Artist photo preview" class="size-12 rounded-full object-cover"/>
+                <button id="change-photo-btn" type="button"
+                        class="cursor-pointer rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-white/20">
+                  Change photo
+                </button>
+                <button id="clear-photo-btn" type="button"
+                        class="cursor-pointer text-sm font-semibold text-gray-400 hover:text-red-400">
+                  Clear
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -163,17 +179,43 @@
 @section scripts {
   <script>
     const fileInput = document.getElementById('photo-input');
-    const fileNameSpan = document.getElementById('selected-file-name');
+    const placeholder = document.getElementById('photo-placeholder');
+    const preview = document.getElementById('photo-preview');
+    const previewImg = document.getElementById('photo-preview-img');
+
+    function showPreview(file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        previewImg.src = e.target.result;
+        placeholder.classList.add('hidden');
+        preview.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearPhoto() {
+      fileInput.value = '';
+      preview.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+    }
 
     document.getElementById('select-photo-btn').addEventListener('click', function () {
       fileInput.click();
     });
 
+    document.getElementById('change-photo-btn').addEventListener('click', function () {
+      fileInput.click();
+    });
+
+    document.getElementById('clear-photo-btn').addEventListener('click', function () {
+      clearPhoto();
+    });
+
     fileInput.addEventListener('change', function () {
       if (fileInput.files.length > 0) {
-        fileNameSpan.textContent = fileInput.files[0].name;
+        showPreview(fileInput.files[0]);
       } else {
-        fileNameSpan.textContent = '';
+        clearPhoto();
       }
     });
   </script>

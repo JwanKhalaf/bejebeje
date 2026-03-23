@@ -1,12 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet test:*)",
-      "Bash(dotnet build)",
-      "Bash(dotnet build:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)"
-    ],
-    "deny": []
+      "Bash(psql:*)",
+      "Bash(dotnet build:*)"
+    ]
   }
 }
