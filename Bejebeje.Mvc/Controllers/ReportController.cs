@@ -1,5 +1,6 @@
 namespace Bejebeje.Mvc.Controllers;
 
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Bejebeje.Domain;
@@ -14,13 +15,16 @@ using Services.Services.Interfaces;
 public class ReportController : Controller
 {
   private readonly ILyricReportsService _reportsService;
+  private readonly IBbPointsService _bbPointsService;
   private readonly ILogger<ReportController> _logger;
 
   public ReportController(
     ILyricReportsService reportsService,
+    IBbPointsService bbPointsService,
     ILogger<ReportController> logger)
   {
     _reportsService = reportsService;
+    _bbPointsService = bbPointsService;
     _logger = logger;
   }
 
@@ -37,14 +41,6 @@ public class ReportController : Controller
     }
 
     string userId = User.GetUserId().ToString();
-
-    int reportCount = await _reportsService.GetReportCountForUserTodayAsync(userId);
-
-    if (reportCount >= 3)
-    {
-      _logger.LogDebug("user {UserId} has reached daily report limit", userId);
-      return RedirectToAction("LimitReached", new { artistSlug, lyricSlug });
-    }
 
     bool hasPending = await _reportsService.HasPendingReportForLyricAsync(userId, viewModel.LyricId);
     viewModel.HasPendingReport = hasPending;
@@ -81,15 +77,6 @@ public class ReportController : Controller
 
     string userId = User.GetUserId().ToString();
 
-    // server-side rate limit re-check
-    int reportCount = await _reportsService.GetReportCountForUserTodayAsync(userId);
-
-    if (reportCount >= 3)
-    {
-      _logger.LogDebug("user {UserId} hit daily limit during submission", userId);
-      return RedirectToAction("LimitReached", new { artistSlug, lyricSlug });
-    }
-
     // server-side duplicate re-check
     bool hasPending = await _reportsService.HasPendingReportForLyricAsync(userId, viewModel.LyricId);
 
@@ -101,6 +88,25 @@ public class ReportController : Controller
 
     // save the report
     await _reportsService.CreateReportAsync(userId, viewModel.LyricId, formModel.Category.Value, formModel.Comment);
+
+    // award bb points for report submission
+    try
+    {
+      string cognitoUserId = User.GetCognitoUserId();
+      string username = User.GetPreferredUsername();
+
+      bool earned = await _bbPointsService.AwardSubmissionPointsAsync(
+        cognitoUserId, username, PointActionType.ReportSubmitted,
+        viewModel.LyricId, viewModel.LyricTitle, BbPointsConstants.ReportSubmitted);
+
+      TempData["BbPoints:Earned"] = earned;
+      TempData["BbPoints:Amount"] = BbPointsConstants.ReportSubmitted;
+      TempData["BbPoints:EntityType"] = "report";
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "failed to award bb points for report submission on lyric {LyricId}", viewModel.LyricId);
+    }
 
     // get category display label
     string categoryDisplayLabel = GetCategoryDisplayLabel(formModel.Category.Value);
@@ -143,27 +149,6 @@ public class ReportController : Controller
       ArtistName = artistName,
       ArtistSlug = TempData["ArtistSlug"] as string ?? artistSlug,
       LyricSlug = TempData["LyricSlug"] as string ?? lyricSlug,
-    };
-
-    return View(viewModel);
-  }
-
-  [HttpGet]
-  [Route("artists/{artistSlug}/lyrics/{lyricSlug}/report/limit-reached")]
-  public async Task<IActionResult> LimitReached(string artistSlug, string lyricSlug)
-  {
-    var lyricDetails = await _reportsService.GetLyricDetailsForReportAsync(artistSlug, lyricSlug);
-
-    if (lyricDetails == null)
-    {
-      return RedirectToAction("Index", "Home");
-    }
-
-    var viewModel = new LyricReportLimitReachedViewModel
-    {
-      LyricTitle = lyricDetails.LyricTitle,
-      ArtistSlug = artistSlug,
-      LyricSlug = lyricSlug,
     };
 
     return View(viewModel);

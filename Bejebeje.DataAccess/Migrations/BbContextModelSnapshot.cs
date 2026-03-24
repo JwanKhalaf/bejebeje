@@ -389,6 +389,120 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("lyric_slugs", (string)null);
                 });
 
+            modelBuilder.Entity("Bejebeje.Domain.PointEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionType")
+                        .HasColumnType("integer")
+                        .HasColumnName("action_type");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("integer")
+                        .HasColumnName("entity_id");
+
+                    b.Property<string>("EntityName")
+                        .HasColumnType("text")
+                        .HasColumnName("entity_name");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("integer")
+                        .HasColumnName("points");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_point_events");
+
+                    b.HasIndex("UserId", "CreatedAt")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_point_events_user_id_created_at");
+
+                    b.HasIndex("UserId", "ActionType", "EntityId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_point_events_user_id_action_type_entity_id");
+
+                    b.ToTable("point_events", (string)null);
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArtistApprovalPoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("artist_approval_points");
+
+                    b.Property<int>("ArtistSubmissionPoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("artist_submission_points");
+
+                    b.Property<string>("CognitoUserId")
+                        .HasColumnType("text")
+                        .HasColumnName("cognito_user_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("LastSeenPoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("last_seen_points");
+
+                    b.Property<int>("LyricApprovalPoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("lyric_approval_points");
+
+                    b.Property<int>("LyricSubmissionPoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("lyric_submission_points");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("modified_at");
+
+                    b.Property<int>("ReportAcknowledgementPoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("report_acknowledgement_points");
+
+                    b.Property<int>("ReportSubmissionPoints")
+                        .HasColumnType("integer")
+                        .HasColumnName("report_submission_points");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("text")
+                        .HasColumnName("username");
+
+                    b.HasKey("Id")
+                        .HasName("pk_users");
+
+                    b.HasIndex("CognitoUserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_cognito_user_id");
+
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_username");
+
+                    b.ToTable("users", (string)null);
+                });
+
             modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
                 {
                     b.HasOne("Bejebeje.Domain.Artist", null)
@@ -436,6 +550,18 @@ namespace Bejebeje.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_lyric_slugs_lyrics_lyric_id");
+                });
+
+            modelBuilder.Entity("Bejebeje.Domain.PointEvent", b =>
+                {
+                    b.HasOne("Bejebeje.Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_point_events_users_user_id");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Bejebeje.Domain.Artist", b =>

@@ -35,6 +35,7 @@
 <main
   class="pl-4 lg:pl-0 bg-neutral-800 lg:bg-transparent rounded-b-lg col-start-1 col-end-3 row-end-2 overflow-y-scroll lg:col-start-2 lg:row-start-1 lg:row-end-3 lg:grid lg:grid-rows-[auto_120px]">
   <div class="lg:bg-neutral-800 lg:pl-8 lg:rounded-bl-lg lg:row-start-1 lg:row-end-2">
+    @await Html.PartialAsync("_PointsNotification")
     @RenderBody()
   </div>
 
@@ -84,8 +85,8 @@
     <li>
       <a asp-controller="Home" asp-action="Index"
          class="flex flex-col justify-between items-center text-xs lg:text-sm gap-1.5">
-        <svg viewBox="0 0 576 576" class="size-5 lg:size-8 text-neutral-800" fill="currentColor">
-          <path d="M310.7 98.1C297.5 87.4 278.5 87.4 265.3 98.1L121.3 215.1C112.9 221.9 108 232.2 108 243L108 450C108 469.9 124.1 486 144 486L180 486C199.9 486 216 469.9 216 450L216 378C216 338.2 248.2 306 288 306C327.8 306 360 338.2 360 378L360 450C360 469.9 376.1 486 396 486L432 486C451.9 486 468 469.9 468 450L468 243C468 232.2 463.1 221.9 454.7 215.1L310.7 98.1zM242.6 70.1C269.1 48.6 307 48.6 333.4 70.1L477.4 187.1C494.2 200.8 504 221.3 504 243L504 450C504 489.8 471.8 522 432 522L396 522C356.2 522 324 489.8 324 450L324 378C324 358.1 307.9 342 288 342C268.1 342 252 358.1 252 378L252 450C252 489.8 219.8 522 180 522L144 522C104.2 522 72 489.8 72 450L72 243C72 221.3 81.8 200.8 98.6 187.1L242.6 70.1z"/>
+        <svg viewBox="0 0 640 640" class="size-5 lg:size-8 text-neutral-800" fill="currentColor">
+          <path d="M336 70.1C326.9 61.9 313.1 61.9 304 70.1L72 278.1C62.1 286.9 61.3 302.1 70.2 312C79.1 321.9 94.2 322.7 104.1 313.8L112.1 306.6L112.1 511.9C112.1 547.2 140.8 575.9 176.1 575.9L464.1 575.9C499.4 575.9 528.1 547.2 528.1 511.9L528.1 306.6L536.1 313.8C546 322.6 561.1 321.8 570 312C578.9 302.2 578 287 568.2 278.1L336 70.1zM480 263.7L480 512C480 520.8 472.8 528 464 528L176 528C167.2 528 160 520.8 160 512L160 263.7L320 120.2L480 263.7z"/>
         </svg>
         Home
       </a>
@@ -99,6 +100,8 @@
         Add
       </a>
     </li>
+
+    @await Component.InvokeAsync("BbPointsNav")
 
     <li>
       <a asp-controller="Profile" asp-action="Index"

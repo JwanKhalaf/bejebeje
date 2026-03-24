@@ -14,6 +14,7 @@ Bejebeje is a community driven archive of Kurdish lyrics. It is a website where 
 6. They can add new artists (all new submissions require approval by the site admins)
 7. They can add new lyrics to existing artists (again, this requires approval by the site admins)
 8. They can also see who the lyrics were written by (often a poet), these are known as 'Authors' in Bejebeje
+9. They can report a lyric (e.g. for errors, wrong attribution) — reports are reviewed by admins and can be Acknowledged or Dismissed
 
 ## Common Development Commands
 

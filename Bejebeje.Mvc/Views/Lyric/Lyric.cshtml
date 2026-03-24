@@ -1,4 +1,5 @@
-﻿@model Bejebeje.Models.Lyric.LyricDetailsViewModel
+﻿@using Humanizer
+@model Bejebeje.Models.Lyric.LyricDetailsViewModel
 
 @{
   ViewData["Title"] = $"{Model.Artist.FullName} - {Model.Title} lyrics";
@@ -47,7 +48,17 @@
 
     <div>
       <div class="flex gap-2 items-center">
-        <p class="font-open-sans text-neutral-200 text-sm"><span class="opacity-70">By:</span> @Model.SubmitterUsername
+        <p class="font-open-sans text-neutral-200 text-sm">
+          <span class="opacity-70">By:</span>
+          @if (!string.IsNullOrEmpty(Model.SubmitterProfileUrl))
+          {
+            <a href="@Model.SubmitterProfileUrl" class="text-amber-400 hover:text-amber-300 transition-colors">@Model.SubmitterUsername</a>
+            <span class="text-neutral-500 text-xs ml-1">@(((double)Model.SubmitterPoints).ToMetric(decimals: 1)) BB · @Model.SubmitterLabel</span>
+          }
+          else
+          {
+            @Model.SubmitterUsername
+          }
         </p>
       </div>
     </div>

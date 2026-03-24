@@ -191,6 +191,7 @@ public class LyricsService : ILyricsService
       viewModel.CreatedAt = lyricCreatedAt;
       viewModel.ModifiedAt = lyricModifiedAt;
       viewModel.IsApproved = isApproved;
+      viewModel.SubmitterUserId = submitterUserId;
       viewModel.SubmitterUsername = await _cognitoService.GetPreferredUsernameAsync(submitterUserId);
       viewModel.Author.Id = authorId;
       viewModel.Author.FullName = authorFullName;

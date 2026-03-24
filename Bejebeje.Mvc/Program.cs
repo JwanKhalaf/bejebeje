@@ -6,6 +6,8 @@ using Amazon.SimpleEmailV2;
 using Bejebeje.DataAccess.Context;
 using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
+using Bejebeje.Mvc.Auth;
+using Bejebeje.Services.Services.Interfaces;
 using Bejebeje.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -16,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
@@ -42,6 +45,8 @@ builder.Services.AddAWSService<IAmazonS3>();
 
 builder.Services.Configure<DatabaseOptions>(builder.Configuration);
 
+builder.Services.Configure<BbPointsOptions>(builder.Configuration.GetSection("BbPoints"));
+
 builder.WebHost.UseSentry();
 
 builder.Services.AddDbContext<BbContext>(options => options
@@ -66,6 +71,8 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 
 builder.Services.AddScoped<ILyricReportsService, LyricReportsService>();
 
+builder.Services.AddScoped<IBbPointsService, BbPointsService>();
+
 builder.Services.AddAuthentication(options =>
     {
       options.DefaultScheme = "Cookies";
@@ -84,8 +91,21 @@ builder.Services.AddAuthentication(options =>
       options.Scope.Clear();
       options.Scope.Add("openid");
       options.Scope.Add("email");
+      options.Scope.Add("profile");
       options.ClaimActions.MapUniqueJsonKey("role", "role");
       options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = "cognito:user", RoleClaimType = "cognito:groups" };
+      options.Events = new OpenIdConnectEvents
+      {
+        OnTokenValidated = async context =>
+        {
+          var handler = new OnTokenValidatedHandler(
+            context.HttpContext.RequestServices.GetRequiredService<IBbPointsService>(),
+            context.HttpContext.RequestServices.GetRequiredService<ICognitoService>(),
+            context.HttpContext.RequestServices.GetRequiredService<ILogger<OnTokenValidatedHandler>>());
+
+          await handler.HandleAsync(context.Principal);
+        },
+      };
     });
 
 builder.Services.AddControllersWithViews();
@@ -114,7 +134,11 @@ if (!app.Environment.IsDevelopment())
 {
   Console.WriteLine("We are in a Production environment!!!");
 
-  app.UseExceptionHandler("/Error");
+  // handle unhandled exceptions with a friendly error page
+  app.UseExceptionHandler("/server-error");
+
+  // handle http status codes (404, etc.) with friendly pages
+  app.UseStatusCodePagesWithReExecute("/status/{0}");
 
   // the default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
   app.UseHsts();
@@ -122,6 +146,12 @@ if (!app.Environment.IsDevelopment())
 else
 {
   Console.WriteLine("We are in Development environment!!!");
+
+  // handle unhandled exceptions with a friendly error page
+  app.UseExceptionHandler("/server-error");
+
+  // handle http status codes (404, etc.) with friendly pages
+  app.UseStatusCodePagesWithReExecute("/status/{0}");
 }
 
 app.UseHttpsRedirection();
