@@ -7,6 +7,7 @@ using Bejebeje.DataAccess.Context;
 using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
 using Bejebeje.Services.Services.Interfaces;
+using Bejebeje.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +43,8 @@ builder.Services.AddAWSService<IAmazonS3>();
 
 builder.Services.Configure<DatabaseOptions>(builder.Configuration);
 
+builder.Services.Configure<BbPointsOptions>(builder.Configuration.GetSection("BbPoints"));
+
 builder.WebHost.UseSentry();
 
 builder.Services.AddDbContext<BbContext>(options => options
@@ -65,6 +68,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 
 builder.Services.AddScoped<ILyricReportsService, LyricReportsService>();
+
+builder.Services.AddScoped<IBbPointsService, BbPointsService>();
 
 builder.Services.AddAuthentication(options =>
     {

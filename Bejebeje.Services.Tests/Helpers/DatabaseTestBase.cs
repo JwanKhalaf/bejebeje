@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Services.Tests.Helpers
 {
   using System;
-  using DataAccess.Context;
+  using Bejebeje.DataAccess.Context;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.EntityFrameworkCore.Diagnostics;
   using Microsoft.Extensions.DependencyInjection;
