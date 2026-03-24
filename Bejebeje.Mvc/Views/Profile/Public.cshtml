@@ -1,3 +1,4 @@
+@using Humanizer
 @model Bejebeje.Models.BbPoints.PublicProfileViewModel
 
 @{
@@ -22,7 +23,7 @@
 <div class="mb-8">
   <div class="flex gap-8 items-center">
     <div class="text-center">
-      <p class="text-amber-400 text-3xl font-semibold">@Model.TotalPoints</p>
+      <p class="text-amber-400 text-3xl font-semibold">@(((double)Model.TotalPoints).ToMetric(decimals: 1))</p>
       <p class="text-neutral-400 text-xs uppercase mt-1">BB Points</p>
     </div>
 

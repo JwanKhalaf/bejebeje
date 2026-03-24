@@ -1,3 +1,4 @@
+@using Humanizer
 @model Bejebeje.Models.BbPoints.NavBarPointsViewModel
 
 <li>
@@ -12,6 +13,6 @@
         <span class="absolute -top-1 -right-1 size-2.5 rounded-full bg-amber-400"></span>
       }
     </span>
-    @Model.TotalPoints
+    @(((double)Model.TotalPoints).ToMetric(decimals: 1))
   </a>
 </li>

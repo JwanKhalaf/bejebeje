@@ -1,3 +1,4 @@
+@using Humanizer
 @model Bejebeje.Models.BbPoints.OwnProfileViewModel
 
 @{
@@ -66,7 +67,7 @@
         </tr>
         <tr class="border-t-2 border-neutral-500">
           <td class="text-neutral-200 font-semibold py-2 pr-4">Total</td>
-          <td class="text-amber-400 font-semibold py-2 text-right">@Model.TotalPoints</td>
+          <td class="text-amber-400 font-semibold py-2 text-right">@(((double)Model.TotalPoints).ToMetric(decimals: 1))</td>
         </tr>
       </tbody>
     </table>
