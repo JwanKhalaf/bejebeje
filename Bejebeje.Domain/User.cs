@@ -10,6 +10,8 @@ namespace Bejebeje.Domain
 
     public string Username { get; set; }
 
+    public string Slug { get; set; }
+
     public int ArtistSubmissionPoints { get; set; }
 
     public int ArtistApprovalPoints { get; set; }

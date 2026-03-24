@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Bejebeje.Common.Extensions;
 using Bejebeje.DataAccess.Context;
 using Bejebeje.Domain;
 using Bejebeje.Models.BbPoints;
@@ -40,16 +41,34 @@ public class BbPointsService : IBbPointsService
   {
     _logger.LogDebug("ensuring user exists for cognito id {CognitoUserId}", cognitoUserId);
 
+    var trimmedUsername = username.Trim();
+
     var user = await _context.Users.FirstOrDefaultAsync(u => u.CognitoUserId == cognitoUserId);
 
     if (user == null)
     {
-      _logger.LogInformation("creating new user record for cognito id {CognitoUserId} with username {Username}", cognitoUserId, username);
+      // check for duplicate trimmed username before creating
+      bool duplicateExists = await _context.Users
+        .AnyAsync(u => u.Username == trimmedUsername && u.CognitoUserId != cognitoUserId);
+
+      if (duplicateExists)
+      {
+        _logger.LogWarning(
+          "duplicate username detected on new user creation: trimmed username {Username} already exists for a different user. cognito id {CognitoUserId}",
+          trimmedUsername, cognitoUserId);
+        return null;
+      }
+
+      var slug = await GenerateUniqueSlugAsync(trimmedUsername, cognitoUserId, currentUserId: null);
+
+      _logger.LogDebug("generated slug {Slug} for new user {CognitoUserId}", slug, cognitoUserId);
+      _logger.LogInformation("creating new user record for cognito id {CognitoUserId} with username {Username}", cognitoUserId, trimmedUsername);
 
       user = new User
       {
         CognitoUserId = cognitoUserId,
-        Username = username,
+        Username = trimmedUsername,
+        Slug = slug,
         CreatedAt = DateTime.UtcNow,
       };
 
@@ -59,16 +78,55 @@ public class BbPointsService : IBbPointsService
       return user;
     }
 
-    if (user.Username != username)
+    if (user.Username != trimmedUsername)
     {
-      _logger.LogInformation("updating username for cognito id {CognitoUserId} from {OldUsername} to {NewUsername}", cognitoUserId, user.Username, username);
+      // check for duplicate trimmed username before updating
+      bool duplicateExists = await _context.Users
+        .AnyAsync(u => u.Username == trimmedUsername && u.CognitoUserId != cognitoUserId);
 
-      user.Username = username;
+      if (duplicateExists)
+      {
+        _logger.LogWarning(
+          "duplicate username detected on username change: trimmed username {Username} already exists for a different user. cognito id {CognitoUserId}",
+          trimmedUsername, cognitoUserId);
+        return user;
+      }
+
+      var slug = await GenerateUniqueSlugAsync(trimmedUsername, cognitoUserId, currentUserId: user.Id);
+
+      _logger.LogInformation(
+        "updating username for cognito id {CognitoUserId} from {OldUsername} to {NewUsername}, slug changed to {Slug}",
+        cognitoUserId, user.Username, trimmedUsername, slug);
+
+      user.Username = trimmedUsername;
+      user.Slug = slug;
       user.ModifiedAt = DateTime.UtcNow;
       await _context.SaveChangesAsync();
     }
 
     return user;
+  }
+
+  private async Task<string> GenerateUniqueSlugAsync(string trimmedUsername, string cognitoUserId, int? currentUserId)
+  {
+    var baseSlug = trimmedUsername.NormalizeStringForUrl();
+
+    if (string.IsNullOrEmpty(baseSlug))
+    {
+      baseSlug = $"user-{cognitoUserId[..Math.Min(8, cognitoUserId.Length)]}";
+      _logger.LogWarning("empty slug fallback triggered for cognito id {CognitoUserId}, using {BaseSlug}", cognitoUserId, baseSlug);
+    }
+
+    var candidateSlug = baseSlug;
+    int suffix = 2;
+
+    while (await _context.Users.AnyAsync(u => u.Slug == candidateSlug && u.Id != (currentUserId ?? 0)))
+    {
+      candidateSlug = $"{baseSlug}-{suffix}";
+      suffix++;
+    }
+
+    return candidateSlug;
   }
 
   public async Task<int> GetDailySubmissionCountAsync(string cognitoUserId, PointActionType actionType)
@@ -259,15 +317,15 @@ public class BbPointsService : IBbPointsService
     };
   }
 
-  public async Task<PublicProfileViewModel> GetPublicProfileDataAsync(string username)
+  public async Task<PublicProfileViewModel> GetPublicProfileDataAsync(string slug)
   {
-    _logger.LogDebug("fetching public profile data for username {Username}", username);
+    _logger.LogDebug("fetching public profile data for slug {Slug}", slug);
 
-    var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Slug == slug);
 
     if (user == null)
     {
-      _logger.LogDebug("no user found for username {Username}", username);
+      _logger.LogDebug("no user found for slug {Slug}", slug);
       return null;
     }
 
@@ -283,6 +341,7 @@ public class BbPointsService : IBbPointsService
     return new PublicProfileViewModel
     {
       Username = user.Username,
+      CognitoUserId = user.CognitoUserId,
       TotalPoints = totalPoints,
       ContributorLabel = BbPointsConstants.GetContributorLabel(totalPoints),
       ArtistsSubmittedCount = artistsSubmittedCount,
@@ -306,6 +365,7 @@ public class BbPointsService : IBbPointsService
         TotalPoints = totalPoints,
         ContributorLabel = BbPointsConstants.GetContributorLabel(totalPoints),
         Username = user.Username,
+        Slug = user.Slug,
       };
     }
 
@@ -328,6 +388,7 @@ public class BbPointsService : IBbPointsService
       TotalPoints = 0,
       ContributorLabel = BbPointsConstants.GetContributorLabel(0),
       Username = resolvedUsername,
+      Slug = null,
     };
   }
 

@@ -41,5 +41,12 @@ namespace Bejebeje.Mvc.Tests.Models
       var vm = new PublicProfileViewModel { LyricsSubmittedCount = 15 };
       vm.LyricsSubmittedCount.Should().Be(15);
     }
+
+    [Test]
+    public void should_have_cognito_user_id_property()
+    {
+      var vm = new PublicProfileViewModel { CognitoUserId = "abc-123" };
+      vm.CognitoUserId.Should().Be("abc-123");
+    }
   }
 }

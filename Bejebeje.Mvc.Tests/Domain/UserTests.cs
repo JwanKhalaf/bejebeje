@@ -100,5 +100,12 @@ namespace Bejebeje.Mvc.Tests.Domain
       var user = new User { ModifiedAt = now };
       user.ModifiedAt.Should().Be(now);
     }
+
+    [Test]
+    public void should_have_slug_property()
+    {
+      var user = new User { Slug = "ali-fm" };
+      user.Slug.Should().Be("ali-fm");
+    }
   }
 }

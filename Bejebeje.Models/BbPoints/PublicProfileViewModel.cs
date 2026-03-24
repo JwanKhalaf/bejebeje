@@ -4,6 +4,8 @@ namespace Bejebeje.Models.BbPoints
   {
     public string Username { get; set; }
 
+    public string CognitoUserId { get; set; }
+
     public int TotalPoints { get; set; }
 
     public string ContributorLabel { get; set; }

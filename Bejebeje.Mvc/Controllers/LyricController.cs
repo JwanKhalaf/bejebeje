@@ -68,7 +68,9 @@ public class LyricController : Controller
         var submitterPoints = await _bbPointsService.GetSubmitterPointsAsync(viewModel.SubmitterUserId);
         viewModel.SubmitterPoints = submitterPoints.TotalPoints;
         viewModel.SubmitterLabel = submitterPoints.ContributorLabel;
-        viewModel.SubmitterProfileUrl = $"/profile/{submitterPoints.Username}";
+        viewModel.SubmitterProfileUrl = !string.IsNullOrEmpty(submitterPoints.Slug)
+          ? $"/profile/{submitterPoints.Slug}"
+          : null;
 
         // use the resolved username from the points service if it's more reliable
         if (!string.IsNullOrEmpty(submitterPoints.Username))

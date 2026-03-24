@@ -324,6 +324,7 @@ namespace Bejebeje.Services.Tests.Services
       {
         CognitoUserId = "user-1",
         Username = "contributor1",
+        Slug = "contributor1",
         ArtistSubmissionPoints = 50,
         LyricSubmissionPoints = 25,
         CreatedAt = DateTime.UtcNow,
@@ -352,7 +353,7 @@ namespace Bejebeje.Services.Tests.Services
     }
 
     [Test]
-    public async Task should_return_null_for_unknown_username()
+    public async Task should_return_null_for_unknown_slug()
     {
       // act
       var result = await _service.GetPublicProfileDataAsync("nonexistent");
@@ -369,6 +370,7 @@ namespace Bejebeje.Services.Tests.Services
       {
         CognitoUserId = "user-1",
         Username = "testuser",
+        Slug = "testuser",
         CreatedAt = DateTime.UtcNow,
       });
 
@@ -382,6 +384,39 @@ namespace Bejebeje.Services.Tests.Services
 
       // assert
       result.ArtistsSubmittedCount.Should().Be(2); // includes pending
+    }
+
+    [Test]
+    public async Task should_query_by_slug_and_return_cognito_user_id()
+    {
+      // arrange
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "abc-123",
+        Username = "ali fm",
+        Slug = "ali-fm",
+        ArtistSubmissionPoints = 10,
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act — query by slug, not username
+      var result = await _service.GetPublicProfileDataAsync("ali-fm");
+
+      // assert
+      result.Should().NotBeNull();
+      result.Username.Should().Be("ali fm");
+      result.CognitoUserId.Should().Be("abc-123");
+    }
+
+    [Test]
+    public async Task should_return_null_when_no_user_matches_slug()
+    {
+      // act
+      var result = await _service.GetPublicProfileDataAsync("no-such-slug");
+
+      // assert
+      result.Should().BeNull();
     }
   }
 
@@ -424,6 +459,7 @@ namespace Bejebeje.Services.Tests.Services
       {
         CognitoUserId = "user-1",
         Username = "songwriter",
+        Slug = "songwriter",
         ArtistSubmissionPoints = 10,
         LyricApprovalPoints = 200,
         CreatedAt = DateTime.UtcNow,
@@ -437,6 +473,41 @@ namespace Bejebeje.Services.Tests.Services
       result.TotalPoints.Should().Be(210);
       result.ContributorLabel.Should().Be("Regular Contributor");
       result.Username.Should().Be("songwriter");
+    }
+
+    [Test]
+    public async Task should_return_slug_from_user_record()
+    {
+      // arrange
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-1",
+        Username = "ali fm",
+        Slug = "ali-fm",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act
+      var result = await _service.GetSubmitterPointsAsync("user-1");
+
+      // assert
+      result.Slug.Should().Be("ali-fm");
+    }
+
+    [Test]
+    public async Task should_return_null_slug_in_fallback_path()
+    {
+      // arrange
+      _cognitoServiceMock
+        .Setup(x => x.GetPreferredUsernameAsync("old-user-789"))
+        .ReturnsAsync("resolveduser");
+
+      // act
+      var result = await _service.GetSubmitterPointsAsync("old-user-789");
+
+      // assert
+      result.Slug.Should().BeNull();
     }
 
     [Test]

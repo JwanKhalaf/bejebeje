@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
+using Bejebeje.Common.Extensions;
 using Npgsql;
 
 // resolve connection string from args or environment variable
@@ -222,10 +223,10 @@ try
       int lastSeenPoints = totalPoints;
 
       await using (var cmd = new NpgsqlCommand(@"
-        insert into users (cognito_user_id, username, artist_submission_points, artist_approval_points,
+        insert into users (cognito_user_id, username, slug, artist_submission_points, artist_approval_points,
           lyric_submission_points, lyric_approval_points, report_submission_points, report_acknowledgement_points,
           last_seen_points, created_at)
-        values (@cognito_user_id, @username, @asp, @aap, @lsp, @lap, @rsp, @rap, @lsp_total, @created_at)
+        values (@cognito_user_id, @username, null, @asp, @aap, @lsp, @lap, @rsp, @rap, @lsp_total, @created_at)
         on conflict (cognito_user_id) do update set
           username = @username,
           artist_submission_points = @asp,
@@ -265,10 +266,10 @@ try
     }
   }
 
-  // task 16.7: final summary
+  // task 16.7: phase 1 summary
   Console.WriteLine();
   Console.WriteLine("==========================================");
-  Console.WriteLine("retroactive calculation complete");
+  Console.WriteLine("phase 1: retroactive calculation complete");
   Console.WriteLine($"  users processed: {usersProcessed}");
   Console.WriteLine($"  total points awarded: {totalPointsAwarded}");
   Console.WriteLine($"  errors: {errors}");
@@ -277,10 +278,157 @@ try
 
   if (errors > 0)
   {
-    Console.Error.WriteLine($"warning: {errors} errors occurred during processing");
+    Console.Error.WriteLine($"warning: {errors} errors occurred during phase 1 processing");
   }
 
-  return errors > 0 ? 1 : 0;
+  // phase 2: slug generation and username trimming sweep
+  Console.WriteLine();
+  Console.WriteLine("==========================================");
+  Console.WriteLine("phase 2: slug generation and username trimming");
+  Console.WriteLine("==========================================");
+
+  int phase2Processed = 0;
+  int slugsGenerated = 0;
+  int usernamesTrimmed = 0;
+  int trimCollisionsSkipped = 0;
+  int phase2Errors = 0;
+
+  // collect all assigned slugs during this run for collision detection
+  Dictionary<string, int> assignedSlugs = new();
+  var allUsers = new List<(int Id, string CognitoUserId, string Username, string? Slug)>();
+
+  await using (var queryCmd = new NpgsqlCommand(
+    "select id, cognito_user_id, username, slug from users order by id asc;",
+    connection))
+  {
+    await using var reader = await queryCmd.ExecuteReaderAsync();
+    while (await reader.ReadAsync())
+    {
+      allUsers.Add((
+        reader.GetInt32(0),
+        reader.GetString(1),
+        reader.GetString(2),
+        reader.IsDBNull(3) ? null : reader.GetString(3)
+      ));
+    }
+  }
+
+  Console.WriteLine($"found {allUsers.Count} users to process");
+
+  foreach (var (id, cognitoUserId, currentUsername, currentSlug) in allUsers)
+  {
+    try
+    {
+      string workingUsername = currentUsername;
+
+      // step 2a: attempt username trimming
+      string trimmed = currentUsername.Trim();
+      bool wasTrimmed = false;
+
+      if (trimmed != currentUsername)
+      {
+        // check if trimmed value collides with another user's username
+        await using var trimCheckCmd = new NpgsqlCommand(
+          "select count(*) from users where username = @trimmed and id != @id;",
+          connection);
+        trimCheckCmd.Parameters.AddWithValue("@trimmed", trimmed);
+        trimCheckCmd.Parameters.AddWithValue("@id", id);
+
+        long collisionCount = (long)await trimCheckCmd.ExecuteScalarAsync()!;
+
+        if (collisionCount > 0)
+        {
+          trimCollisionsSkipped++;
+          Console.WriteLine($"  [{phase2Processed + 1}/{allUsers.Count}] skipping trim for user {id} ({cognitoUserId[..Math.Min(8, cognitoUserId.Length)]}...): \"{currentUsername}\" -> \"{trimmed}\" collides with existing username");
+        }
+        else
+        {
+          workingUsername = trimmed;
+          wasTrimmed = true;
+          usernamesTrimmed++;
+        }
+      }
+
+      // step 2b: generate slug
+      string baseSlug = workingUsername.NormalizeStringForUrl();
+
+      if (string.IsNullOrEmpty(baseSlug))
+      {
+        baseSlug = $"user-{cognitoUserId[..Math.Min(8, cognitoUserId.Length)]}";
+        Console.WriteLine($"  empty slug fallback for user {id}: using {baseSlug}");
+      }
+
+      // collision resolution against both database and already-assigned slugs in this run
+      string candidateSlug = baseSlug;
+      int suffix = 2;
+
+      while (true)
+      {
+        // check if another user (not this one) already holds this slug in the assigned map
+        if (assignedSlugs.TryGetValue(candidateSlug, out int holderId) && holderId != id)
+        {
+          candidateSlug = $"{baseSlug}-{suffix}";
+          suffix++;
+          continue;
+        }
+
+        // also check the database for slugs assigned in previous runs
+        await using var slugCheckCmd = new NpgsqlCommand(
+          "select count(*) from users where slug = @slug and id != @id;",
+          connection);
+        slugCheckCmd.Parameters.AddWithValue("@slug", candidateSlug);
+        slugCheckCmd.Parameters.AddWithValue("@id", id);
+
+        long slugCollisionCount = (long)await slugCheckCmd.ExecuteScalarAsync()!;
+
+        if (slugCollisionCount == 0)
+        {
+          break;
+        }
+
+        candidateSlug = $"{baseSlug}-{suffix}";
+        suffix++;
+      }
+
+      // step 2c: update user record
+      await using var updateCmd = new NpgsqlCommand(
+        "update users set slug = @slug, username = @username where id = @id;",
+        connection);
+      updateCmd.Parameters.AddWithValue("@slug", candidateSlug);
+      updateCmd.Parameters.AddWithValue("@username", workingUsername);
+      updateCmd.Parameters.AddWithValue("@id", id);
+
+      await updateCmd.ExecuteNonQueryAsync();
+
+      assignedSlugs[candidateSlug] = id;
+      slugsGenerated++;
+      phase2Processed++;
+
+      string trimIndicator = wasTrimmed ? " (trimmed)" : "";
+      Console.WriteLine($"  [{phase2Processed}/{allUsers.Count}] user {id} ({cognitoUserId[..Math.Min(8, cognitoUserId.Length)]}...): \"{workingUsername}\"{trimIndicator} -> slug \"{candidateSlug}\"");
+    }
+    catch (Exception ex)
+    {
+      phase2Errors++;
+      phase2Processed++;
+      Console.Error.WriteLine($"  error processing user {id} ({cognitoUserId}): {ex.Message}");
+    }
+  }
+
+  // phase 2 summary
+  Console.WriteLine();
+  Console.WriteLine("==========================================");
+  Console.WriteLine("phase 2: slug generation complete");
+  Console.WriteLine($"  users processed: {phase2Processed}");
+  Console.WriteLine($"  slugs generated: {slugsGenerated}");
+  Console.WriteLine($"  usernames trimmed: {usernamesTrimmed}");
+  Console.WriteLine($"  trim collisions skipped: {trimCollisionsSkipped}");
+  Console.WriteLine($"  errors: {phase2Errors}");
+  Console.WriteLine($"  completed at: {DateTime.UtcNow:O}");
+
+  int totalErrors = errors + phase2Errors;
+
+  return totalErrors > 0 ? 1 : 0;
 }
 catch (Exception ex)
 {
