@@ -1,0 +1,37 @@
+@{
+  Layout = "_ErrorLayout";
+  ViewData["Title"] = "Something went wrong";
+}
+
+<main class="grid min-h-full place-items-center px-6 py-24">
+  <div class="flex flex-col items-center text-center">
+    <p class="text-base font-semibold text-amber-400">500</p>
+    <h1 class="mt-4 text-5xl font-semibold tracking-tight text-neutral-200">
+      Something went wrong
+    </h1>
+
+    <p class="mt-6 text-lg text-neutral-400">
+      We've been notified and are looking into it. Please try again in a moment.
+    </p>
+
+    <div class="mt-10 flex items-center justify-center gap-x-6">
+      <button type="button"
+              onclick="location.reload()"
+              class="rounded-md bg-amber-500 px-4 py-2.5 text-sm font-semibold text-neutral-900 hover:bg-amber-400 transition-colors cursor-pointer">
+        Try again
+      </button>
+
+      <a href="/"
+         class="text-sm font-semibold text-neutral-200 hover:text-amber-400 transition-colors">
+        Go home <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+
+    @if (ViewData["RequestId"] != null)
+    {
+      <p class="mt-10 text-sm text-neutral-600">
+        Reference: @ViewData["RequestId"]
+      </p>
+    }
+  </div>
+</main>

@@ -134,7 +134,11 @@ if (!app.Environment.IsDevelopment())
 {
   Console.WriteLine("We are in a Production environment!!!");
 
-  app.UseExceptionHandler("/Error");
+  // handle unhandled exceptions with a friendly error page
+  app.UseExceptionHandler("/server-error");
+
+  // handle http status codes (404, etc.) with friendly pages
+  app.UseStatusCodePagesWithReExecute("/status/{0}");
 
   // the default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
   app.UseHsts();
@@ -142,6 +146,12 @@ if (!app.Environment.IsDevelopment())
 else
 {
   Console.WriteLine("We are in Development environment!!!");
+
+  // handle unhandled exceptions with a friendly error page
+  app.UseExceptionHandler("/server-error");
+
+  // handle http status codes (404, etc.) with friendly pages
+  app.UseStatusCodePagesWithReExecute("/status/{0}");
 }
 
 app.UseHttpsRedirection();

@@ -21,6 +21,7 @@ public class ProfileController : Controller
   }
 
   [Authorize]
+  [Route("profile")]
   public async Task<IActionResult> Index()
   {
     string cognitoUserId = User.GetCognitoUserId();
