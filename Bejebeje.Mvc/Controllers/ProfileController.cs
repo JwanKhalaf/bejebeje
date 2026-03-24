@@ -33,28 +33,28 @@ public class ProfileController : Controller
     return View(model);
   }
 
-  [Route("profile/{username}")]
-  public async Task<IActionResult> Public(string username)
+  [Route("profile/{slug}")]
+  public async Task<IActionResult> Public(string slug)
   {
-    // if the authenticated user is viewing their own public profile url, redirect to own profile
-    if (User.Identity?.IsAuthenticated == true)
-    {
-      string preferredUsername = User.GetPreferredUsername();
+    _logger.LogDebug("loading public profile for slug {Slug}", slug);
 
-      if (!string.IsNullOrEmpty(preferredUsername) &&
-          string.Equals(preferredUsername, username, System.StringComparison.OrdinalIgnoreCase))
-      {
-        return RedirectToAction("Index");
-      }
-    }
-
-    _logger.LogDebug("loading public profile for username {Username}", username);
-
-    var model = await _bbPointsService.GetPublicProfileDataAsync(username);
+    var model = await _bbPointsService.GetPublicProfileDataAsync(slug);
 
     if (model == null)
     {
       return NotFound();
+    }
+
+    // if the authenticated user is viewing their own public profile url, redirect to own profile
+    if (User.Identity?.IsAuthenticated == true)
+    {
+      string cognitoUserId = User.GetCognitoUserId();
+
+      if (!string.IsNullOrEmpty(cognitoUserId) &&
+          string.Equals(model.CognitoUserId, cognitoUserId, System.StringComparison.Ordinal))
+      {
+        return RedirectToAction("Index");
+      }
     }
 
     return View(model);

@@ -55,6 +55,10 @@
         entity.HasIndex(e => e.Username)
           .IsUnique()
           .HasDatabaseName("ix_users_username");
+
+        entity.HasIndex(e => e.Slug)
+          .IsUnique()
+          .HasDatabaseName("ix_users_slug");
       });
 
       builder.Entity<PointEvent>(entity =>

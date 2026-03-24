@@ -27,5 +27,19 @@ namespace Bejebeje.Mvc.Tests.Models
       var vm = new SubmitterPointsViewModel { Username = "songwriter" };
       vm.Username.Should().Be("songwriter");
     }
+
+    [Test]
+    public void should_have_slug_property()
+    {
+      var vm = new SubmitterPointsViewModel { Slug = "songwriter" };
+      vm.Slug.Should().Be("songwriter");
+    }
+
+    [Test]
+    public void should_have_slug_default_to_null()
+    {
+      var vm = new SubmitterPointsViewModel();
+      vm.Slug.Should().BeNull();
+    }
   }
 }

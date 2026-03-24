@@ -186,6 +186,7 @@ namespace Bejebeje.Mvc.Tests.Controllers
           TotalPoints = 200,
           ContributorLabel = "Regular Contributor",
           Username = "contributor1",
+          Slug = "contributor1",
         });
 
       // act
@@ -197,6 +198,76 @@ namespace Bejebeje.Mvc.Tests.Controllers
       model.SubmitterPoints.Should().Be(200);
       model.SubmitterLabel.Should().Be("Regular Contributor");
       model.SubmitterProfileUrl.Should().Be("/profile/contributor1");
+    }
+
+    [Test]
+    public async Task should_use_slug_for_profile_url_on_lyric_detail()
+    {
+      // arrange
+      _mockLyricsService
+        .Setup(s => s.GetSingleLyricAsync("sivan", "ey-reqib", It.IsAny<string>()))
+        .ReturnsAsync(new LyricDetailsViewModel
+        {
+          Id = 77,
+          Title = "Ey Reqib",
+          Body = "Ey reqib...",
+          SubmitterUserId = "submitter-123",
+          SubmitterUsername = "ali fm",
+          Artist = new ArtistViewModel(),
+        });
+
+      _mockPointsService
+        .Setup(s => s.GetSubmitterPointsAsync("submitter-123"))
+        .ReturnsAsync(new SubmitterPointsViewModel
+        {
+          TotalPoints = 200,
+          ContributorLabel = "Regular Contributor",
+          Username = "ali fm",
+          Slug = "ali-fm",
+        });
+
+      // act
+      var result = await _controller.Lyric("sivan", "ey-reqib");
+
+      // assert
+      var view = result.Should().BeOfType<ViewResult>().Subject;
+      var model = view.Model.Should().BeOfType<LyricDetailsViewModel>().Subject;
+      model.SubmitterProfileUrl.Should().Be("/profile/ali-fm");
+    }
+
+    [Test]
+    public async Task should_set_profile_url_null_when_slug_is_null()
+    {
+      // arrange
+      _mockLyricsService
+        .Setup(s => s.GetSingleLyricAsync("sivan", "ey-reqib", It.IsAny<string>()))
+        .ReturnsAsync(new LyricDetailsViewModel
+        {
+          Id = 77,
+          Title = "Ey Reqib",
+          Body = "Ey reqib...",
+          SubmitterUserId = "submitter-123",
+          SubmitterUsername = "fallbackuser",
+          Artist = new ArtistViewModel(),
+        });
+
+      _mockPointsService
+        .Setup(s => s.GetSubmitterPointsAsync("submitter-123"))
+        .ReturnsAsync(new SubmitterPointsViewModel
+        {
+          TotalPoints = 0,
+          ContributorLabel = "New Contributor",
+          Username = "fallbackuser",
+          Slug = null,
+        });
+
+      // act
+      var result = await _controller.Lyric("sivan", "ey-reqib");
+
+      // assert
+      var view = result.Should().BeOfType<ViewResult>().Subject;
+      var model = view.Model.Should().BeOfType<LyricDetailsViewModel>().Subject;
+      model.SubmitterProfileUrl.Should().BeNull();
     }
 
     [Test]

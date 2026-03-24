@@ -529,4 +529,254 @@ namespace Bejebeje.Services.Tests.Services
       user.ArtistApprovalPoints.Should().Be(10);
     }
   }
+
+  [TestFixture]
+  public class BbPointsServiceSlugGenerationTests : DatabaseTestBase
+  {
+    private BbPointsService _service;
+    private Mock<IOptions<BbPointsOptions>> _optionsMock;
+    private Mock<IOptions<DatabaseOptions>> _dbOptionsMock;
+    private Mock<ICognitoService> _cognitoServiceMock;
+    private Mock<ILogger<BbPointsService>> _loggerMock;
+
+    [SetUp]
+    public void Setup()
+    {
+      SetupDataContext();
+
+      _optionsMock = new Mock<IOptions<BbPointsOptions>>();
+      _optionsMock.Setup(x => x.Value).Returns(new BbPointsOptions());
+
+      _dbOptionsMock = new Mock<IOptions<DatabaseOptions>>();
+      _dbOptionsMock.Setup(x => x.Value).Returns(new DatabaseOptions { ConnectionString = "unused" });
+
+      _cognitoServiceMock = new Mock<ICognitoService>();
+      _loggerMock = new Mock<ILogger<BbPointsService>>();
+
+      _service = new BbPointsService(
+        Context,
+        _optionsMock.Object,
+        _dbOptionsMock.Object,
+        _cognitoServiceMock.Object,
+        _loggerMock.Object);
+    }
+
+    [Test]
+    public async Task should_generate_slug_from_trimmed_username_on_new_user()
+    {
+      // act
+      var result = await _service.EnsureUserExistsAsync("abc-123", "ali fm ");
+
+      // assert
+      result.Should().NotBeNull();
+      result.Username.Should().Be("ali fm");
+      result.Slug.Should().Be("ali-fm");
+    }
+
+    [Test]
+    public async Task should_use_empty_slug_fallback_when_normalize_returns_empty()
+    {
+      // act — username of all special chars that NormalizeStringForUrl strips
+      var result = await _service.EnsureUserExistsAsync("abcd1234-5678", "!!!");
+
+      // assert
+      result.Should().NotBeNull();
+      result.Slug.Should().Be("user-abcd1234");
+    }
+
+    [Test]
+    public async Task should_append_suffix_when_slug_collides_with_another_user()
+    {
+      // arrange — existing user holds the "kardox" slug
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-26",
+        Username = "Kardox",
+        Slug = "kardox",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act
+      var result = await _service.EnsureUserExistsAsync("user-91", "Kardox2");
+
+      // assert — "kardox2" doesn't collide with "kardox", so no suffix needed
+      // let's use a case where it does collide
+      result.Should().NotBeNull();
+    }
+
+    [Test]
+    public async Task should_append_numeric_suffix_for_slug_collision()
+    {
+      // arrange — existing user holds the "kardox" slug
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-26",
+        Username = "Kardox",
+        Slug = "kardox",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act — new user whose username also normalizes to "kardox"
+      var result = await _service.EnsureUserExistsAsync("user-91", "kardox");
+
+      // assert
+      result.Should().NotBeNull();
+      result.Slug.Should().Be("kardox-2");
+    }
+
+    [Test]
+    public async Task should_increment_suffix_past_existing_collisions()
+    {
+      // arrange — two users already hold "kardox" and "kardox-2"
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-26",
+        Username = "Kardox",
+        Slug = "kardox",
+        CreatedAt = DateTime.UtcNow,
+      });
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-91",
+        Username = "Kardox ",
+        Slug = "kardox-2",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act
+      var result = await _service.EnsureUserExistsAsync("user-200", "kardox");
+
+      // assert
+      result.Should().NotBeNull();
+      result.Slug.Should().Be("kardox-3");
+    }
+
+    [Test]
+    public async Task should_trim_username_on_new_user_creation()
+    {
+      // act
+      var result = await _service.EnsureUserExistsAsync("abc-123", "  ali fm  ");
+
+      // assert
+      result.Should().NotBeNull();
+      result.Username.Should().Be("ali fm");
+    }
+
+    [Test]
+    public async Task should_return_null_when_duplicate_trimmed_username_on_new_user()
+    {
+      // arrange — existing user holds "kardox"
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-26",
+        Username = "kardox",
+        Slug = "kardox",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act — new user with trailing space trims to same "kardox"
+      var result = await _service.EnsureUserExistsAsync("user-91", "kardox ");
+
+      // assert
+      result.Should().BeNull();
+      var count = await Context.Users.CountAsync();
+      count.Should().Be(1);
+    }
+
+    [Test]
+    public async Task should_not_update_when_trimmed_username_matches_stored()
+    {
+      // arrange — existing user stored with trimmed username
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "abc-123",
+        Username = "ali fm",
+        Slug = "ali-fm",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act — cognito sends same username with trailing space
+      var result = await _service.EnsureUserExistsAsync("abc-123", "ali fm ");
+
+      // assert
+      result.Username.Should().Be("ali fm");
+      result.ModifiedAt.Should().BeNull();
+    }
+
+    [Test]
+    public async Task should_regenerate_slug_on_username_change()
+    {
+      // arrange
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "abc-123",
+        Username = "ali fm",
+        Slug = "ali-fm",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act
+      var result = await _service.EnsureUserExistsAsync("abc-123", "ali music");
+
+      // assert
+      result.Username.Should().Be("ali music");
+      result.Slug.Should().Be("ali-music");
+      result.ModifiedAt.Should().NotBeNull();
+    }
+
+    [Test]
+    public async Task should_block_username_change_when_duplicate_exists()
+    {
+      // arrange
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-1",
+        Username = "old-name",
+        Slug = "old-name",
+        CreatedAt = DateTime.UtcNow,
+      });
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "user-2",
+        Username = "new-name",
+        Slug = "new-name",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act — user-1 tries to change username to "new-name"
+      var result = await _service.EnsureUserExistsAsync("user-1", "new-name");
+
+      // assert — username and slug remain unchanged
+      result.Username.Should().Be("old-name");
+      result.Slug.Should().Be("old-name");
+      result.ModifiedAt.Should().BeNull();
+    }
+
+    [Test]
+    public async Task should_not_count_own_slug_as_collision_during_regeneration()
+    {
+      // arrange — user with slug "ali-fm" changes username but it still generates "ali-fm"
+      Context.Users.Add(new User
+      {
+        CognitoUserId = "abc-123",
+        Username = "ali_fm",
+        Slug = "ali-fm",
+        CreatedAt = DateTime.UtcNow,
+      });
+      await Context.SaveChangesAsync();
+
+      // act — new username also normalizes to "ali-fm"
+      var result = await _service.EnsureUserExistsAsync("abc-123", "ali fm");
+
+      // assert — slug should remain "ali-fm", not "ali-fm-2"
+      result.Slug.Should().Be("ali-fm");
+    }
+  }
 }

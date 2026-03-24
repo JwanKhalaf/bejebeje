@@ -7,5 +7,7 @@ namespace Bejebeje.Models.BbPoints
     public string ContributorLabel { get; set; }
 
     public string Username { get; set; }
+
+    public string Slug { get; set; }
   }
 }

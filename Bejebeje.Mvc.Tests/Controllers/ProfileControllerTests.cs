@@ -109,19 +109,24 @@ namespace Bejebeje.Mvc.Tests.Controllers
       _testUserId = Guid.NewGuid().ToString();
 
       _controller = new ProfileController(_mockPointsService.Object, _mockLogger.Object);
-      SetupAuthenticatedUser("ownuser");
+      SetupAuthenticatedUser();
     }
 
     [Test]
-    public async Task should_redirect_to_own_profile_when_username_matches_authenticated_user()
+    public async Task should_redirect_to_own_profile_when_slug_belongs_to_authenticated_user()
     {
-      // arrange
+      // arrange — the slug resolves to a profile with the same cognito user id
       _mockPointsService
-        .Setup(s => s.GetOwnProfileDataAsync(_testUserId))
-        .ReturnsAsync(new OwnProfileViewModel { Username = "ownuser" });
+        .Setup(s => s.GetPublicProfileDataAsync("ali-fm"))
+        .ReturnsAsync(new PublicProfileViewModel
+        {
+          Username = "ali fm",
+          CognitoUserId = _testUserId,
+          TotalPoints = 100,
+        });
 
       // act
-      var result = await _controller.Public("ownuser");
+      var result = await _controller.Public("ali-fm");
 
       // assert
       var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
@@ -129,7 +134,35 @@ namespace Bejebeje.Mvc.Tests.Controllers
     }
 
     [Test]
-    public async Task should_return_404_when_user_not_found()
+    public async Task should_return_view_when_slug_belongs_to_another_user()
+    {
+      // arrange
+      _mockPointsService
+        .Setup(s => s.GetPublicProfileDataAsync("other-user"))
+        .ReturnsAsync(new PublicProfileViewModel
+        {
+          Username = "other user",
+          CognitoUserId = "different-cognito-id",
+          TotalPoints = 300,
+          ContributorLabel = "Regular Contributor",
+          ArtistsSubmittedCount = 5,
+          LyricsSubmittedCount = 20,
+        });
+
+      // act
+      var result = await _controller.Public("other-user");
+
+      // assert
+      var view = result.Should().BeOfType<ViewResult>().Subject;
+      var model = view.Model.Should().BeOfType<PublicProfileViewModel>().Subject;
+      model.TotalPoints.Should().Be(300);
+      model.ContributorLabel.Should().Be("Regular Contributor");
+      model.ArtistsSubmittedCount.Should().Be(5);
+      model.LyricsSubmittedCount.Should().Be(20);
+    }
+
+    [Test]
+    public async Task should_return_404_when_slug_not_found()
     {
       // arrange
       _mockPointsService
@@ -141,35 +174,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
 
       // assert
       result.Should().BeOfType<NotFoundResult>();
-    }
-
-    [Test]
-    public async Task should_return_view_with_public_profile_data()
-    {
-      // arrange
-      var publicProfile = new PublicProfileViewModel
-      {
-        Username = "otheruser",
-        TotalPoints = 300,
-        ContributorLabel = "Regular Contributor",
-        ArtistsSubmittedCount = 5,
-        LyricsSubmittedCount = 20,
-      };
-
-      _mockPointsService
-        .Setup(s => s.GetPublicProfileDataAsync("otheruser"))
-        .ReturnsAsync(publicProfile);
-
-      // act
-      var result = await _controller.Public("otheruser");
-
-      // assert
-      var view = result.Should().BeOfType<ViewResult>().Subject;
-      var model = view.Model.Should().BeOfType<PublicProfileViewModel>().Subject;
-      model.TotalPoints.Should().Be(300);
-      model.ContributorLabel.Should().Be("Regular Contributor");
-      model.ArtistsSubmittedCount.Should().Be(5);
-      model.LyricsSubmittedCount.Should().Be(20);
     }
 
     [Test]
@@ -186,28 +190,29 @@ namespace Bejebeje.Mvc.Tests.Controllers
       var publicProfile = new PublicProfileViewModel
       {
         Username = "someuser",
+        CognitoUserId = "some-cognito-id",
         TotalPoints = 50,
         ContributorLabel = "Contributor",
       };
 
       _mockPointsService
-        .Setup(s => s.GetPublicProfileDataAsync("someuser"))
+        .Setup(s => s.GetPublicProfileDataAsync("some-user"))
         .ReturnsAsync(publicProfile);
 
       // act
-      var result = await _controller.Public("someuser");
+      var result = await _controller.Public("some-user");
 
       // assert
       var view = result.Should().BeOfType<ViewResult>().Subject;
       view.Model.Should().BeOfType<PublicProfileViewModel>();
     }
 
-    private void SetupAuthenticatedUser(string preferredUsername)
+    private void SetupAuthenticatedUser()
     {
       var claims = new List<Claim>
       {
         new Claim("sub", _testUserId),
-        new Claim("preferred_username", preferredUsername),
+        new Claim("preferred_username", "testuser"),
       };
 
       var identity = new ClaimsIdentity(claims, "TestAuth");

@@ -12,7 +12,7 @@ public interface IBbPointsService
 
   Task<OwnProfileViewModel> GetOwnProfileDataAsync(string cognitoUserId);
 
-  Task<PublicProfileViewModel> GetPublicProfileDataAsync(string username);
+  Task<PublicProfileViewModel> GetPublicProfileDataAsync(string slug);
 
   Task<SubmitterPointsViewModel> GetSubmitterPointsAsync(string cognitoUserId);
 
