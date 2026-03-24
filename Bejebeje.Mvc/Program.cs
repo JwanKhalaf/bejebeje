@@ -6,6 +6,7 @@ using Amazon.SimpleEmailV2;
 using Bejebeje.DataAccess.Context;
 using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
+using Bejebeje.Mvc.Auth;
 using Bejebeje.Services.Services.Interfaces;
 using Bejebeje.Services.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
@@ -17,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
@@ -89,8 +91,21 @@ builder.Services.AddAuthentication(options =>
       options.Scope.Clear();
       options.Scope.Add("openid");
       options.Scope.Add("email");
+      options.Scope.Add("profile");
       options.ClaimActions.MapUniqueJsonKey("role", "role");
       options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = "cognito:user", RoleClaimType = "cognito:groups" };
+      options.Events = new OpenIdConnectEvents
+      {
+        OnTokenValidated = async context =>
+        {
+          var handler = new OnTokenValidatedHandler(
+            context.HttpContext.RequestServices.GetRequiredService<IBbPointsService>(),
+            context.HttpContext.RequestServices.GetRequiredService<ICognitoService>(),
+            context.HttpContext.RequestServices.GetRequiredService<ILogger<OnTokenValidatedHandler>>());
+
+          await handler.HandleAsync(context.Principal);
+        },
+      };
     });
 
 builder.Services.AddControllersWithViews();

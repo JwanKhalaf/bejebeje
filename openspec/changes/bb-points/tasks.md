@@ -46,56 +46,56 @@
 
 ## 7. User Record Sync on Login
 
-- [ ] 7.1 Add the `profile` scope to the OIDC configuration in `Program.cs` alongside existing `openid` and `email` scopes. Ref: SPEC §6 Authentication Event, §11 Deferred Decision 2.
-- [ ] 7.2 Add an `OnTokenValidated` event handler in the OIDC configuration in `Program.cs`: extract cognitoUserId from the `sub` claim, obtain preferredUsername from the `preferred_username` claim (or fallback to ICognitoService.GetPreferredUsernameAsync), call IBbPointsService.EnsureUserExistsAsync(cognitoUserId, preferredUsername). Ref: SPEC §7 Flow 1.
+- [x] 7.1 Add the `profile` scope to the OIDC configuration in `Program.cs` alongside existing `openid` and `email` scopes. Ref: SPEC §6 Authentication Event, §11 Deferred Decision 2.
+- [x] 7.2 Add an `OnTokenValidated` event handler in the OIDC configuration in `Program.cs`: extract cognitoUserId from the `sub` claim, obtain preferredUsername from the `preferred_username` claim (or fallback to ICognitoService.GetPreferredUsernameAsync), call IBbPointsService.EnsureUserExistsAsync(cognitoUserId, preferredUsername). Ref: SPEC §7 Flow 1.
 
 ## 8. Nav Bar View Component
 
-- [ ] 8.1 Create `BbPointsNavViewComponent` in Bejebeje.Mvc/ViewComponents: check IsAuthenticated, if false return Content.Empty. If true, extract cognitoUserId from sub claim, call GetNavBarDataAsync, return view with NavBarPointsViewModel. Ref: SPEC §6 View Component.
-- [ ] 8.2 Create the View Component Razor view: render a `<li>` element matching existing nav item pattern with the diamond SVG icon (using size-5 lg:size-8 text-neutral-800 classes), total points number, linked to /profile. When HasPointsChanged=true, apply visual indicator (glow/dot) to the diamond icon. Ref: SPEC §6 View Component rendered output.
-- [ ] 8.3 Add error handling to the View Component: wrap the service call in a try/catch, log exceptions at ERROR level, and return Content.Empty on failure so the page renders without points. Ref: SPEC §9 Nav Bar View Component Failure.
-- [ ] 8.4 Invoke the BbPointsNavViewComponent from `_Layout.cshtml` using `@await Component.InvokeAsync("BbPointsNav")` within the existing nav `<ul>`. Ref: SPEC §7 Flow 10.
+- [x] 8.1 Create `BbPointsNavViewComponent` in Bejebeje.Mvc/ViewComponents: check IsAuthenticated, if false return Content.Empty. If true, extract cognitoUserId from sub claim, call GetNavBarDataAsync, return view with NavBarPointsViewModel. Ref: SPEC §6 View Component.
+- [x] 8.2 Create the View Component Razor view: render a `<li>` element matching existing nav item pattern with the diamond SVG icon (using size-5 lg:size-8 text-neutral-800 classes), total points number, linked to /profile. When HasPointsChanged=true, apply visual indicator (glow/dot) to the diamond icon. Ref: SPEC §6 View Component rendered output.
+- [x] 8.3 Add error handling to the View Component: wrap the service call in a try/catch, log exceptions at ERROR level, and return Content.Empty on failure so the page renders without points. Ref: SPEC §9 Nav Bar View Component Failure.
+- [x] 8.4 Invoke the BbPointsNavViewComponent from `_Layout.cshtml` using `@await Component.InvokeAsync("BbPointsNav")` within the existing nav `<ul>`. Ref: SPEC §7 Flow 10.
 
 ## 9. Daily Limit Messaging
 
-- [ ] 9.1 Create `_PointsNotification.cshtml` shared partial view that reads TempData keys: `BbPoints:Earned` (bool), `BbPoints:Amount` (int), `BbPoints:EntityType` (string). If Earned=true, render success banner ("You earned [Amount] BB Points for your [EntityType] submission!"). If Earned=false, render limit banner ("Your submission has been saved! You've already earned your maximum BB points for [EntityType] submissions today. Come back tomorrow to earn more!"). The banner should be a dismissible full-width element positioned at the top of the main content area (below the nav bar, above page content), consistent with standard notification banner patterns. Ref: SPEC §6 TempData Contract.
-- [ ] 9.2 Include `_PointsNotification.cshtml` in `_Layout.cshtml` immediately after the nav bar and before the main content container, so it renders on all pages at the top of the content area. TempData auto-expires after being read so the banner displays once. Ref: SPEC §6 TempData Contract.
+- [x] 9.1 Create `_PointsNotification.cshtml` shared partial view that reads TempData keys: `BbPoints:Earned` (bool), `BbPoints:Amount` (int), `BbPoints:EntityType` (string). If Earned=true, render success banner ("You earned [Amount] BB Points for your [EntityType] submission!"). If Earned=false, render limit banner ("Your submission has been saved! You've already earned your maximum BB points for [EntityType] submissions today. Come back tomorrow to earn more!"). The banner should be a dismissible full-width element positioned at the top of the main content area (below the nav bar, above page content), consistent with standard notification banner patterns. Ref: SPEC §6 TempData Contract.
+- [x] 9.2 Include `_PointsNotification.cshtml` in `_Layout.cshtml` immediately after the nav bar and before the main content container, so it renders on all pages at the top of the content area. TempData auto-expires after being read so the banner displays once. Ref: SPEC §6 TempData Contract.
 
 ## 10. Artist Submission Points Integration
 
-- [ ] 10.1 Modify `ArtistController.Create` (individual artist POST action): after the image upload step completes (or is skipped), determine hasImage from whether the photo upload succeeded, call AwardSubmissionPointsAsync with ActionType=ArtistSubmitted and points = hasImage ? 5 : 1, set TempData keys (BbPoints:Earned, BbPoints:Amount, BbPoints:EntityType="artist"). Ref: SPEC §7 Flow 2 steps 3-7.
-- [ ] 10.2 Modify `ArtistController.CreateBand` (band artist POST action): apply the same points-awarding logic as individual artist creation. Ref: SPEC §7 Flow 2, FR-2.
+- [x] 10.1 Modify `ArtistController.Create` (individual artist POST action): after the image upload step completes (or is skipped), determine hasImage from whether the photo upload succeeded, call AwardSubmissionPointsAsync with ActionType=ArtistSubmitted and points = hasImage ? 5 : 1, set TempData keys (BbPoints:Earned, BbPoints:Amount, BbPoints:EntityType="artist"). Ref: SPEC §7 Flow 2 steps 3-7.
+- [x] 10.2 Modify `ArtistController.CreateBand` (band artist POST action): apply the same points-awarding logic as individual artist creation. Ref: SPEC §7 Flow 2, FR-2.
 
 ## 11. Lyric Submission Points Integration
 
-- [ ] 11.1 Modify `LyricController.Create` POST action: after lyric and slug creation, call AwardSubmissionPointsAsync with ActionType=LyricSubmitted, Points=5, set TempData keys with EntityType="lyric". Ensure TempData is not consumed by the Like action redirect. Ref: SPEC §7 Flow 3.
-- [ ] 11.2 Verify that the `LyricController.Like` action does not read or enumerate BB Points TempData keys (BbPoints:*), so TempData survives through the double redirect (Create -> Like -> Lyric detail). Ref: SPEC §7 Flow 3 Implementation Constraint.
+- [x] 11.1 Modify `LyricController.Create` POST action: after lyric and slug creation, call AwardSubmissionPointsAsync with ActionType=LyricSubmitted, Points=5, set TempData keys with EntityType="lyric". Ensure TempData is not consumed by the Like action redirect. Ref: SPEC §7 Flow 3.
+- [x] 11.2 Verify that the `LyricController.Like` action does not read or enumerate BB Points TempData keys (BbPoints:*), so TempData survives through the double redirect (Create -> Like -> Lyric detail). Ref: SPEC §7 Flow 3 Implementation Constraint.
 
 ## 12. Report Submission Points Integration
 
-- [ ] 12.1 Remove the existing daily limit check from `ReportController.Report` GET action that redirects to the LimitReached page. The report form SHALL always be shown (duplicate pending report check remains). Ref: SPEC §7 Flow 4 step 2.
-- [ ] 12.2 Remove the existing `reportCount >= 3` check from `ReportController.SubmitReport` POST action that redirects to LimitReached. Ref: SPEC §7 Flow 4 step 4c.
-- [ ] 12.3 Add point awarding to `ReportController.SubmitReport` POST action: after saving the report via CreateReportAsync, call AwardSubmissionPointsAsync with ActionType=ReportSubmitted, Points=1, set TempData keys with EntityType="report". Ref: SPEC §7 Flow 4 steps 4e-4g.
-- [ ] 12.4 Remove the LimitReached route and its associated Razor view from the ReportController. Requests to the old route should return 404. Ref: SPEC §7 Flow 4 Day 1 Verification.
+- [x] 12.1 Remove the existing daily limit check from `ReportController.Report` GET action that redirects to the LimitReached page. The report form SHALL always be shown (duplicate pending report check remains). Ref: SPEC §7 Flow 4 step 2.
+- [x] 12.2 Remove the existing `reportCount >= 3` check from `ReportController.SubmitReport` POST action that redirects to LimitReached. Ref: SPEC §7 Flow 4 step 4c.
+- [x] 12.3 Add point awarding to `ReportController.SubmitReport` POST action: after saving the report via CreateReportAsync, call AwardSubmissionPointsAsync with ActionType=ReportSubmitted, Points=1, set TempData keys with EntityType="report". Ref: SPEC §7 Flow 4 steps 4e-4g.
+- [x] 12.4 Remove the LimitReached route and its associated Razor view from the ReportController. Requests to the old route should return 404. Ref: SPEC §7 Flow 4 Day 1 Verification.
 
 ## 13. Own Profile Page
 
-- [ ] 13.1 Modify `ProfileController.Index` action: call IBbPointsService.GetOwnProfileDataAsync(cognitoUserId), pass the OwnProfileViewModel to the view. Ref: SPEC §7 Flow 8.
-- [ ] 13.2 Update `Profile/Index.cshtml` to display the per-category points breakdown table showing all 6 event-based categories, like-based points, and total. Display the contributor label. Retain the existing "Want to help?" content. Ref: SPEC §7 Flow 8 step 5.
-- [ ] 13.3 Add the "Recent Activity" section to `Profile/Index.cshtml`: render the 20 most recent PointEvents showing action description, entity name, points earned, and date in reverse chronological order. Ref: SPEC §7 Flow 8.
-- [ ] 13.4 Implement the activity feed empty state: when there are 0 PointEvents and category totals are all 0, show "You haven't earned any BB Points yet. Submit an artist or lyric to get started!" When there are 0 PointEvents but category totals > 0 (retroactive only), show "Your historical contributions have been counted! New activity will appear here as you earn more points." Ref: SPEC §7 Flow 8 Empty State.
+- [x] 13.1 Modify `ProfileController.Index` action: call IBbPointsService.GetOwnProfileDataAsync(cognitoUserId), pass the OwnProfileViewModel to the view. Ref: SPEC §7 Flow 8.
+- [x] 13.2 Update `Profile/Index.cshtml` to display the per-category points breakdown table showing all 6 event-based categories, like-based points, and total. Display the contributor label. Retain the existing "Want to help?" content. Ref: SPEC §7 Flow 8 step 5.
+- [x] 13.3 Add the "Recent Activity" section to `Profile/Index.cshtml`: render the 20 most recent PointEvents showing action description, entity name, points earned, and date in reverse chronological order. Ref: SPEC §7 Flow 8.
+- [x] 13.4 Implement the activity feed empty state: when there are 0 PointEvents and category totals are all 0, show "You haven't earned any BB Points yet. Submit an artist or lyric to get started!" When there are 0 PointEvents but category totals > 0 (retroactive only), show "Your historical contributions have been counted! New activity will appear here as you earn more points." Ref: SPEC §7 Flow 8 Empty State.
 
 ## 14. Public Profile Page
 
-- [ ] 14.1 Add a `Public` action to `ProfileController` at route `/profile/{username}`: if the authenticated user's username matches the route parameter, redirect to `/profile`. Otherwise, call GetPublicProfileDataAsync(username). If null, return 404. Otherwise, render the public profile view. This action SHALL NOT have an [Authorize] attribute (anonymous users can view). Ref: SPEC §7 Flow 9.
-- [ ] 14.2 Create the public profile Razor view: display the username, total BB points, contributor label, and contribution counts labelled "artists submitted" and "lyrics submitted". No category breakdown or activity feed. Ref: SPEC §7 Flow 9 step 5.
-- [ ] 14.3 Ensure routing for `/profile/{username}` and `/profile` does not conflict. `/profile` (no parameter) renders own profile, `/profile/{username}` renders public profile. Ref: SPEC §7 Flow 9 Day 1 Verification.
+- [x] 14.1 Add a `Public` action to `ProfileController` at route `/profile/{username}`: if the authenticated user's username matches the route parameter, redirect to `/profile`. Otherwise, call GetPublicProfileDataAsync(username). If null, return 404. Otherwise, render the public profile view. This action SHALL NOT have an [Authorize] attribute (anonymous users can view). Ref: SPEC §7 Flow 9.
+- [x] 14.2 Create the public profile Razor view: display the username, total BB points, contributor label, and contribution counts labelled "artists submitted" and "lyrics submitted". No category breakdown or activity feed. Ref: SPEC §7 Flow 9 step 5.
+- [x] 14.3 Ensure routing for `/profile/{username}` and `/profile` does not conflict. `/profile` (no parameter) renders own profile, `/profile/{username}` renders public profile. Ref: SPEC §7 Flow 9 Day 1 Verification.
 
 ## 15. Lyric Detail Page Integration
 
-- [ ] 15.1 Modify the `LyricController.Lyric` action: after fetching lyric details, call IBbPointsService.GetSubmitterPointsAsync(submitterUserId). Add new properties to the lyric details view model: SubmitterPoints (int), SubmitterLabel (string), SubmitterProfileUrl (string, formatted as /profile/{username}). Ref: SPEC §7 Flow 11.
-- [ ] 15.2 Add SubmitterPoints, SubmitterLabel, and SubmitterProfileUrl properties to the existing lyric details view model. Ref: SPEC §7 Flow 11 step 4.
-- [ ] 15.3 Update `Lyric/Lyric.cshtml`: render the submitter's username as a clickable link to their public profile URL, with BB points total and contributor label displayed next to the username. Ref: SPEC §7 Flow 11 step 5.
+- [x] 15.1 Modify the `LyricController.Lyric` action: after fetching lyric details, call IBbPointsService.GetSubmitterPointsAsync(submitterUserId). Add new properties to the lyric details view model: SubmitterPoints (int), SubmitterLabel (string), SubmitterProfileUrl (string, formatted as /profile/{username}). Ref: SPEC §7 Flow 11.
+- [x] 15.2 Add SubmitterPoints, SubmitterLabel, and SubmitterProfileUrl properties to the existing lyric details view model. Ref: SPEC §7 Flow 11 step 4.
+- [x] 15.3 Update `Lyric/Lyric.cshtml`: render the submitter's username as a clickable link to their public profile URL, with BB points total and contributor label displayed next to the username. Ref: SPEC §7 Flow 11 step 5.
 
 ## 16. Retroactive Calculation Console App
 
@@ -110,24 +110,24 @@
 
 ## 17. Observability & Logging
 
-- [ ] 17.1 Add INFO-level logging for point event creation: log user ID, action type, entity ID, and points awarded. Ref: SPEC §8 Observability.
-- [ ] 17.2 Add INFO-level logging for daily limit hits: log user ID, action type, current count, and configured limit. Ref: SPEC §8 Observability.
-- [ ] 17.3 Add ERROR-level logging for point awarding failures with full context (user ID, action type, entity ID, exception details). Ref: SPEC §8 Observability.
+- [x] 17.1 Add INFO-level logging for point event creation: log user ID, action type, entity ID, and points awarded. Ref: SPEC §8 Observability.
+- [x] 17.2 Add INFO-level logging for daily limit hits: log user ID, action type, current count, and configured limit. Ref: SPEC §8 Observability.
+- [x] 17.3 Add ERROR-level logging for point awarding failures with full context (user ID, action type, entity ID, exception details). Ref: SPEC §8 Observability.
 
 ## 18. Error Handling & Edge Cases
 
-- [ ] 18.1 Implement transaction rollback on point event insertion failure: if the INSERT into point_events or UPDATE of users fails, the transaction rolls back. The submission itself (already saved) is not affected. The user sees a generic success message (not the points message). Log the error. Ref: SPEC §9 Point Event Insertion Failure.
-- [ ] 18.2 Implement idempotent handling for duplicate approval awards: use INSERT ON CONFLICT DO NOTHING for point_events, and only increment the user's category total if the insert actually created a row. Ref: SPEC §9 Duplicate Point Award Attempt.
-- [ ] 18.3 Implement fallback handling in GetSubmitterPointsAsync: when no user record exists for a submitter, return 0 points, "New Contributor" label, and resolve the username via ICognitoService.GetPreferredUsernameAsync. Ref: SPEC §9 User Record Does Not Exist for Submitter.
+- [x] 18.1 Implement transaction rollback on point event insertion failure: if the INSERT into point_events or UPDATE of users fails, the transaction rolls back. The submission itself (already saved) is not affected. The user sees a generic success message (not the points message). Log the error. Ref: SPEC §9 Point Event Insertion Failure.
+- [x] 18.2 Implement idempotent handling for duplicate approval awards: use INSERT ON CONFLICT DO NOTHING for point_events, and only increment the user's category total if the insert actually created a row. Ref: SPEC §9 Duplicate Point Award Attempt.
+- [x] 18.3 Implement fallback handling in GetSubmitterPointsAsync: when no user record exists for a submitter, return 0 points, "New Contributor" label, and resolve the username via ICognitoService.GetPreferredUsernameAsync. Ref: SPEC §9 User Record Does Not Exist for Submitter.
 
 ## 19. Service Tests
 
-- [ ] 19.1 Write unit tests for contributor label derivation: verify correct labels at boundaries (0, 49, 50, 199, 200, 499, 500, 1000). Ref: SPEC §5 Contributor Labels.
-- [ ] 19.2 Write unit tests for EnsureUserExistsAsync: verify new user creation, existing user with same username (no-op), existing user with changed username (update). Ref: SPEC §7 Flow 1.
-- [ ] 19.3 Write unit tests for AwardSubmissionPointsAsync: verify points awarded within daily limit, points skipped when over limit, correct category column incremented, PointEvent creation. Ref: SPEC §7 Flow 2 step 6.
-- [ ] 19.4 Write unit tests for AwardApprovalPointsAsync: verify points awarded on first call, duplicate call skipped (idempotent), correct category column incremented. Ref: SPEC §7 Flow 5.
-- [ ] 19.5 Write unit tests for GetNavBarDataAsync: verify total computation (6 categories + like points), contributor label, HasPointsChanged flag. Ref: SPEC §7 Flow 10.
-- [ ] 19.6 Write unit tests for GetOwnProfileDataAsync: verify per-category breakdown, like points, total, activity feed limited to 20, LastSeenPoints update. Ref: SPEC §7 Flow 8.
-- [ ] 19.7 Write unit tests for GetPublicProfileDataAsync: verify total, label, contribution counts, null return for unknown username. Ref: SPEC §7 Flow 9.
-- [ ] 19.8 Write unit tests for GetSubmitterPointsAsync: verify normal return, fallback for missing user record. Ref: SPEC §7 Flow 11.
-- [ ] 19.9 Write unit tests for GetDailySubmissionCountAsync: verify correct count from source table for UTC day boundaries. Ref: SPEC §6 IBbPointsService.GetDailySubmissionCountAsync.
+- [x] 19.1 Write unit tests for contributor label derivation: verify correct labels at boundaries (0, 49, 50, 199, 200, 499, 500, 1000). Ref: SPEC §5 Contributor Labels.
+- [x] 19.2 Write unit tests for EnsureUserExistsAsync: verify new user creation, existing user with same username (no-op), existing user with changed username (update). Ref: SPEC §7 Flow 1.
+- [x] 19.3 Write unit tests for AwardSubmissionPointsAsync: verify points awarded within daily limit, points skipped when over limit, correct category column incremented, PointEvent creation. Ref: SPEC §7 Flow 2 step 6.
+- [x] 19.4 Write unit tests for AwardApprovalPointsAsync: verify points awarded on first call, duplicate call skipped (idempotent), correct category column incremented. Ref: SPEC §7 Flow 5.
+- [x] 19.5 Write unit tests for GetNavBarDataAsync: verify total computation (6 categories + like points), contributor label, HasPointsChanged flag. Ref: SPEC §7 Flow 10.
+- [x] 19.6 Write unit tests for GetOwnProfileDataAsync: verify per-category breakdown, like points, total, activity feed limited to 20, LastSeenPoints update. Ref: SPEC §7 Flow 8.
+- [x] 19.7 Write unit tests for GetPublicProfileDataAsync: verify total, label, contribution counts, null return for unknown username. Ref: SPEC §7 Flow 9.
+- [x] 19.8 Write unit tests for GetSubmitterPointsAsync: verify normal return, fallback for missing user record. Ref: SPEC §7 Flow 11.
+- [x] 19.9 Write unit tests for GetDailySubmissionCountAsync: verify correct count from source table for UTC day boundaries. Ref: SPEC §6 IBbPointsService.GetDailySubmissionCountAsync.

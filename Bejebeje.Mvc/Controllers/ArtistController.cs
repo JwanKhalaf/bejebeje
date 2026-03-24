@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Bejebeje.Common.Extensions;
 using Bejebeje.Models.Artist;
 using Bejebeje.Services.Services.Interfaces;
+using Bejebeje.Domain;
 using Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +22,18 @@ public class ArtistController : Controller
 {
   private readonly IArtistsService _artistsService;
   private readonly IImagesService _imagesService;
+  private readonly IBbPointsService _bbPointsService;
   private readonly ILogger<ArtistController> _logger;
 
   public ArtistController(
     IArtistsService artistsService,
     IImagesService imagesService,
+    IBbPointsService bbPointsService,
     ILogger<ArtistController> logger)
   {
     _artistsService = artistsService;
     _imagesService = imagesService;
+    _bbPointsService = bbPointsService;
     _logger = logger;
   }
 
@@ -311,6 +315,27 @@ public class ArtistController : Controller
         {
           _logger.LogError(ex, "Exception during image upload for artist {ArtistId}", result.ArtistId);
         }
+      }
+
+      // award bb points for artist submission
+      try
+      {
+        bool hasImage = viewModel.Photo != null;
+        int points = hasImage ? BbPointsConstants.ArtistSubmittedWithPhoto : BbPointsConstants.ArtistSubmittedNoPhoto;
+        string cognitoUserId = User.GetCognitoUserId();
+        string username = User.GetPreferredUsername();
+
+        bool earned = await _bbPointsService.AwardSubmissionPointsAsync(
+          cognitoUserId, username, PointActionType.ArtistSubmitted,
+          result.ArtistId, fullName, points);
+
+        TempData["BbPoints:Earned"] = earned;
+        TempData["BbPoints:Amount"] = points;
+        TempData["BbPoints:EntityType"] = "artist";
+      }
+      catch (Exception pointsEx)
+      {
+        _logger.LogError(pointsEx, "failed to award bb points for individual artist creation {ArtistId}", result.ArtistId);
       }
 
       _logger.LogInformation(
@@ -632,6 +657,27 @@ public class ArtistController : Controller
         {
           _logger.LogError(ex, "Exception during image upload for band {ArtistId}", result.ArtistId);
         }
+      }
+
+      // award bb points for band artist submission
+      try
+      {
+        bool hasImage = viewModel.Photo != null;
+        int points = hasImage ? BbPointsConstants.ArtistSubmittedWithPhoto : BbPointsConstants.ArtistSubmittedNoPhoto;
+        string cognitoUserId = User.GetCognitoUserId();
+        string username = User.GetPreferredUsername();
+
+        bool earned = await _bbPointsService.AwardSubmissionPointsAsync(
+          cognitoUserId, username, PointActionType.ArtistSubmitted,
+          result.ArtistId, bandName, points);
+
+        TempData["BbPoints:Earned"] = earned;
+        TempData["BbPoints:Amount"] = points;
+        TempData["BbPoints:EntityType"] = "artist";
+      }
+      catch (Exception pointsEx)
+      {
+        _logger.LogError(pointsEx, "failed to award bb points for band artist creation {ArtistId}", result.ArtistId);
       }
 
       _logger.LogInformation(

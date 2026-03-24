@@ -30,5 +30,13 @@ public class LyricDetailsViewModel
 
   public AuthorViewModel Author { get; set; }
 
+  public string SubmitterUserId { get; set; }
+
   public string SubmitterUsername { get; set; }
+
+  public int SubmitterPoints { get; set; }
+
+  public string SubmitterLabel { get; set; }
+
+  public string SubmitterProfileUrl { get; set; }
 }

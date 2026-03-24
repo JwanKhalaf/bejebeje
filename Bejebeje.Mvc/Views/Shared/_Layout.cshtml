@@ -35,6 +35,7 @@
 <main
   class="pl-4 lg:pl-0 bg-neutral-800 lg:bg-transparent rounded-b-lg col-start-1 col-end-3 row-end-2 overflow-y-scroll lg:col-start-2 lg:row-start-1 lg:row-end-3 lg:grid lg:grid-rows-[auto_120px]">
   <div class="lg:bg-neutral-800 lg:pl-8 lg:rounded-bl-lg lg:row-start-1 lg:row-end-2">
+    @await Html.PartialAsync("_PointsNotification")
     @RenderBody()
   </div>
 
@@ -99,6 +100,8 @@
         Add
       </a>
     </li>
+
+    @await Component.InvokeAsync("BbPointsNav")
 
     <li>
       <a asp-controller="Profile" asp-action="Index"

@@ -1,25 +1,33 @@
 ﻿namespace Bejebeje.Mvc.Controllers;
 
+using System;
 using System.Threading.Tasks;
+using Bejebeje.Domain;
 using Bejebeje.Models.Artist;
 using Bejebeje.Models.Lyric;
 using Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Services.Services.Interfaces;
 
 public class LyricController : Controller
 {
   private readonly IArtistsService _artistsService;
-
   private readonly ILyricsService _lyricsService;
+  private readonly IBbPointsService _bbPointsService;
+  private readonly ILogger<LyricController> _logger;
 
   public LyricController(
     IArtistsService artistsService,
-    ILyricsService lyricsService)
+    ILyricsService lyricsService,
+    IBbPointsService bbPointsService,
+    ILogger<LyricController> logger)
   {
     _artistsService = artistsService;
     _lyricsService = lyricsService;
+    _bbPointsService = bbPointsService;
+    _logger = logger;
   }
 
   [Route("artists/{artistSlug}/lyrics")]
@@ -51,6 +59,28 @@ public class LyricController : Controller
       .GetSingleLyricAsync(artistSlug, lyricSlug, userId);
 
     viewModel.PrimarySlug = lyricSlug;
+
+    // populate submitter bb points data
+    try
+    {
+      if (!string.IsNullOrEmpty(viewModel.SubmitterUserId))
+      {
+        var submitterPoints = await _bbPointsService.GetSubmitterPointsAsync(viewModel.SubmitterUserId);
+        viewModel.SubmitterPoints = submitterPoints.TotalPoints;
+        viewModel.SubmitterLabel = submitterPoints.ContributorLabel;
+        viewModel.SubmitterProfileUrl = $"/profile/{submitterPoints.Username}";
+
+        // use the resolved username from the points service if it's more reliable
+        if (!string.IsNullOrEmpty(submitterPoints.Username))
+        {
+          viewModel.SubmitterUsername = submitterPoints.Username;
+        }
+      }
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "failed to fetch submitter points for lyric {ArtistSlug}/{LyricSlug}", artistSlug, lyricSlug);
+    }
 
     return View(viewModel);
   }
@@ -104,6 +134,25 @@ public class LyricController : Controller
 
     LyricCreateResultViewModel result = await _lyricsService
       .AddLyricAsync(viewModel);
+
+    // award bb points for lyric submission
+    try
+    {
+      string cognitoUserId = User.GetCognitoUserId();
+      string username = User.GetPreferredUsername();
+
+      bool earned = await _bbPointsService.AwardSubmissionPointsAsync(
+        cognitoUserId, username, PointActionType.LyricSubmitted,
+        result.LyricId, viewModel.Title, BbPointsConstants.LyricSubmitted);
+
+      TempData["BbPoints:Earned"] = earned;
+      TempData["BbPoints:Amount"] = BbPointsConstants.LyricSubmitted;
+      TempData["BbPoints:EntityType"] = "lyric";
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, "failed to award bb points for lyric creation {LyricId}", result.LyricId);
+    }
 
     return RedirectToAction("Like", "Lyric",
       new { artistSlug = result.ArtistSlug, lyricSlug = result.LyricSlug, lyricId = result.LyricId });

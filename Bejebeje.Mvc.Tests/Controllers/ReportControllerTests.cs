@@ -4,6 +4,7 @@ namespace Bejebeje.Mvc.Tests.Controllers
   using System.Collections.Generic;
   using System.Security.Claims;
   using System.Threading.Tasks;
+  using Bejebeje.Domain;
   using Bejebeje.Models.Report;
   using FluentAssertions;
   using Microsoft.AspNetCore.Http;
@@ -19,6 +20,7 @@ namespace Bejebeje.Mvc.Tests.Controllers
   public class ReportControllerTests
   {
     private Mock<ILyricReportsService> _mockReportsService;
+    private Mock<IBbPointsService> _mockPointsService;
     private Mock<ILogger<ReportController>> _mockLogger;
     private ReportController _controller;
     private string _testUserId;
@@ -27,14 +29,19 @@ namespace Bejebeje.Mvc.Tests.Controllers
     public void SetUp()
     {
       _mockReportsService = new Mock<ILyricReportsService>();
+      _mockPointsService = new Mock<IBbPointsService>();
       _mockLogger = new Mock<ILogger<ReportController>>();
-      _controller = new ReportController(_mockReportsService.Object, _mockLogger.Object);
+      _controller = new ReportController(
+        _mockReportsService.Object,
+        _mockPointsService.Object,
+        _mockLogger.Object);
       _testUserId = Guid.NewGuid().ToString();
 
       // set up authenticated user
       var claims = new List<Claim>
       {
         new Claim("sub", _testUserId),
+        new Claim("preferred_username", "testuser"),
         new Claim("email", "test@example.com"),
       };
 
@@ -72,9 +79,9 @@ namespace Bejebeje.Mvc.Tests.Controllers
     }
 
     [Test]
-    public async Task report_get_should_redirect_to_limit_reached_when_daily_limit_hit()
+    public async Task report_get_should_always_show_form_regardless_of_daily_count()
     {
-      // arrange
+      // arrange - no daily limit check means form always shows
       var viewModel = CreateTestLyricReportViewModel();
 
       _mockReportsService
@@ -82,15 +89,14 @@ namespace Bejebeje.Mvc.Tests.Controllers
         .ReturnsAsync(viewModel);
 
       _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(3);
+        .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
+        .ReturnsAsync(false);
 
       // act
       var result = await _controller.Report("test-artist", "test-lyric");
 
       // assert
-      var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-      redirect.ActionName.Should().Be("LimitReached");
+      result.Should().BeOfType<ViewResult>();
     }
 
     [Test]
@@ -102,10 +108,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
       _mockReportsService
         .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
         .ReturnsAsync(viewModel);
-
-      _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(0);
 
       _mockReportsService
         .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
@@ -129,10 +131,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
       _mockReportsService
         .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
         .ReturnsAsync(viewModel);
-
-      _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(0);
 
       _mockReportsService
         .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
@@ -190,29 +188,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
     }
 
     [Test]
-    public async Task submit_report_should_redirect_to_limit_reached_when_daily_limit_hit()
-    {
-      // arrange
-      var formModel = CreateTestFormModel();
-
-      var viewModel = CreateTestLyricReportViewModel();
-      _mockReportsService
-        .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
-        .ReturnsAsync(viewModel);
-
-      _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(3);
-
-      // act
-      var result = await _controller.SubmitReport("test-artist", "test-lyric", formModel);
-
-      // assert
-      var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-      redirect.ActionName.Should().Be("LimitReached");
-    }
-
-    [Test]
     public async Task submit_report_should_redirect_to_report_when_duplicate_exists()
     {
       // arrange
@@ -222,10 +197,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
       _mockReportsService
         .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
         .ReturnsAsync(viewModel);
-
-      _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(0);
 
       _mockReportsService
         .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
@@ -251,10 +222,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
         .ReturnsAsync(viewModel);
 
       _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(0);
-
-      _mockReportsService
         .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
         .ReturnsAsync(false);
 
@@ -272,7 +239,7 @@ namespace Bejebeje.Mvc.Tests.Controllers
     }
 
     [Test]
-    public async Task submit_report_should_call_send_report_emails()
+    public async Task submit_report_should_award_bb_points_after_saving()
     {
       // arrange
       var formModel = CreateTestFormModel();
@@ -283,8 +250,75 @@ namespace Bejebeje.Mvc.Tests.Controllers
         .ReturnsAsync(viewModel);
 
       _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(0);
+        .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
+        .ReturnsAsync(false);
+
+      _mockReportsService
+        .Setup(s => s.CreateReportAsync(_testUserId, 42, 1, "some comment"))
+        .ReturnsAsync(99);
+
+      _mockPointsService
+        .Setup(s => s.AwardSubmissionPointsAsync(
+          _testUserId, "testuser", PointActionType.ReportSubmitted, 42, "Test Lyric", 1))
+        .ReturnsAsync(true);
+
+      // act
+      await _controller.SubmitReport("test-artist", "test-lyric", formModel);
+
+      // assert
+      _mockPointsService.Verify(
+        s => s.AwardSubmissionPointsAsync(
+          _testUserId, "testuser", PointActionType.ReportSubmitted, 42, "Test Lyric", 1),
+        Times.Once);
+
+      _controller.TempData["BbPoints:Earned"].Should().Be(true);
+      _controller.TempData["BbPoints:Amount"].Should().Be(1);
+      _controller.TempData["BbPoints:EntityType"].Should().Be("report");
+    }
+
+    [Test]
+    public async Task submit_report_should_still_succeed_when_points_service_throws()
+    {
+      // arrange
+      var formModel = CreateTestFormModel();
+
+      var viewModel = CreateTestLyricReportViewModel();
+      _mockReportsService
+        .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
+        .ReturnsAsync(viewModel);
+
+      _mockReportsService
+        .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
+        .ReturnsAsync(false);
+
+      _mockReportsService
+        .Setup(s => s.CreateReportAsync(_testUserId, 42, 1, "some comment"))
+        .ReturnsAsync(99);
+
+      _mockPointsService
+        .Setup(s => s.AwardSubmissionPointsAsync(
+          It.IsAny<string>(), It.IsAny<string>(), It.IsAny<PointActionType>(),
+          It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>()))
+        .ThrowsAsync(new Exception("db error"));
+
+      // act
+      var result = await _controller.SubmitReport("test-artist", "test-lyric", formModel);
+
+      // assert
+      var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+      redirect.ActionName.Should().Be("ThankYou");
+    }
+
+    [Test]
+    public async Task submit_report_should_call_send_report_emails()
+    {
+      // arrange
+      var formModel = CreateTestFormModel();
+
+      var viewModel = CreateTestLyricReportViewModel();
+      _mockReportsService
+        .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
+        .ReturnsAsync(viewModel);
 
       _mockReportsService
         .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
@@ -344,45 +378,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
       model.ArtistName.Should().Be("Test Artist");
     }
 
-    // --- GET LimitReached ---
-
-    [Test]
-    public async Task limit_reached_should_return_view_with_correct_model()
-    {
-      // arrange
-      var viewModel = CreateTestLyricReportViewModel();
-      _mockReportsService
-        .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
-        .ReturnsAsync(viewModel);
-
-      // act
-      var result = await _controller.LimitReached("test-artist", "test-lyric");
-
-      // assert
-      var view = result.Should().BeOfType<ViewResult>().Subject;
-      var model = view.Model.Should().BeOfType<LyricReportLimitReachedViewModel>().Subject;
-      model.LyricTitle.Should().Be("Test Lyric");
-      model.ArtistSlug.Should().Be("test-artist");
-      model.LyricSlug.Should().Be("test-lyric");
-    }
-
-    [Test]
-    public async Task limit_reached_should_redirect_to_home_when_lyric_not_found()
-    {
-      // arrange
-      _mockReportsService
-        .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
-        .ReturnsAsync((LyricReportViewModel)null);
-
-      // act
-      var result = await _controller.LimitReached("test-artist", "test-lyric");
-
-      // assert
-      var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
-      redirect.ActionName.Should().Be("Index");
-      redirect.ControllerName.Should().Be("Home");
-    }
-
     // --- edge case: missing email claim ---
 
     [Test]
@@ -392,6 +387,7 @@ namespace Bejebeje.Mvc.Tests.Controllers
       var claims = new List<Claim>
       {
         new Claim("sub", _testUserId),
+        new Claim("preferred_username", "testuser"),
       };
 
       var identity = new ClaimsIdentity(claims, "TestAuth");
@@ -412,10 +408,6 @@ namespace Bejebeje.Mvc.Tests.Controllers
       _mockReportsService
         .Setup(s => s.GetLyricDetailsForReportAsync("test-artist", "test-lyric"))
         .ReturnsAsync(viewModel);
-
-      _mockReportsService
-        .Setup(s => s.GetReportCountForUserTodayAsync(_testUserId))
-        .ReturnsAsync(0);
 
       _mockReportsService
         .Setup(s => s.HasPendingReportForLyricAsync(_testUserId, 42))
