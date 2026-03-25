@@ -1,5 +1,5 @@
 using System;
-using System.IdentityModel.Tokens.Jwt;
+using System.Threading.RateLimiting;
 using Amazon.CognitoIdentityProvider;
 using Amazon.S3;
 using Amazon.SimpleEmailV2;
@@ -8,31 +8,20 @@ using Bejebeje.Services.Config;
 using Bejebeje.Services.Services;
 using Bejebeje.Mvc.Auth;
 using Bejebeje.Services.Services.Interfaces;
-using Bejebeje.Services.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // add services to the container.
-IdentityModelEventSource.ShowPII = true;
-
-string authority = builder.Configuration["Cognito:Authority"];
-
-string clientId = builder.Configuration["Cognito:ClientId"];
-
-string clientSecret = builder.Configuration["Cognito:ClientSecret"];
-
 string connectionString = builder.Configuration["ConnectionString"];
 
 builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
@@ -46,6 +35,8 @@ builder.Services.AddAWSService<IAmazonS3>();
 builder.Services.Configure<DatabaseOptions>(builder.Configuration);
 
 builder.Services.Configure<BbPointsOptions>(builder.Configuration.GetSection("BbPoints"));
+
+builder.Services.Configure<CognitoOptions>(builder.Configuration.GetSection("Cognito"));
 
 builder.WebHost.UseSentry();
 
@@ -73,46 +64,61 @@ builder.Services.AddScoped<ILyricReportsService, LyricReportsService>();
 
 builder.Services.AddScoped<IBbPointsService, BbPointsService>();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// cookie-only authentication (replaces oidc middleware)
 builder.Services.AddAuthentication(options =>
     {
       options.DefaultScheme = "Cookies";
-      options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+      options.DefaultChallengeScheme = "Cookies";
     })
-    .AddCookie("Cookies")
-    .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+    .AddCookie("Cookies", options =>
     {
-      options.Authority = authority;
-      options.RequireHttpsMetadata = false;
-      options.ClientId = clientId;
-      options.ClientSecret = clientSecret;
-      options.ResponseType = "code";
-      options.SaveTokens = true;
-      options.GetClaimsFromUserInfoEndpoint = true;
-      options.Scope.Clear();
-      options.Scope.Add("openid");
-      options.Scope.Add("email");
-      options.Scope.Add("profile");
-      options.ClaimActions.MapUniqueJsonKey("role", "role");
-      options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = "cognito:user", RoleClaimType = "cognito:groups" };
-      options.Events = new OpenIdConnectEvents
+      options.LoginPath = "/login";
+      options.Cookie.HttpOnly = true;
+      options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+      options.Cookie.SameSite = SameSiteMode.Lax;
+      options.Events.OnSigningIn = async context =>
       {
-        OnTokenValidated = async context =>
+        var identity = context.Principal?.Identity as System.Security.Claims.ClaimsIdentity;
+
+        if (identity != null)
         {
-          var handler = new OnTokenValidatedHandler(
+          var handler = new OnSigningInHandler(
             context.HttpContext.RequestServices.GetRequiredService<IBbPointsService>(),
             context.HttpContext.RequestServices.GetRequiredService<ICognitoService>(),
-            context.HttpContext.RequestServices.GetRequiredService<ILogger<OnTokenValidatedHandler>>());
+            context.HttpContext.RequestServices.GetRequiredService<ILogger<OnSigningInHandler>>());
 
-          await handler.HandleAsync(context.Principal);
-        },
+          await handler.HandleAsync(identity);
+        }
       };
     });
 
+// rate limiting for auth endpoints
+builder.Services.AddRateLimiter(options =>
+{
+  options.RejectionStatusCode = 429;
+
+  options.AddFixedWindowLimiter("auth-login", limiterOptions =>
+  {
+    limiterOptions.PermitLimit = 2;
+    limiterOptions.Window = TimeSpan.FromMinutes(1);
+  });
+
+  options.AddFixedWindowLimiter("auth-signup", limiterOptions =>
+  {
+    limiterOptions.PermitLimit = 2;
+    limiterOptions.Window = TimeSpan.FromMinutes(1);
+  });
+
+  options.OnRejected = async (context, cancellationToken) =>
+  {
+    context.HttpContext.Response.StatusCode = 429;
+    await context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.", cancellationToken);
+  };
+});
+
 builder.Services.AddControllersWithViews();
-
-JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 WebApplication app = builder.Build();
 
@@ -159,6 +165,8 @@ app.UseHttpsRedirection();
 app.MapStaticAssets();
 
 app.UseRouting();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 
