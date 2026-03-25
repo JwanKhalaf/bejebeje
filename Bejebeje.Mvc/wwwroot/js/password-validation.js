@@ -1,61 +1,94 @@
 // client-side password validation for cognito password policy
+// uses svg icon toggle pattern (x-circle / check-circle) with
+// container border colour change when all criteria are met
 (function () {
   const passwordInput = document.getElementById("password") || document.getElementById("newPassword");
+  const confirmPasswordInput = document.getElementById("confirmPassword");
   const submitBtn = document.getElementById("submit-btn");
-  const checkLength = document.getElementById("check-length");
-  const checkNumber = document.getElementById("check-number");
-  const checkUppercase = document.getElementById("check-uppercase");
-  const checkLowercase = document.getElementById("check-lowercase");
+  const validationContainer = document.getElementById("password-validation");
 
-  if (!passwordInput || !submitBtn) return;
+  if (!passwordInput || !submitBtn || !validationContainer) return;
 
   const rules = [
-    { element: checkLength, test: (v) => v.length >= 14 },
-    { element: checkNumber, test: (v) => /\d/.test(v) },
-    { element: checkUppercase, test: (v) => /[A-Z]/.test(v) },
-    { element: checkLowercase, test: (v) => /[a-z]/.test(v) },
+    {
+      id: "length",
+      test: function (v) { return v.length >= 14; },
+    },
+    {
+      id: "number",
+      test: function (v) { return /\d/.test(v); },
+    },
+    {
+      id: "uppercase",
+      test: function (v) { return /[A-Z]/.test(v); },
+    },
+    {
+      id: "lowercase",
+      test: function (v) { return /[a-z]/.test(v); },
+    },
   ];
 
-  const updateIndicator = (element, passed) => {
-    if (!element) return;
-    const dot = element.querySelector("span");
-    if (passed) {
-      dot.classList.remove("bg-neutral-600");
-      dot.classList.add("bg-green-500");
-      element.classList.remove("text-neutral-400");
-      element.classList.add("text-green-400");
-    } else {
-      dot.classList.remove("bg-green-500");
-      dot.classList.add("bg-neutral-600");
-      element.classList.remove("text-green-400");
-      element.classList.add("text-neutral-400");
-    }
+  var policyValid = false;
+  var matchValid = !confirmPasswordInput;
+
+  var updateIcon = function (id, passed) {
+    var invalidIcon = document.getElementById(id + "-icon-invalid");
+    var validIcon = document.getElementById(id + "-icon-valid");
+    var text = document.getElementById(id + "-text");
+
+    if (!invalidIcon || !validIcon || !text) return;
+
+    invalidIcon.style.display = passed ? "none" : "block";
+    validIcon.style.display = passed ? "block" : "none";
+    text.className = passed
+      ? "text-sm font-medium text-green-300"
+      : "text-sm font-medium text-red-300";
   };
 
-  const validate = () => {
-    const value = passwordInput.value;
-    const allPassed = rules.every(({ element, test }) => {
-      const passed = test(value);
-      updateIndicator(element, passed);
+  var updateContainer = function () {
+    var allValid = policyValid && matchValid;
+
+    if (allValid) {
+      validationContainer.className = "border rounded-md border-green-500/30 bg-green-500/10 p-3 mt-3";
+    } else {
+      validationContainer.className = "border rounded-md border-red-500/30 bg-red-500/10 p-3 mt-3";
+    }
+
+    submitBtn.disabled = !allValid;
+  };
+
+  var validatePolicy = function () {
+    var value = passwordInput.value;
+
+    policyValid = rules.every(function (rule) {
+      var passed = rule.test(value);
+      updateIcon(rule.id, passed);
       return passed;
     });
 
-    // check if password match validation also exists on this page
-    const matchCheck = window.passwordMatchValid;
-    const matchRequired = document.getElementById("confirmPassword") !== null;
-
-    if (matchRequired) {
-      submitBtn.disabled = !(allPassed && matchCheck === true);
-    } else {
-      submitBtn.disabled = !allPassed;
+    // if there is a confirm password field, also check match
+    if (confirmPasswordInput) {
+      validateMatch();
     }
 
-    // expose for password-match.js to use
-    window.passwordPolicyValid = allPassed;
+    updateContainer();
   };
 
-  passwordInput.addEventListener("input", validate);
+  var validateMatch = function () {
+    var pw = passwordInput.value;
+    var cpw = confirmPasswordInput.value;
 
-  // run once on load in case browser autofills
-  validate();
+    matchValid = pw.length > 0 && pw === cpw;
+    updateIcon("match", matchValid);
+    updateContainer();
+  };
+
+  passwordInput.addEventListener("input", validatePolicy);
+
+  if (confirmPasswordInput) {
+    confirmPasswordInput.addEventListener("input", validateMatch);
+  }
+
+  // run once on load
+  validatePolicy();
 })();

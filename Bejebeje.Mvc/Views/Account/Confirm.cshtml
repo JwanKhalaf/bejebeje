@@ -3,60 +3,96 @@
 @{
   ViewData["Title"] = "Confirm email";
   ViewData["Description"] = "Confirm your email address";
+  Layout = "_AuthLayout";
 }
 
-<div class="py-5 pr-4 mb-6">
-  <nav class="text-neutral-200 opacity-70 uppercase text-base">
-    / Confirm email
-  </nav>
-</div>
+<div class="flex min-h-full">
+  <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <div class="mx-auto w-full max-w-sm lg:w-96">
+      <div class="flex flex-col items-center">
+        <a href="/" aria-label="Bejebeje home">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.95 23.79" class="h-20 w-auto" aria-hidden="true">
+            <g>
+              <path fill="#e5e5e5" d="M19,16.09a7.17,7.17,0,0,1-.31,2.08c-.48,1.33-1.92.59-2.07.5h0l-6-3.65a1.86,1.86,0,0,0-2.13.17L6.87,16.47a1.14,1.14,0,0,1-1.36.1h0l-2.1-1.31a1.13,1.13,0,0,0-1.19,0l-1.46.85h0S0,16.42,0,15.52V6.77a6.77,6.77,0,0,1,13.54,0A6.61,6.61,0,0,1,13.16,9,7.24,7.24,0,0,1,19,16.09"/>
+              <path fill="#e5e5e5" d="M16.5,20.38a1,1,0,0,1,.13,1.49A7.21,7.21,0,0,1,12,23.79H10.76a.5.5,0,0,1-.49-.61c.13-.64.32-1.51.45-2.1a.8.8,0,0,0-.48-.91A1.46,1.46,0,0,1,9.36,19a14.14,14.14,0,0,1-.1-1.9.78.78,0,0,1,.74-.76.71.71,0,0,1,.46.13s4.15,2.65,6,3.89"/>
+              <path fill="#e5e5e5" d="M1.22,21s.76-1.1,1-1.6a.32.32,0,0,0-.2-.46H2a.4.4,0,0,1-.27-.56l.82-1.63a.38.38,0,0,1,.56-.15l2,1.26a.4.4,0,0,1,0,.62L1.72,21.3c-.3.25-.62,0-.5-.33"/>
+            </g>
+          </svg>
+        </a>
 
-<div class="pr-4 lg:pr-8 mb-8 max-w-md">
-  <h1 class="font-lora text-neutral-200 text-3xl mb-2">
-    Confirm your email
-  </h1>
+        <h1 class="mt-8 font-lora text-2xl/9 font-bold tracking-tight text-neutral-100">
+          Confirm your email
+        </h1>
 
-  <p class="text-neutral-400 text-sm mb-6">
-    We've sent a confirmation code to your email. Enter it below to verify your account.
-  </p>
+        <p class="mt-2 text-sm/6 text-neutral-400 text-center">
+          We've sent a confirmation code to your email. Enter it below to verify your account.
+        </p>
+      </div>
 
-  @if (!string.IsNullOrEmpty(Model.SuccessMessage))
-  {
-    <div class="rounded-md bg-green-900/50 border border-green-700 p-4 mb-6">
-      <p class="text-sm text-green-200">@Model.SuccessMessage</p>
+      <div class="mt-10">
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+          <div class="rounded-md bg-green-500/10 border border-green-500/20 p-4 mb-6" role="status">
+            <div class="flex">
+              <div class="shrink-0">
+                <svg viewBox="0 0 20 20" class="size-5 text-green-400" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <p class="ml-3 text-sm font-medium text-green-300">@Model.SuccessMessage</p>
+            </div>
+          </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+          <div class="rounded-md bg-red-500/10 border border-red-500/20 p-4 mb-6" role="alert">
+            <div class="flex">
+              <div class="shrink-0">
+                <svg viewBox="0 0 20 20" class="size-5 text-red-400" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+              <p class="ml-3 text-sm font-medium text-red-300">@Model.ErrorMessage</p>
+            </div>
+          </div>
+        }
+
+        <form method="post" asp-action="Confirm" class="space-y-6">
+          @Html.AntiForgeryToken()
+          <input type="hidden" name="Email" value="@Model.Email"/>
+
+          <div>
+            <label for="code" class="block text-sm/6 font-medium text-neutral-200">Confirmation code</label>
+            <div class="mt-2">
+              <input type="text" id="code" name="Code" value="@Model.Code" required
+                     autocomplete="one-time-code"
+                     class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-neutral-100 outline-1 -outline-offset-1 outline-neutral-600 placeholder:text-neutral-500 focus:outline-2 focus:-outline-offset-2 focus:outline-neutral-400 sm:text-sm/6"/>
+            </div>
+          </div>
+
+          <div>
+            <button type="submit"
+                    class="cursor-pointer flex w-full justify-center rounded-md bg-neutral-200 px-3 py-1.5 text-sm/6 font-semibold text-neutral-900 shadow-xs hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-200">
+              Confirm
+            </button>
+          </div>
+        </form>
+
+        <form method="post" asp-action="ResendCode" class="mt-4 text-center">
+          @Html.AntiForgeryToken()
+          <input type="hidden" name="Email" value="@Model.Email"/>
+
+          <button type="submit"
+                  class="cursor-pointer text-sm font-semibold text-neutral-200 hover:text-white underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-200">
+            Resend code
+          </button>
+        </form>
+      </div>
     </div>
-  }
+  </div>
 
-  @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-  {
-    <div class="rounded-md bg-red-900/50 border border-red-700 p-4 mb-6">
-      <p class="text-sm text-red-200">@Model.ErrorMessage</p>
-    </div>
-  }
-
-  <form method="post" asp-action="Confirm">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="Email" value="@Model.Email" />
-
-    <div class="mb-6">
-      <label for="code" class="block text-sm font-medium text-neutral-300 mb-1">Confirmation code</label>
-      <input type="text" id="code" name="Code" value="@Model.Code" required autocomplete="one-time-code"
-             class="w-full rounded-md bg-neutral-700 border border-neutral-600 text-neutral-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:border-transparent" />
-    </div>
-
-    <button type="submit"
-            class="w-full rounded-md bg-neutral-600 px-4 py-2 text-sm font-medium text-neutral-200 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500">
-      Confirm
-    </button>
-  </form>
-
-  <form method="post" asp-action="ResendCode" class="mt-4">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="Email" value="@Model.Email" />
-
-    <button type="submit"
-            class="text-sm text-neutral-200 underline hover:text-neutral-100">
-      Resend code
-    </button>
-  </form>
+  <div class="relative hidden w-0 flex-1 lg:block">
+    <div class="absolute inset-0 bg-neutral-800"></div>
+  </div>
 </div>
