@@ -5,4 +5,6 @@ using System.Threading.Tasks;
 public interface ICognitoService
 {
   Task<string> GetPreferredUsernameAsync(string userId);
+
+  Task<CognitoUserInfo> GetUserByEmailAsync(string email);
 }
