@@ -6,21 +6,21 @@
   ViewData["Description"] = "Search and find lyrics in the largest, community driven archive of Kurdish lyrics on the internet";
 }
 
+<h1 class="sr-only">Search Results</h1>
+
 <div class="py-5 pr-4 mb-6">
-  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+  <nav aria-label="Breadcrumb" class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Search" asp-action="Index">/ Search</a> / @Model.SearchTerm
   </nav>
 </div>
 
 @await Html.PartialAsync("_SearchForm")
 
-<div class="pr-4 lg:pr-8">
+<div class="pr-4 lg:pr-8" aria-live="polite">
   @if (!Model.Lyrics.Any() && !Model.Artists.Any() && !string.IsNullOrEmpty(Model.SearchTerm))
   {
     <div class="mb-10">
-      <div class="results__heading">
-        <h2>There were no matching artists and lyrics!</h2>
-      </div>
+      <p class="text-neutral-200 font-open-sans text-base">There were no matching artists and lyrics!</p>
     </div>
   }
   else
@@ -50,9 +50,9 @@
                          alt="@artist.ImageAlternateText"/>
                   </picture>
 
-                  <h5 class="text-neutral-200 font-open-sans text-base">
+                  <h3 class="text-neutral-200 font-open-sans text-base">
                     @artist.Name
-                  </h5>
+                  </h3>
                 </a>
               </li>
             }
@@ -60,7 +60,7 @@
         }
         else
         {
-          <h3>No matching artists!</h3>
+          <p class="text-neutral-300 font-open-sans">No matching artists!</p>
         }
       </div>
 
@@ -74,7 +74,7 @@
             {
               <li class="bg-neutral-700 p-4">
                 <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistSlug"
-                   asp-route-lyricSlug="@item.LyricPrimarySlug" class="flex flex-col gap-0.5 text-neutral-400 text-sm">
+                   asp-route-lyricSlug="@item.LyricPrimarySlug" class="flex flex-col gap-0.5 text-neutral-300 text-sm">
                   <strong class="text-neutral-200 font-lora text-base">@item.Title</strong>
 
                   @item.ArtistFullName
@@ -85,7 +85,7 @@
         }
         else
         {
-          <h3>No matching lyrics!</h3>
+          <p class="text-neutral-300 font-open-sans">No matching lyrics!</p>
         }
       </div>
     }
