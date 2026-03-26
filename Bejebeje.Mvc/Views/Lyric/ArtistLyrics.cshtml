@@ -6,7 +6,7 @@
 }
 
 <div class="py-5 pr-4 mb-6">
-  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+  <nav aria-label="Breadcrumb" class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Artist" asp-action="Index">/ Artists</a> / @Model.Artist.FullName
   </nav>
 </div>
@@ -35,7 +35,7 @@
 
     <div>
       <h1 class="font-open-sans text-neutral-200 uppercase">@Model.Artist.FullName</h1>
-      <span class="font-open-sans text-neutral-400">@Model.LyricCount</span>
+      <span class="font-open-sans text-neutral-300">@Model.LyricCount</span>
     </div>
   </div>
 </div>
@@ -48,7 +48,7 @@
       <li class="mb-4 bg-neutral-700 rounded-sm">
         <a class="p-4 flex justify-between items-center" asp-controller="Lyric" asp-action="Lyric"
            asp-route-artistSlug="@Model.Artist.PrimarySlug" asp-route-lyricSlug="@lyric.Slug">
-          <h4 class="font-lora text-neutral-400">@lyric.Title</h4>
+          <h2 class="font-lora text-neutral-300">@lyric.Title</h2>
 
           <div class="flex gap-4">
             @if (lyric.IsVerified)

@@ -10,7 +10,7 @@
 }
 
 <div class="py-5 pr-4 mb-6">
-  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+  <nav aria-label="Breadcrumb" class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Profile" asp-action="Index">/ Profile</a>
   </nav>
 </div>
@@ -101,7 +101,7 @@
           </div>
           <div class="text-right">
             <p class="text-amber-400 text-sm font-semibold">+@activity.Points</p>
-            <p class="text-neutral-500 text-xs">@activity.Date.ToString("d MMM yyyy")</p>
+            <p class="text-neutral-400 text-xs">@activity.Date.ToString("d MMM yyyy")</p>
           </div>
         </div>
       }

@@ -6,7 +6,7 @@
 }
 
 <div class="py-5 pr-4 mb-6">
-  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+  <nav aria-label="Breadcrumb" class="text-neutral-200 opacity-70 uppercase text-base">
     <a href="/artists/@Model.ArtistSlug/lyrics">/ @Model.ArtistName</a> /
     <a href="/artists/@Model.ArtistSlug/lyrics/@Model.LyricSlug">@Model.LyricTitle</a> / Report
   </nav>
@@ -161,7 +161,7 @@
         <textarea id="Comment" name="Comment" maxlength="2000" rows="4"
                   class="w-full rounded-sm bg-neutral-700 border border-neutral-600 text-neutral-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
                   placeholder="Provide any extra context that might help us review this lyric..."></textarea>
-        <p class="text-xs text-neutral-500 mt-1">
+        <p class="text-xs text-neutral-400 mt-1">
           <span id="comment-char-count">0</span> / 2000 characters
         </p>
       </div>

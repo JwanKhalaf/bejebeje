@@ -7,7 +7,7 @@
 }
 
 <div class="py-5 pr-4 mb-6">
-  <nav class="text-neutral-200 opacity-70 uppercase text-base">
+  <nav aria-label="Breadcrumb" class="text-neutral-200 opacity-70 uppercase text-base">
     <a asp-controller="Lyric" asp-action="ArtistLyrics"
        asp-route-artistSlug="@Model.Artist.PrimarySlug">/ @Model.Artist.FullName</a> / @Model.Title
   </nav>
@@ -53,7 +53,7 @@
           @if (!string.IsNullOrEmpty(Model.SubmitterProfileUrl))
           {
             <a href="@Model.SubmitterProfileUrl" class="text-amber-400 hover:text-amber-300 transition-colors">@Model.SubmitterUsername</a>
-            <span class="text-neutral-500 text-xs ml-1">@(((double)Model.SubmitterPoints).ToMetric(decimals: 1)) BB · @Model.SubmitterLabel</span>
+            <span class="text-neutral-400 text-xs ml-1">@(((double)Model.SubmitterPoints).ToMetric(decimals: 1)) BB · @Model.SubmitterLabel</span>
           }
           else
           {
@@ -66,17 +66,17 @@
 
   <div class="flex justify-between pr-4 lg:pr-8">
     <div class="mb-8">
-      <div class="text-neutral-200 font-lora whitespace-pre-line mb-8">
+      <div class="text-neutral-200 font-lora whitespace-pre-line mb-8" lang="ku">
         @Model.Body
       </div>
 
       @if (Model.Author.Id != null)
       {
         <a asp-controller="Author" asp-action="Get" asp-route-authorSlug="@Model.Author.PrimarySlug" class="bg-neutral-700 p-4 flex items-center gap-2 rounded-sm">
-          <i class="fa-solid fa-pen-nib text-neutral-400"></i>
-          <h6 class="text-neutral-200 font-semibold font-open-sans">
-            <span class="text-neutral-400">Lyrics by:</span> @Model.Author.FullName
-          </h6>
+          <i class="fa-solid fa-pen-nib text-neutral-300" aria-hidden="true"></i>
+          <p class="text-neutral-200 font-semibold font-open-sans">
+            <span class="text-neutral-300">Lyrics by:</span> @Model.Author.FullName
+          </p>
         </a>
       }
     </div>
@@ -102,8 +102,9 @@
              asp-action="Like"
              asp-route-artistSlug="@Model.Artist.PrimarySlug"
              asp-route-lyricSlug="@Model.PrimarySlug"
-             asp-route-lyricId="@Model.Id">
-            <svg viewBox="0 0 640 640" class="size-10 lg:size-8 text-neutral-500" fill="currentColor">
+             asp-route-lyricId="@Model.Id"
+             aria-label="Like this lyric">
+            <svg viewBox="0 0 640 640" class="size-10 lg:size-8 text-neutral-500" fill="currentColor" aria-hidden="true">
               <path d="M305 151.1L320 171.8L335 151.1C360 116.5 400.2 96 442.9 96C516.4 96 576 155.6 576 229.1L576 231.7C576 343.9 436.1 474.2 363.1 529.9C350.7 539.3 335.5 544 320 544C304.5 544 289.2 539.4 276.9 529.9C203.9 474.2 64 343.9 64 231.7L64 229.1C64 155.6 123.6 96 197.1 96C239.8 96 280 116.5 305 151.1z"/>
             </svg>
           </a>
