@@ -26,9 +26,16 @@
 
         <p class="mt-2 text-sm/6 text-neutral-400">
           Already have an account?
-          <a href="/login" class="font-semibold text-neutral-200 hover:text-white underline underline-offset-2">
+          @{
+            var signupReturnUrl = Context.Request.Query["returnUrl"].FirstOrDefault();
+          }
+          <a href="/login@(string.IsNullOrEmpty(signupReturnUrl) ? "" : $"?returnUrl={Uri.EscapeDataString(signupReturnUrl)}")" class="font-semibold text-neutral-200 hover:text-white underline underline-offset-2">
             Sign in
           </a>
+        </p>
+
+        <p class="mt-4 text-sm/6 text-neutral-500">
+          Create an account to add artists and lyrics, earn BB Points for approved contributions, and help preserve Kurdish music.
         </p>
       </div>
 
@@ -49,6 +56,7 @@
 
         <form method="post" asp-action="Signup" class="space-y-6">
           @Html.AntiForgeryToken()
+          <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
 
           <div>
             <label for="email" class="block text-sm/6 font-medium text-neutral-200">Email</label>

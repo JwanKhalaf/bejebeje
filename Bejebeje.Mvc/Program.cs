@@ -66,6 +66,10 @@ builder.Services.AddScoped<IBbPointsService, BbPointsService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services.AddScoped<IHomepageService, HomepageService>();
+
+builder.Services.AddMemoryCache();
+
 // cookie-only authentication (replaces oidc middleware)
 builder.Services.AddAuthentication(options =>
     {

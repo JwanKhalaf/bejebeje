@@ -1,111 +1,234 @@
-﻿@using Bejebeje.Models.Artist
-@using Bejebeje.Models.Lyric
-@model Bejebeje.Models.Lyric.IndexViewModel
+@using Bejebeje.Models.Artist
+@using Bejebeje.Models.Homepage
+@using Bejebeje.Common.Helpers
+@using Bejebeje.Common.Enums
+@model Bejebeje.Models.Homepage.HomepageViewModel
 
 @{
   ViewData["Title"] = "Kurdish Lyrics - Gotinên stranan";
   ViewData["Description"] = "The largest community driven archive of Kurdish lyrics on the web. Erşîva herî mezin ya gotinê stranê Kurdî.";
 }
 
-<h1 class="sr-only">Bêjebêje - Kurdish Lyrics Archive</h1>
+@* page-level analytics context *@
+<div id="homepage-analytics-context" data-is-authenticated="@Model.IsAuthenticated.ToString().ToLower()" data-ui-variant="homepage_v1" class="hidden"></div>
 
-<div class="py-5 pr-4 mb-6">
-  <nav aria-label="Breadcrumb" class="text-neutral-200 opacity-70 uppercase text-base">
-    <a asp-controller="Home" asp-action="Index">/ Home</a>
-  </nav>
-</div>
+@* section 1: hero area with search and ctas *@
+<section class="py-6 pr-4 lg:pr-8 mb-6">
+  <h1 class="font-lora text-2xl lg:text-3xl text-neutral-200 mb-3">Preserving Kurdish lyrics, together</h1>
+  <p class="font-open-sans text-neutral-400 text-sm lg:text-base mb-6">Search for your favourite artists and lyrics, discover new music, and help build the largest community-driven archive of Kurdish lyrics.</p>
 
-@await Html.PartialAsync("_SearchForm")
+  <div class="mb-6 w-full">
+    <form asp-controller="Search" asp-action="Search" method="get" role="search" id="homepage-search-form">
+      <label for="searchTerm" class="sr-only">Search for artist or lyric</label>
+      <input id="searchTerm" type="search" class="w-full bg-neutral-700 p-4 placeholder:text-neutral-200 placeholder:opacity-80 text-neutral-200 rounded-sm outline-0 focus:outline-2 focus:outline-red-400 focus:outline-offset-0" placeholder="Search for artist or lyric" name="searchTerm" autocomplete="off" />
+    </form>
+  </div>
 
-<section class="mb-8">
-  <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-2">Recent Submissions</h2>
-
-  <ul class="flex gap-4 overflow-y-hidden">
-    @foreach (LyricItemViewModel item in Model.RecentlySubmittedLyrics)
+  <div class="flex flex-col gap-3 lg:flex-row lg:gap-4">
+    @if (Model.IsAuthenticated)
     {
-      <li class="basis-[80px] grow-0 shrink-0">
-        <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
-           asp-route-lyricSlug="@item.LyricPrimarySlug" class="block mb-1">
-          <picture>
-            <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
-            <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
+      <a href="/artists/new/selector"
+         class="inline-block text-center font-open-sans text-sm font-semibold bg-red-500 text-white px-6 py-3 rounded-sm hover:bg-red-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+         data-analytics-cta data-cta-name="add_artist" data-entry-point="hero_add_artist" data-source-section="hero" data-destination-type="add_artist_page" data-auth-required="false">
+        Add an artist
+      </a>
+      <a href="/artists"
+         class="inline-block text-center font-open-sans text-sm font-semibold border border-neutral-500 text-neutral-200 px-6 py-3 rounded-sm hover:border-neutral-300 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+         data-analytics-cta data-cta-name="add_lyric" data-entry-point="hero_add_lyric" data-source-section="hero" data-destination-type="artist_index_page" data-auth-required="false">
+        Contribute a lyric
+      </a>
+    }
+    else
+    {
+      <a href="/login?returnUrl=@Uri.EscapeDataString("/artists/new/selector?entry_point=hero_add_artist&contribution_type=artist&source_section=hero")"
+         class="inline-block text-center font-open-sans text-sm font-semibold bg-red-500 text-white px-6 py-3 rounded-sm hover:bg-red-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+         data-analytics-cta data-cta-name="add_artist" data-entry-point="hero_add_artist" data-source-section="hero" data-destination-type="login_page" data-auth-required="true" data-contribution-type="artist" data-post-auth-destination="/artists/new/selector">
+        Join to add an artist
+      </a>
+      <a href="/login?returnUrl=@Uri.EscapeDataString("/artists?entry_point=hero_add_lyric&contribution_type=lyric&source_section=hero")"
+         class="inline-block text-center font-open-sans text-sm font-semibold border border-neutral-500 text-neutral-200 px-6 py-3 rounded-sm hover:border-neutral-300 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+         data-analytics-cta data-cta-name="add_lyric" data-entry-point="hero_add_lyric" data-source-section="hero" data-destination-type="login_page" data-auth-required="true" data-contribution-type="lyric" data-post-auth-destination="/artists">
+        Join to contribute a lyric
+      </a>
+    }
+  </div>
+</section>
 
-            <img class="rounded-sm mb-2"
-                 src=@($"{item.ArtistImageUrl}.jpg")
-                 width="80"
-                 height="80"
-                 loading="lazy"
-                 alt="@item.ArtistImageAlternateText"/>
-          </picture>
+@* section 2: help grow the archive *@
+<section class="mb-8 pr-4 lg:pr-8">
+  <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-4">Help grow the archive</h2>
 
-          <h3 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Title</h3>
-        </a>
+  <ul class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <li>
+      <a href="@(Model.IsAuthenticated ? "/artists/new/selector" : $"/login?returnUrl={Uri.EscapeDataString("/artists/new/selector?entry_point=help_grow_add_artist&contribution_type=artist&source_section=help_grow_archive")}")"
+         class="block bg-neutral-700 rounded-sm p-4 hover:bg-neutral-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+         data-analytics-cta data-cta-name="add_artist" data-entry-point="help_grow_add_artist" data-source-section="help_grow_archive" data-destination-type="@(Model.IsAuthenticated ? "add_artist_page" : "login_page")" data-auth-required="@(!Model.IsAuthenticated ? "true" : "false")" @if(!Model.IsAuthenticated){<text>data-contribution-type="artist" data-post-auth-destination="/artists/new/selector"</text>}>
+        <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Add a missing artist</span>
+        <span class="block font-open-sans text-xs text-neutral-400">Know an artist who isn't on Bêjebêje yet? Add them to the archive.</span>
+      </a>
+    </li>
 
-        <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug">
-          <p class="text-neutral-400 text-xs font-open-sans">@item.ArtistName</p>
+    <li>
+      <a href="@(Model.IsAuthenticated ? "/artists" : $"/login?returnUrl={Uri.EscapeDataString("/artists?entry_point=help_grow_add_lyric&contribution_type=lyric&source_section=help_grow_archive")}")"
+         class="block bg-neutral-700 rounded-sm p-4 hover:bg-neutral-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+         data-analytics-cta data-cta-name="add_lyric" data-entry-point="help_grow_add_lyric" data-source-section="help_grow_archive" data-destination-type="@(Model.IsAuthenticated ? "artist_index_page" : "login_page")" data-auth-required="@(!Model.IsAuthenticated ? "true" : "false")" @if(!Model.IsAuthenticated){<text>data-contribution-type="lyric" data-post-auth-destination="/artists"</text>}>
+        <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Add lyrics for an existing artist</span>
+        <span class="block font-open-sans text-xs text-neutral-400">Find an artist and contribute lyrics that are missing from their page.</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/artists"
+         class="block bg-neutral-700 rounded-sm p-4 hover:bg-neutral-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+         data-analytics-cta data-cta-name="report_issue" data-entry-point="help_grow_report_issue" data-source-section="help_grow_archive" data-destination-type="artist_index_page" data-auth-required="false">
+        <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Report an issue with a lyric</span>
+        <span class="block font-open-sans text-xs text-neutral-400">Spot an error or wrong attribution? Find the lyric and use the report button.</span>
+      </a>
+    </li>
+
+    @if (!Model.IsAuthenticated)
+    {
+      <li>
+        <a href="/signup"
+           class="block bg-neutral-700 rounded-sm p-4 hover:bg-neutral-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+           data-analytics-cta data-cta-name="join_contributor" data-entry-point="help_grow_join_contributor" data-source-section="help_grow_archive" data-destination-type="signup_page" data-auth-required="true">
+          <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Create an account</span>
+          <span class="block font-open-sans text-xs text-neutral-400">Join the community and get credit for your contributions.</span>
         </a>
       </li>
     }
   </ul>
 </section>
 
-<section class="mb-8">
-  <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-2">Recently Verified</h2>
+@* section 3: inline contribution explainer *@
+<section class="mb-8 pr-4 lg:pr-8">
+  <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-4">How contributing works</h2>
 
-  <ul class="flex gap-4 overflow-y-hidden">
-    @foreach (LyricItemViewModel item in Model.RecentlyVerifiedLyrics)
-    {
-      <li class="basis-[80px] grow-0 shrink-0">
-        <a asp-controller="Lyric" asp-action="Lyric" asp-route-artistSlug="@item.ArtistPrimarySlug"
-           asp-route-lyricSlug="@item.LyricPrimarySlug" class="block mb-1">
-          <picture>
-            <source type="image/webp" srcset=@($"{item.ArtistImageUrl}.webp")>
-            <source type="image/jpeg" srcset=@($"{item.ArtistImageUrl}.jpg")>
+  <ol class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <li class="bg-neutral-700 rounded-sm p-4">
+      <span class="block font-open-sans text-xs font-semibold text-red-400 uppercase mb-1">Step 1</span>
+      <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Submit</span>
+      <span class="block font-open-sans text-xs text-neutral-400">Add an artist or lyrics — it only takes a minute.</span>
+    </li>
 
-            <img class="rounded-sm mb-2"
-                 src=@($"{item.ArtistImageUrl}.jpg")
-                 width="80"
-                 height="80"
-                 loading="lazy"
-                 alt="@item.ArtistImageAlternateText"/>
-          </picture>
+    <li class="bg-neutral-700 rounded-sm p-4">
+      <span class="block font-open-sans text-xs font-semibold text-red-400 uppercase mb-1">Step 2</span>
+      <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Review</span>
+      <span class="block font-open-sans text-xs text-neutral-400">Our team reviews every submission for accuracy.</span>
+    </li>
 
-          <h3 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Title</h3>
-        </a>
+    <li class="bg-neutral-700 rounded-sm p-4">
+      <span class="block font-open-sans text-xs font-semibold text-red-400 uppercase mb-1">Step 3</span>
+      <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Published &amp; credited</span>
+      <span class="block font-open-sans text-xs text-neutral-400">Approved contributions go live and you're credited.</span>
+    </li>
 
-        <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.ArtistPrimarySlug">
-          <p class="text-neutral-400 text-xs font-open-sans">@item.ArtistName</p>
-        </a>
-
-      </li>
-    }
-  </ul>
+    <li class="bg-neutral-700 rounded-sm p-4">
+      <span class="block font-open-sans text-xs font-semibold text-red-400 uppercase mb-1">Step 4</span>
+      <span class="block font-open-sans text-sm font-semibold text-neutral-200 mb-1">Earn BB Points</span>
+      <span class="block font-open-sans text-xs text-neutral-400">Every approved submission earns you BB Points as a thank you.</span>
+    </li>
+  </ol>
 </section>
 
-<section class="mb-8">
-  <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-2">Popular Female Artists</h2>
+@* section 4: where help is needed *@
+<section class="mb-8 pr-4 lg:pr-8">
+  <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-4">Where help is needed</h2>
 
-  <ul class="flex gap-4 overflow-y-hidden">
-    @foreach (RandomFemaleArtistItemViewModel item in Model.FemaleArtists)
-    {
-      <li class="basis-[80px] grow-0 shrink-0">
-        <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@item.PrimarySlug"
-           class="block mb-1">
-          <picture>
-            <source type="image/webp" srcset=@($"{item.ImageUrl}.webp")>
-            <source type="image/jpeg" srcset=@($"{item.ImageUrl}.jpg")>
+  @if (Model.OpportunityCards != null && Model.OpportunityCards.Count > 0)
+  {
+    <ul class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      @foreach (var card in Model.OpportunityCards)
+      {
+        var imageUrl = ImageUrlBuilder.BuildArtistImageUrl(card.HasImage, card.ArtistId, ImageSize.Small);
+        var altText = ImageUrlBuilder.GetArtistImageAlternateText(card.HasImage, card.ArtistName);
 
-            <img class="rounded-sm mb-2"
-                 src=@($"{item.ImageUrl}.jpg")
-                 width="80"
-                 height="80"
-                 loading="lazy"
-                 alt="@item.ImageAlternateText"/>
-          </picture>
-
-          <h3 class="text-neutral-200 opacity-80 text-xs font-lora">@item.Name</h3>
-        </a>
-      </li>
-    }
-  </ul>
+        <li>
+          <a href="/artists/@card.ArtistSlug/lyrics"
+             class="block bg-neutral-700 rounded-sm p-4 hover:bg-neutral-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2 text-center"
+             data-analytics-opportunity data-opportunity-type="@card.OpportunityType" data-artist-id="@card.ArtistId">
+            <picture>
+              <source type="image/webp" srcset="@(imageUrl).webp">
+              <source type="image/jpeg" srcset="@(imageUrl).jpg">
+              <img class="rounded-sm mb-2 mx-auto"
+                   src="@(imageUrl).jpg"
+                   width="80"
+                   height="80"
+                   loading="lazy"
+                   alt="@altText" />
+            </picture>
+            <span class="block font-open-sans text-sm text-neutral-200">@card.ArtistName</span>
+            <span class="block font-open-sans text-xs text-neutral-400 mt-1">@card.ApprovedLyricCount @(card.ApprovedLyricCount == 1 ? "lyric" : "lyrics") so far</span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+  else
+  {
+    <p class="font-open-sans text-sm text-neutral-400">
+      The archive is in great shape — but there are always more artists to add!
+      <a href="@(Model.IsAuthenticated ? "/artists/new/selector" : $"/login?returnUrl={Uri.EscapeDataString("/artists/new/selector?entry_point=opportunity_fallback_add_artist&contribution_type=artist&source_section=where_help_is_needed")}")"
+         class="text-red-400 hover:text-red-300 underline focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2">Add an artist</a>.
+    </p>
+  }
 </section>
+
+@* section 5: community impact stats *@
+@if (Model.CommunityImpact != null)
+{
+  <section class="mb-8 pr-4 lg:pr-8">
+    <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-4">Community impact</h2>
+
+    <ul class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <li class="bg-neutral-700 rounded-sm p-4 text-center">
+        <span class="block font-lora text-3xl text-neutral-200 mb-1">@Model.CommunityImpact.TotalApprovedLyrics</span>
+        <span class="block font-open-sans text-xs text-neutral-400">@(Model.CommunityImpact.TotalApprovedLyrics == 1 ? "lyric" : "lyrics") preserved and growing</span>
+      </li>
+
+      <li class="bg-neutral-700 rounded-sm p-4 text-center">
+        <span class="block font-lora text-3xl text-neutral-200 mb-1">@Model.CommunityImpact.TotalApprovedArtists</span>
+        <span class="block font-open-sans text-xs text-neutral-400">@(Model.CommunityImpact.TotalApprovedArtists == 1 ? "artist" : "artists") documented so far</span>
+      </li>
+
+      <li class="bg-neutral-700 rounded-sm p-4 text-center">
+        <span class="block font-lora text-3xl text-neutral-200 mb-1">@Model.CommunityImpact.TotalContributors</span>
+        <span class="block font-open-sans text-xs text-neutral-400">@(Model.CommunityImpact.TotalContributors == 1 ? "contributor" : "contributors") and counting</span>
+      </li>
+    </ul>
+  </section>
+}
+
+@* section 6: curated discovery *@
+@if (Model.FemaleArtists != null && Model.FemaleArtists.Any())
+{
+  <section class="mb-8 pr-4 lg:pr-8">
+    <h2 class="font-open-sans text-red-400 tracking-wide uppercase text-lg mb-4">Women of Kurdish music</h2>
+
+    <ul class="flex gap-4 overflow-y-hidden">
+      @foreach (RandomFemaleArtistItemViewModel artist in Model.FemaleArtists)
+      {
+        <li class="basis-[80px] grow-0 shrink-0">
+          <a asp-controller="Lyric" asp-action="ArtistLyrics" asp-route-artistSlug="@artist.PrimarySlug"
+             class="block mb-1">
+            <picture>
+              <source type="image/webp" srcset="@(artist.ImageUrl).webp">
+              <source type="image/jpeg" srcset="@(artist.ImageUrl).jpg">
+              <img class="rounded-sm mb-2"
+                   src="@(artist.ImageUrl).jpg"
+                   width="80"
+                   height="80"
+                   loading="lazy"
+                   alt="@artist.ImageAlternateText" />
+            </picture>
+            <span class="text-neutral-200 opacity-80 text-xs font-lora">@artist.Name</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+@section Scripts {
+  <script src="~/js/homepage-analytics.js"></script>
+}

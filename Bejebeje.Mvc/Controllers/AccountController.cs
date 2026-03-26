@@ -103,6 +103,12 @@ namespace Bejebeje.Mvc.Controllers
 
       _logger.LogInformation("user logged in successfully: {Email}", model.Email);
 
+      // best effort: detect new signup for analytics
+      if (TempData["IsNewSignup"] != null)
+      {
+        TempData["Analytics:SignUpCompleted"] = true;
+      }
+
       if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
       {
         return Redirect(model.ReturnUrl);
@@ -112,9 +118,9 @@ namespace Bejebeje.Mvc.Controllers
     }
 
     [HttpGet("/signup")]
-    public IActionResult Signup()
+    public IActionResult Signup(string returnUrl = null)
     {
-      return View(new SignupViewModel());
+      return View(new SignupViewModel { ReturnUrl = returnUrl });
     }
 
     [HttpPost("/signup")]
@@ -137,6 +143,7 @@ namespace Bejebeje.Mvc.Controllers
       }
 
       TempData["SignUpEmail"] = model.Email;
+      TempData["SignUpReturnUrl"] = model.ReturnUrl;
       return RedirectToAction(nameof(Confirm));
     }
 
@@ -150,9 +157,12 @@ namespace Bejebeje.Mvc.Controllers
         return RedirectToAction(nameof(Signup));
       }
 
+      string returnUrl = TempData["SignUpReturnUrl"] as string;
+
       var viewModel = new ConfirmViewModel
       {
         Email = email,
+        ReturnUrl = returnUrl,
       };
 
       return View(viewModel);
@@ -204,6 +214,13 @@ namespace Bejebeje.Mvc.Controllers
       }
 
       TempData["ConfirmationSuccess"] = true;
+      TempData["IsNewSignup"] = true;
+
+      if (!string.IsNullOrEmpty(model.ReturnUrl))
+      {
+        return Redirect($"/login?returnUrl={Uri.EscapeDataString(model.ReturnUrl)}");
+      }
+
       return RedirectToAction(nameof(Login));
     }
 

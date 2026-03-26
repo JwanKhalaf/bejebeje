@@ -73,6 +73,13 @@ namespace Bejebeje.Mvc.Tests.Models
       var vm = new SignupViewModel { ErrorMessage = "Email taken" };
       vm.ErrorMessage.Should().Be("Email taken");
     }
+
+    [Test]
+    public void should_have_return_url_property()
+    {
+      var vm = new SignupViewModel { ReturnUrl = "/artists" };
+      vm.ReturnUrl.Should().Be("/artists");
+    }
   }
 
   [TestFixture]
@@ -104,6 +111,13 @@ namespace Bejebeje.Mvc.Tests.Models
     {
       var vm = new ConfirmViewModel { SuccessMessage = "Code resent" };
       vm.SuccessMessage.Should().Be("Code resent");
+    }
+
+    [Test]
+    public void should_have_return_url_property()
+    {
+      var vm = new ConfirmViewModel { ReturnUrl = "/artists" };
+      vm.ReturnUrl.Should().Be("/artists");
     }
   }
 

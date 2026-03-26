@@ -9,4 +9,6 @@ public class SignupViewModel
   public string Password { get; set; }
 
   public string ErrorMessage { get; set; }
+
+  public string ReturnUrl { get; set; }
 }

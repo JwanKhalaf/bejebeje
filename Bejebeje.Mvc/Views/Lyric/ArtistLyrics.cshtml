@@ -40,6 +40,31 @@
   </div>
 </div>
 
+@* contribution cta — placed below artist info, above lyrics list *@
+<div class="mr-4 lg:mr-8 mb-6">
+  @{
+    var artistIsAuth = User.Identity?.IsAuthenticated == true;
+  }
+  @if (artistIsAuth)
+  {
+    <a href="/artists/@Model.Artist.PrimarySlug/lyrics/new?entry_point=artist_header_add_lyric&contribution_type=lyric&source_section=artist_header"
+       id="artist-add-lyric-cta"
+       class="block bg-neutral-700 rounded-sm p-4 hover:bg-neutral-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+       data-artist-id="@Model.Artist.Id" data-auth-required="false">
+      <span class="font-open-sans text-sm text-neutral-200">Know another lyric by this artist? <span class="font-semibold text-red-400">Add one</span></span>
+    </a>
+  }
+  else
+  {
+    <a href="/login?returnUrl=@Uri.EscapeDataString($"/artists/{Model.Artist.PrimarySlug}/lyrics/new?entry_point=artist_header_add_lyric&contribution_type=lyric&source_section=artist_header")"
+       id="artist-add-lyric-cta"
+       class="block bg-neutral-700 rounded-sm p-4 hover:bg-neutral-600 transition-colors focus-visible:outline-2 focus-visible:outline-red-400 focus-visible:outline-offset-2"
+       data-artist-id="@Model.Artist.Id" data-auth-required="true">
+      <span class="font-open-sans text-sm text-neutral-200">Know another lyric by this artist? <span class="font-semibold text-red-400">Add one</span></span>
+    </a>
+  }
+</div>
+
 @if (Model.Lyrics.Any())
 {
   <ul class="mr-4 lg:mr-8 mb-10">
@@ -87,3 +112,7 @@
     Add a lyric for @Model.Artist.FullName
   </a>
 </div>
+
+@section Scripts {
+  <script src="~/js/artist-page-analytics.js"></script>
+}

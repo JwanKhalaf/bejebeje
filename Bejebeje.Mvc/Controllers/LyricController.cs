@@ -156,6 +156,18 @@ public class LyricController : Controller
       _logger.LogError(ex, "failed to award bb points for lyric creation {LyricId}", result.LyricId);
     }
 
+    // preserve analytics attribution through redirect chain
+    if (Request.HasFormContentType)
+    {
+      string attrEntryPoint = Request.Form["entry_point"].ToString();
+      if (!string.IsNullOrEmpty(attrEntryPoint))
+      {
+        TempData["Attribution:EntryPoint"] = attrEntryPoint;
+        TempData["Attribution:ContributionType"] = Request.Form["contribution_type"].ToString();
+        TempData["Attribution:SourceSection"] = Request.Form["source_section"].ToString();
+      }
+    }
+
     return RedirectToAction("Like", "Lyric",
       new { artistSlug = result.ArtistSlug, lyricSlug = result.LyricSlug, lyricId = result.LyricId });
   }

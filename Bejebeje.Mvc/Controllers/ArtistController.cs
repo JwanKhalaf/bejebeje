@@ -338,6 +338,18 @@ public class ArtistController : Controller
         _logger.LogError(pointsEx, "failed to award bb points for individual artist creation {ArtistId}", result.ArtistId);
       }
 
+      // preserve analytics attribution through redirect
+      if (Request.HasFormContentType)
+      {
+        string attrEntryPoint = Request.Form["entry_point"].ToString();
+        if (!string.IsNullOrEmpty(attrEntryPoint))
+        {
+          TempData["Attribution:EntryPoint"] = attrEntryPoint;
+          TempData["Attribution:ContributionType"] = Request.Form["contribution_type"].ToString();
+          TempData["Attribution:SourceSection"] = Request.Form["source_section"].ToString();
+        }
+      }
+
       _logger.LogInformation(
         "Individual artist creation completed successfully for '{FullName}', redirecting to artist page", fullName);
       return RedirectToAction("ArtistLyrics", "Lyric", new { artistSlug = result.PrimarySlug });

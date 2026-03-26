@@ -29,9 +29,13 @@
 
         <p class="mt-2 text-sm/6 text-neutral-400">
           Don't have an account?
-          <a href="/signup" class="font-semibold text-neutral-200 hover:text-white underline underline-offset-2">
+          <a href="/signup@(string.IsNullOrEmpty(Model.ReturnUrl) ? "" : $"?returnUrl={Uri.EscapeDataString(Model.ReturnUrl)}")" class="font-semibold text-neutral-200 hover:text-white underline underline-offset-2">
             Sign up
           </a>
+        </p>
+
+        <p class="mt-4 text-sm/6 text-neutral-500">
+          Sign in to contribute lyrics, add artists, and get credit for approved contributions.
         </p>
       </div>
 

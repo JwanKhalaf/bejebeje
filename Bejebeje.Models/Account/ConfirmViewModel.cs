@@ -9,4 +9,6 @@ public class ConfirmViewModel
   public string ErrorMessage { get; set; }
 
   public string SuccessMessage { get; set; }
+
+  public string ReturnUrl { get; set; }
 }

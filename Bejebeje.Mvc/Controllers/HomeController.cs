@@ -1,38 +1,25 @@
-﻿namespace Bejebeje.Mvc.Controllers
+namespace Bejebeje.Mvc.Controllers
 {
   using System.Diagnostics;
   using System.Threading.Tasks;
-  using Bejebeje.Models.Lyric;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.AspNetCore.Mvc;
   using Models;
 
   public class HomeController : Controller
   {
-    private readonly IArtistsService _artistsService;
+    private readonly IHomepageService _homepageService;
 
-    private readonly ILyricsService _lyricsService;
-
-    public HomeController(
-      IArtistsService artistsService,
-      ILyricsService lyricsService)
+    public HomeController(IHomepageService homepageService)
     {
-      _artistsService = artistsService;
-      _lyricsService = lyricsService;
+      _homepageService = homepageService;
     }
 
     public async Task<IActionResult> Index()
     {
-      IndexViewModel viewModel = new IndexViewModel();
+      bool isAuthenticated = User.Identity?.IsAuthenticated ?? false;
 
-      viewModel.RecentlyVerifiedLyrics = await _lyricsService
-        .GetRecentlyVerifiedLyricsAsync();
-
-      viewModel.RecentlySubmittedLyrics = await _lyricsService
-        .GetRecentlySubmittedLyricsAsync();
-
-      viewModel.FemaleArtists = await _artistsService
-        .GetTopTenFemaleArtistsByLyricsCountAsync();
+      var viewModel = await _homepageService.GetHomepageViewModelAsync(isAuthenticated);
 
       return View(viewModel);
     }

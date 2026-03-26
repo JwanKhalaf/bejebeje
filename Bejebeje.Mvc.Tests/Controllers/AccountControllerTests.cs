@@ -706,7 +706,8 @@ namespace Bejebeje.Mvc.Tests.Controllers
     internal static AccountController CreateController(
       Mock<IAuthService> mockAuthService = null,
       Mock<IBbPointsService> mockPointsService = null,
-      Mock<ICognitoService> mockCognitoService = null)
+      Mock<ICognitoService> mockCognitoService = null,
+      Mock<ILogger<AccountController>> mockLogger = null)
     {
       var controller = new AccountController(
         (mockAuthService ?? new Mock<IAuthService>()).Object,

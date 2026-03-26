@@ -1,10 +1,12 @@
-﻿namespace Bejebeje.Mvc.Tests.Controllers
+namespace Bejebeje.Mvc.Tests.Controllers
 {
   using System.Collections.Generic;
+  using System.Security.Claims;
   using System.Threading.Tasks;
   using Bejebeje.Models.Artist;
-  using Bejebeje.Models.Lyric;
+  using Bejebeje.Models.Homepage;
   using FluentAssertions;
+  using Microsoft.AspNetCore.Http;
   using Microsoft.AspNetCore.Mvc;
   using Moq;
   using Mvc.Controllers;
@@ -14,220 +16,159 @@
   [TestFixture]
   public class HomeControllerTests
   {
+    private Mock<IHomepageService> _mockHomepageService;
+    private HomeController _controller;
+
+    [SetUp]
+    public void Setup()
+    {
+      _mockHomepageService = new Mock<IHomepageService>();
+    }
+
     [Test]
-    public async Task Index_ReturnsAViewResult_WithAnIndexViewModel()
+    public async Task should_return_view_result_with_homepage_view_model()
     {
       // arrange
-      IEnumerable<RandomFemaleArtistItemViewModel> tenFemaleArtists = GetListOfFemaleArtists();
+      var viewModel = new HomepageViewModel
+      {
+        IsAuthenticated = false,
+        OpportunityCards = new List<OpportunityCardViewModel>().AsReadOnly(),
+        FemaleArtists = new List<RandomFemaleArtistItemViewModel>(),
+      };
 
-      Mock<IArtistsService> mockArtistsService = new Mock<IArtistsService>();
+      _mockHomepageService
+        .Setup(x => x.GetHomepageViewModelAsync(false))
+        .ReturnsAsync(viewModel);
 
-      mockArtistsService
-        .Setup(x => x.GetTopTenFemaleArtistsByLyricsCountAsync())
-        .ReturnsAsync(tenFemaleArtists);
-
-      IEnumerable<LyricItemViewModel> tenRecentLyrics = GetListOfRecentLyrics();
-
-      Mock<ILyricsService> mockLyricsService = new Mock<ILyricsService>();
-
-      mockLyricsService
-        .Setup(x => x.GetRecentlySubmittedLyricsAsync())
-        .ReturnsAsync(tenRecentLyrics);
-
-      HomeController homeController = new HomeController(mockArtistsService.Object, mockLyricsService.Object);
+      _controller = CreateController(isAuthenticated: false);
 
       // act
-      IActionResult actionResult = await homeController.Index();
+      var result = await _controller.Index();
 
       // assert
-      ViewResult view = actionResult.Should().BeOfType<ViewResult>().Subject;
-      IndexViewModel viewModel = view.Model.Should().BeOfType<IndexViewModel>().Subject;
-      viewModel.FemaleArtists.Should().HaveCount(10);
-      viewModel.RecentlySubmittedLyrics.Should().HaveCount(10);
+      var view = result.Should().BeOfType<ViewResult>().Subject;
+      view.Model.Should().BeOfType<HomepageViewModel>();
     }
 
-    private static IEnumerable<LyricItemViewModel> GetListOfRecentLyrics()
+    [Test]
+    public async Task should_pass_is_authenticated_true_when_user_is_authenticated()
     {
-      return new List<LyricItemViewModel>
-      {
-        new LyricItemViewModel
-        {
-          Title = "L1",
-          LyricPrimarySlug = "L1",
-          ArtistId = 1,
-          ArtistName = "L1",
-          ArtistPrimarySlug = "L1",
-          ArtistImageUrl = "L1",
-          ArtistImageAlternateText = "L1",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L2",
-          LyricPrimarySlug = "L2",
-          ArtistId = 2,
-          ArtistName = "L2",
-          ArtistPrimarySlug = "L2",
-          ArtistImageUrl = "L2",
-          ArtistImageAlternateText = "L2",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L3",
-          LyricPrimarySlug = "L3",
-          ArtistId = 3,
-          ArtistName = "L3",
-          ArtistPrimarySlug = "L3",
-          ArtistImageUrl = "L3",
-          ArtistImageAlternateText = "L3",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L4",
-          LyricPrimarySlug = "L4",
-          ArtistId = 4,
-          ArtistName = "L4",
-          ArtistPrimarySlug = "L4",
-          ArtistImageUrl = "L4",
-          ArtistImageAlternateText = "L4",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L5",
-          LyricPrimarySlug = "L5",
-          ArtistId = 5,
-          ArtistName = "L5",
-          ArtistPrimarySlug = "L5",
-          ArtistImageUrl = "L5",
-          ArtistImageAlternateText = "L5",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L6",
-          LyricPrimarySlug = "L6",
-          ArtistId = 6,
-          ArtistName = "L6",
-          ArtistPrimarySlug = "L6",
-          ArtistImageUrl = "L6",
-          ArtistImageAlternateText = "L6",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L7",
-          LyricPrimarySlug = "L7",
-          ArtistId = 7,
-          ArtistName = "L7",
-          ArtistPrimarySlug = "L7",
-          ArtistImageUrl = "L7",
-          ArtistImageAlternateText = "L7",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L8",
-          LyricPrimarySlug = "L8",
-          ArtistId = 8,
-          ArtistName = "L8",
-          ArtistPrimarySlug = "L8",
-          ArtistImageUrl = "L8",
-          ArtistImageAlternateText = "L8",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L9",
-          LyricPrimarySlug = "L9",
-          ArtistId = 9,
-          ArtistName = "L9",
-          ArtistPrimarySlug = "L9",
-          ArtistImageUrl = "L9",
-          ArtistImageAlternateText = "L9",
-        },
-        new LyricItemViewModel
-        {
-          Title = "L10",
-          LyricPrimarySlug = "L10",
-          ArtistId = 10,
-          ArtistName = "L10",
-          ArtistPrimarySlug = "L10",
-          ArtistImageUrl = "L10",
-          ArtistImageAlternateText = "L10",
-        },
-      };
+      // arrange
+      var viewModel = new HomepageViewModel { IsAuthenticated = true };
+
+      _mockHomepageService
+        .Setup(x => x.GetHomepageViewModelAsync(true))
+        .ReturnsAsync(viewModel);
+
+      _controller = CreateController(isAuthenticated: true);
+
+      // act
+      await _controller.Index();
+
+      // assert
+      _mockHomepageService.Verify(x => x.GetHomepageViewModelAsync(true), Times.Once);
     }
 
-    private static IEnumerable<RandomFemaleArtistItemViewModel> GetListOfFemaleArtists()
+    [Test]
+    public async Task should_pass_is_authenticated_false_when_user_is_anonymous()
     {
-      return new List<RandomFemaleArtistItemViewModel>
+      // arrange
+      var viewModel = new HomepageViewModel { IsAuthenticated = false };
+
+      _mockHomepageService
+        .Setup(x => x.GetHomepageViewModelAsync(false))
+        .ReturnsAsync(viewModel);
+
+      _controller = CreateController(isAuthenticated: false);
+
+      // act
+      await _controller.Index();
+
+      // assert
+      _mockHomepageService.Verify(x => x.GetHomepageViewModelAsync(false), Times.Once);
+    }
+
+    [Test]
+    public async Task should_return_homepage_view_model_with_opportunity_cards()
+    {
+      // arrange
+      var viewModel = new HomepageViewModel
       {
-        new RandomFemaleArtistItemViewModel
+        IsAuthenticated = false,
+        OpportunityCards = new List<OpportunityCardViewModel>
         {
-          Name = "A1",
-          ImageAlternateText = "A1",
-          ImageUrl = "A1",
-          PrimarySlug = "A1",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A2",
-          ImageAlternateText = "A2",
-          ImageUrl = "A2",
-          PrimarySlug = "A2",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A3",
-          ImageAlternateText = "A3",
-          ImageUrl = "A3",
-          PrimarySlug = "A3",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A4",
-          ImageAlternateText = "A4",
-          ImageUrl = "A4",
-          PrimarySlug = "A4",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A5",
-          ImageAlternateText = "A5",
-          ImageUrl = "A5",
-          PrimarySlug = "A5",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A6",
-          ImageAlternateText = "A6",
-          ImageUrl = "A6",
-          PrimarySlug = "A6",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A7",
-          ImageAlternateText = "A7",
-          ImageUrl = "A7",
-          PrimarySlug = "A7",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A8",
-          ImageAlternateText = "A8",
-          ImageUrl = "A8",
-          PrimarySlug = "A8",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A9",
-          ImageAlternateText = "A9",
-          ImageUrl = "A9",
-          PrimarySlug = "A9",
-        },
-        new RandomFemaleArtistItemViewModel
-        {
-          Name = "A10",
-          ImageAlternateText = "A10",
-          ImageUrl = "A10",
-          PrimarySlug = "A10",
-        }
+          new OpportunityCardViewModel { ArtistName = "Test" },
+        }.AsReadOnly(),
+        FemaleArtists = new List<RandomFemaleArtistItemViewModel>(),
       };
+
+      _mockHomepageService
+        .Setup(x => x.GetHomepageViewModelAsync(false))
+        .ReturnsAsync(viewModel);
+
+      _controller = CreateController(isAuthenticated: false);
+
+      // act
+      var result = await _controller.Index();
+
+      // assert
+      var view = result.Should().BeOfType<ViewResult>().Subject;
+      var model = view.Model.Should().BeOfType<HomepageViewModel>().Subject;
+      model.OpportunityCards.Should().HaveCount(1);
+    }
+
+    [Test]
+    public async Task should_return_homepage_view_model_with_female_artists()
+    {
+      // arrange
+      var viewModel = new HomepageViewModel
+      {
+        IsAuthenticated = false,
+        OpportunityCards = new List<OpportunityCardViewModel>().AsReadOnly(),
+        FemaleArtists = new List<RandomFemaleArtistItemViewModel>
+        {
+          new RandomFemaleArtistItemViewModel { Name = "Gulistan" },
+        },
+      };
+
+      _mockHomepageService
+        .Setup(x => x.GetHomepageViewModelAsync(false))
+        .ReturnsAsync(viewModel);
+
+      _controller = CreateController(isAuthenticated: false);
+
+      // act
+      var result = await _controller.Index();
+
+      // assert
+      var view = result.Should().BeOfType<ViewResult>().Subject;
+      var model = view.Model.Should().BeOfType<HomepageViewModel>().Subject;
+      model.FemaleArtists.Should().HaveCount(1);
+    }
+
+    private HomeController CreateController(bool isAuthenticated)
+    {
+      var controller = new HomeController(_mockHomepageService.Object);
+
+      var claims = new List<Claim>();
+
+      if (isAuthenticated)
+      {
+        claims.Add(new Claim(ClaimTypes.Name, "testuser"));
+      }
+
+      var identity = new ClaimsIdentity(
+        claims,
+        isAuthenticated ? "TestAuth" : null);
+
+      var principal = new ClaimsPrincipal(identity);
+
+      controller.ControllerContext = new ControllerContext
+      {
+        HttpContext = new DefaultHttpContext { User = principal },
+      };
+
+      return controller;
     }
   }
 }

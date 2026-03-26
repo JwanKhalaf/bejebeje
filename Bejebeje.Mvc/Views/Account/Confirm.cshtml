@@ -61,6 +61,7 @@
         <form method="post" asp-action="Confirm" class="space-y-6">
           @Html.AntiForgeryToken()
           <input type="hidden" name="Email" value="@Model.Email"/>
+          <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl"/>
 
           <div>
             <label for="code" class="block text-sm/6 font-medium text-neutral-200">Confirmation code</label>

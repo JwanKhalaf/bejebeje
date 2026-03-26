@@ -122,6 +122,18 @@ public class ReportController : Controller
       categoryDisplayLabel,
       formModel.Comment);
 
+    // preserve analytics attribution through redirect
+    if (Request.HasFormContentType)
+    {
+      string attrEntryPoint = Request.Form["entry_point"].ToString();
+      if (!string.IsNullOrEmpty(attrEntryPoint))
+      {
+        TempData["Attribution:EntryPoint"] = attrEntryPoint;
+        TempData["Attribution:ContributionType"] = Request.Form["contribution_type"].ToString();
+        TempData["Attribution:SourceSection"] = Request.Form["source_section"].ToString();
+      }
+    }
+
     // set tempdata for thank-you page
     TempData["LyricTitle"] = viewModel.LyricTitle;
     TempData["ArtistName"] = viewModel.ArtistName;

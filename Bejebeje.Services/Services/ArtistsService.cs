@@ -149,7 +149,7 @@ public class ArtistsService : IArtistsService
     await connection.OpenAsync();
 
     string sqlCommand =
-      @"select a.id, a.first_name, a.last_name, s.""name"", a.has_image, count(l.id) as number_of_lyrics from artists a left join lyrics l on a.id = l.artist_id inner join artist_slugs s on s.artist_id = a.id where a.sex = 'f' and s.is_primary = true group by a.id, s.""name"" order by number_of_lyrics desc limit 10;";
+      @"select a.id, a.first_name, a.last_name, s.""name"", a.has_image, count(l.id) as number_of_lyrics from artists a left join lyrics l on a.id = l.artist_id and l.is_approved = true and l.is_deleted = false inner join artist_slugs s on s.artist_id = a.id where a.sex = 'f' and s.is_primary = true and a.is_approved = true and a.is_deleted = false group by a.id, s.""name"" order by number_of_lyrics desc limit 10;";
 
     await using NpgsqlCommand command = new NpgsqlCommand(sqlCommand, connection);
 
