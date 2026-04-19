@@ -7,7 +7,7 @@ namespace Bejebeje.Mvc.Tests.Auth
   using System.Text;
   using System.Text.Json;
   using System.Threading.Tasks;
-  using Bejebeje.Domain;
+  using Bejebeje.Shared.Domain;
   using Bejebeje.Mvc.Auth;
   using Bejebeje.Services.Services.Interfaces;
   using FluentAssertions;

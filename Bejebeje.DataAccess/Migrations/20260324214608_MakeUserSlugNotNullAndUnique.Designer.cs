@@ -25,7 +25,7 @@ namespace Bejebeje.DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Bejebeje.Domain.Artist", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.Artist", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,7 +84,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("artists", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.ArtistSlug", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +126,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("artist_slugs", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.Author", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -185,7 +185,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("authors", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.AuthorSlug", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.AuthorSlug", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -227,7 +227,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("author_slugs", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.Lyric", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,7 +284,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("lyrics", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.LyricReport", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.LyricReport", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -350,7 +350,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("lyric_reports", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.LyricSlug", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -392,7 +392,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("lyric_slugs", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.PointEvent", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.PointEvent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -439,7 +439,7 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("point_events", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.User", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -514,9 +514,9 @@ namespace Bejebeje.DataAccess.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.ArtistSlug", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.ArtistSlug", b =>
                 {
-                    b.HasOne("Bejebeje.Domain.Artist", null)
+                    b.HasOne("Bejebeje.Shared.Domain.Artist", null)
                         .WithMany("Slugs")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -524,9 +524,9 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasConstraintName("fk_artist_slugs_artists_artist_id");
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.AuthorSlug", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.AuthorSlug", b =>
                 {
-                    b.HasOne("Bejebeje.Domain.Author", null)
+                    b.HasOne("Bejebeje.Shared.Domain.Author", null)
                         .WithMany("Slugs")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -534,16 +534,16 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasConstraintName("fk_author_slugs_authors_author_id");
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.Lyric", b =>
                 {
-                    b.HasOne("Bejebeje.Domain.Artist", "Artist")
+                    b.HasOne("Bejebeje.Shared.Domain.Artist", "Artist")
                         .WithMany("Lyrics")
                         .HasForeignKey("ArtistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_lyrics_artists_artist_id");
 
-                    b.HasOne("Bejebeje.Domain.Author", "Author")
+                    b.HasOne("Bejebeje.Shared.Domain.Author", "Author")
                         .WithMany("Lyrics")
                         .HasForeignKey("AuthorId")
                         .HasConstraintName("fk_lyrics_authors_author_id");
@@ -553,9 +553,9 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.LyricSlug", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.LyricSlug", b =>
                 {
-                    b.HasOne("Bejebeje.Domain.Lyric", null)
+                    b.HasOne("Bejebeje.Shared.Domain.Lyric", null)
                         .WithMany("Slugs")
                         .HasForeignKey("LyricId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -563,9 +563,9 @@ namespace Bejebeje.DataAccess.Migrations
                         .HasConstraintName("fk_lyric_slugs_lyrics_lyric_id");
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.PointEvent", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.PointEvent", b =>
                 {
-                    b.HasOne("Bejebeje.Domain.User", "User")
+                    b.HasOne("Bejebeje.Shared.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -575,21 +575,21 @@ namespace Bejebeje.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.Artist", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.Artist", b =>
                 {
                     b.Navigation("Lyrics");
 
                     b.Navigation("Slugs");
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.Author", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.Author", b =>
                 {
                     b.Navigation("Lyrics");
 
                     b.Navigation("Slugs");
                 });
 
-            modelBuilder.Entity("Bejebeje.Domain.Lyric", b =>
+            modelBuilder.Entity("Bejebeje.Shared.Domain.Lyric", b =>
                 {
                     b.Navigation("Slugs");
                 });

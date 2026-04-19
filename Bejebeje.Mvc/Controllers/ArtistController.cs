@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Bejebeje.Common.Extensions;
 using Bejebeje.Models.Artist;
 using Bejebeje.Services.Services.Interfaces;
-using Bejebeje.Domain;
+using Bejebeje.Shared.Domain;
 using Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

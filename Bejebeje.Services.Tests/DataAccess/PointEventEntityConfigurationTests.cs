@@ -4,7 +4,7 @@ namespace Bejebeje.Services.Tests.DataAccess
   using System.Linq;
   using System.Threading.Tasks;
   using Bejebeje.DataAccess.Context;
-  using Bejebeje.Domain;
+  using Bejebeje.Shared.Domain;
   using Bejebeje.Services.Tests.Helpers;
   using FluentAssertions;
   using Microsoft.EntityFrameworkCore;

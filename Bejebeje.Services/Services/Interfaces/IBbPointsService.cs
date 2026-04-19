@@ -1,7 +1,7 @@
 namespace Bejebeje.Services.Services.Interfaces;
 
 using System.Threading.Tasks;
-using Bejebeje.Domain;
+using Bejebeje.Shared.Domain;
 using Bejebeje.Models.BbPoints;
 
 public interface IBbPointsService
