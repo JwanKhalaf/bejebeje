@@ -2,6 +2,7 @@
 {
   using System;
   using System.Collections.Generic;
+  using System.ComponentModel.DataAnnotations.Schema;
   using Interfaces;
 
   public class Lyric : IBaseEntity, IApprovable
@@ -23,6 +24,15 @@
     public bool IsDeleted { get; set; }
 
     public bool IsApproved { get; set; }
+
+    public bool? IsVerified { get; set; }
+
+    public DateTime? VerifiedAt { get; set; }
+
+    public bool? IsImported { get; set; }
+
+    [Column("youtube_link")]
+    public string YouTubeLink { get; set; }
 
     public int ArtistId { get; set; }
 
