@@ -28,9 +28,19 @@
 
     public DbSet<PointEvent> PointEvents { get; set; }
 
+    public DbSet<Like> Likes { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
       base.OnModelCreating(builder);
+
+      builder.Entity<Like>(entity =>
+      {
+        entity.ToTable("likes");
+
+        entity.HasKey(e => new { e.UserId, e.LyricId })
+          .HasName("primary_key");
+      });
 
       builder.Entity<LyricReport>(entity =>
       {

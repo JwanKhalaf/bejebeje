@@ -32,6 +32,10 @@
 
     public bool HasImage { get; set; }
 
-    public char Sex { get; set; }
+    public char? Sex { get; set; }
+
+    public bool? IsImported { get; set; }
+
+    public bool? IsGroup { get; set; }
   }
 }
