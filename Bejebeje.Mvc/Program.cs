@@ -38,7 +38,7 @@ builder.Services.Configure<BbPointsOptions>(builder.Configuration.GetSection("Bb
 
 builder.Services.Configure<CognitoOptions>(builder.Configuration.GetSection("Cognito"));
 
-builder.WebHost.UseSentry();
+builder.Logging.AddSeq();
 
 builder.Services.AddDbContext<BbContext>(options => options
       .UseNpgsql(connectionString)
@@ -132,8 +132,6 @@ forwardedHeadersOptions.KnownNetworks.Clear();
 forwardedHeadersOptions.KnownProxies.Clear();
 
 app.UseForwardedHeaders(forwardedHeadersOptions);
-
-app.UseSentryTracing();
 
 // configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
