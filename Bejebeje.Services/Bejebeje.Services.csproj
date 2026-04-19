@@ -16,6 +16,7 @@
     <PackageReference Include="AWSSDK.Core" Version="4.0.3.3" />
     <PackageReference Include="AWSSDK.S3" Version="4.0.0-preview.4" />
     <PackageReference Include="AWSSDK.SimpleEmailV2" Version="4.0.0-preview.4" />
+    <PackageReference Include="Bejebeje.Shared" Version="0.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
     <PackageReference Include="NodaTime" Version="3.2.0" />
@@ -27,7 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bejebeje.Common\Bejebeje.Common.csproj" />
-    <ProjectReference Include="..\Bejebeje.Domain\Bejebeje.Domain.csproj" />
     <ProjectReference Include="..\Bejebeje.Models\Bejebeje.Models.csproj" />
     <ProjectReference Include="..\Bejebeje.DataAccess\Bejebeje.DataAccess.csproj" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 namespace Bejebeje.Mvc.Tests.Domain
 {
   using System;
-  using Bejebeje.Domain;
+  using Bejebeje.Shared.Domain;
   using FluentAssertions;
   using NUnit.Framework;
 

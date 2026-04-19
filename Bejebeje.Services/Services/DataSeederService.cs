@@ -5,7 +5,7 @@
   using System.Linq;
   using System.Threading.Tasks;
   using DataAccess.Context;
-  using Domain;
+  using Bejebeje.Shared.Domain;
   using Interfaces;
   using Microsoft.EntityFrameworkCore;
 

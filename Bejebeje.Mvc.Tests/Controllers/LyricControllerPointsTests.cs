@@ -4,7 +4,7 @@ namespace Bejebeje.Mvc.Tests.Controllers
   using System.Collections.Generic;
   using System.Security.Claims;
   using System.Threading.Tasks;
-  using Bejebeje.Domain;
+  using Bejebeje.Shared.Domain;
   using Bejebeje.Models.Artist;
   using Bejebeje.Models.BbPoints;
   using Bejebeje.Models.Lyric;

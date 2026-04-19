@@ -2,7 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Bejebeje.Domain;
+using Bejebeje.Shared.Domain;
 using Bejebeje.Models.Artist;
 using Bejebeje.Models.Lyric;
 using Extensions;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bejebeje.Common.Extensions;
 using Bejebeje.DataAccess.Context;
-using Bejebeje.Domain;
+using Bejebeje.Shared.Domain;
 using Bejebeje.Models.BbPoints;
 using Bejebeje.Services.Config;
 using Bejebeje.Services.Services.Interfaces;

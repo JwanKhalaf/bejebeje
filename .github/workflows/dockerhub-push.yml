@@ -36,12 +36,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # build the docker image then push it to docker hub
+      # the gh_pat secret is forwarded to buildkit so nuget restore can
+      # authenticate against github packages (bejebeje.shared package)
       - name: build and push
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Bejebeje.Mvc/Dockerfile
           push: true
+          secrets: |
+            gh_pat=${{ secrets.GH_PACKAGES_TOKEN }}
           tags: |
             bejebeje/mvc:latest
             bejebeje/mvc:${{ github.sha }}

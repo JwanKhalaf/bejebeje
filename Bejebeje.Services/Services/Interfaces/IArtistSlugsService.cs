@@ -1,7 +1,7 @@
 ﻿namespace Bejebeje.Services.Services.Interfaces
 {
   using System.Threading.Tasks;
-  using Domain;
+  using Bejebeje.Shared.Domain;
   using Models.ArtistSlug;
 
   public interface IArtistSlugsService

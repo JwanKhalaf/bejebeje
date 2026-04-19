@@ -11,7 +11,7 @@ using Common.Exceptions;
 using Common.Helpers;
 using Config;
 using DataAccess.Context;
-using Domain;
+using Bejebeje.Shared.Domain;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;

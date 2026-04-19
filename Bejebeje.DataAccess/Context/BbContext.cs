@@ -1,6 +1,6 @@
 ﻿namespace Bejebeje.DataAccess.Context
 {
-  using Domain;
+  using Bejebeje.Shared.Domain;
   using Microsoft.EntityFrameworkCore;
 
   public class BbContext : DbContext

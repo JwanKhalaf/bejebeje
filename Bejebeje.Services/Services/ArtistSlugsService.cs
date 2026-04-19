@@ -4,7 +4,7 @@
   using System.Threading.Tasks;
   using Bejebeje.Common.Extensions;
   using Config;
-  using Domain;
+  using Bejebeje.Shared.Domain;
   using Interfaces;
   using Microsoft.Extensions.Options;
   using Models.ArtistSlug;

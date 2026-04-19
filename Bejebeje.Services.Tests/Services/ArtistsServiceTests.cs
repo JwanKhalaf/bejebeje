@@ -7,7 +7,7 @@
 //  using System.Linq;
 //  using System.Threading.Tasks;
 //  using Bejebeje.Common.Exceptions;
-//  using Bejebeje.Domain;
+//  using Bejebeje.Shared.Domain;
 //  using Bejebeje.Models.Artist;
 //  using Bejebeje.Services.Services;
 //  using Bejebeje.Services.Services.Interfaces;
