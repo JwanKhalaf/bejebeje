@@ -12,10 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="4.0.4" />
-    <PackageReference Include="AWSSDK.Core" Version="4.0.3.3" />
-    <PackageReference Include="AWSSDK.S3" Version="4.0.0-preview.4" />
-    <PackageReference Include="AWSSDK.SimpleEmailV2" Version="4.0.0-preview.4" />
+    <PackageReference Include="AWSSDK.CognitoIdentityProvider" Version="4.0.7" />
+    <PackageReference Include="AWSSDK.Core" Version="4.0.3.30" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.21.2" />
+    <PackageReference Include="AWSSDK.SimpleEmailV2" Version="4.0.12.10" />
     <PackageReference Include="Bejebeje.Shared" Version="0.1.0" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
