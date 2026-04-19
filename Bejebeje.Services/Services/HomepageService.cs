@@ -6,7 +6,7 @@ namespace Bejebeje.Services.Services
   using System.Threading.Tasks;
   using Bejebeje.DataAccess.Context;
   using Bejebeje.Models.Homepage;
-  using Bejebeje.Domain;
+  using Bejebeje.Shared.Domain;
   using Bejebeje.Services.Services.Interfaces;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Caching.Memory;

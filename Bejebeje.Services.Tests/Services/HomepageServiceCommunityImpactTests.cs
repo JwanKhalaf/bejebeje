@@ -3,7 +3,7 @@ namespace Bejebeje.Services.Tests.Services
   using System;
   using System.Linq;
   using System.Threading.Tasks;
-  using Bejebeje.Domain;
+  using Bejebeje.Shared.Domain;
   using Bejebeje.Services.Services;
   using Bejebeje.Services.Services.Interfaces;
   using Bejebeje.Services.Tests.Helpers;
