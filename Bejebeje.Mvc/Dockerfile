@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7
+
 # set base image as the dotnet 10.0 SDK.
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 
@@ -20,8 +22,13 @@ COPY . ./
 
 # again, on the container (we are in /app folder)
 # we now publish the project into a folder called 'out'.
-RUN export NVM_DIR="$HOME/.nvm" \
+# the gh_pat secret is mounted as a file only for this step and read
+# into GH_PACKAGES_TOKEN so nuget.config can authenticate against
+# github packages without baking the token into any image layer.
+RUN --mount=type=secret,id=gh_pat \
+    export NVM_DIR="$HOME/.nvm" \
     && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
+    && export GH_PACKAGES_TOKEN="$(cat /run/secrets/gh_pat)" \
     && dotnet publish Bejebeje.Mvc/Bejebeje.Mvc.csproj -c Release -o out
 
 # set base image as the dotnet 10.0 runtime.

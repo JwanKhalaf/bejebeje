@@ -5,6 +5,8 @@ services:
       dockerfile: ./Bejebeje.Mvc/Dockerfile
       labels:
         com.bejebeje.description: "Bejebeje MVC"
+      secrets:
+        - gh_pat
     ports:
       - "5010:5005"
     env_file:
@@ -56,4 +58,8 @@ volumes:
 networks:
   bejebeje_network:
     driver: bridge
+
+secrets:
+  gh_pat:
+    environment: GH_PACKAGES_TOKEN
 
