@@ -11,16 +11,17 @@ services:
       - ./variables.env
     depends_on:
       - database
+      - seq
     networks:
       - bejebeje_network
     container_name: bejebeje-mvc
 
   database:
-    image: postgres:17.2
+    image: postgres:18.3
     ports:
       - "8002:5432"
     volumes:
-      - ./data/postgresql:/var/lib/postgresql/data
+      - database-data:/var/lib/postgresql
     env_file:
       - ./variables.env
     healthcheck:
@@ -32,13 +33,25 @@ services:
       - bejebeje_network
     container_name: bejebeje-database
 
+  seq:
+    image: datalust/seq:2025.2
+    ports:
+      - "8003:80"
+      - "5341:5341"
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
+    volumes:
+      - seq-data:/data
+    networks:
+      - bejebeje_network
+    container_name: bejebeje-seq
+
 volumes:
-  data-volume:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./data/postgresql
+  database-data:
+    name: bejebeje-database-data
+  seq-data:
+    name: bejebeje-seq-data
 
 networks:
   bejebeje_network:

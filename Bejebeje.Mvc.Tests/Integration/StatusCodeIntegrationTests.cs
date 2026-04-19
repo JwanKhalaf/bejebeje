@@ -28,7 +28,6 @@ namespace Bejebeje.Mvc.Tests.Integration
     public void OneTimeSetUp()
     {
       // set environment variables before factory starts — Program.cs reads these directly
-      Environment.SetEnvironmentVariable("Sentry__Dsn", "");
       Environment.SetEnvironmentVariable("ConnectionString", "Host=localhost;Database=test;");
       Environment.SetEnvironmentVariable("Cognito__Authority", "https://cognito-idp.eu-west-2.amazonaws.com/eu-west-2_test");
       Environment.SetEnvironmentVariable("Cognito__ClientId", "test-client-id");
